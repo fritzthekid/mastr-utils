@@ -5,9 +5,11 @@
 ### Install
 
 ~~~
-$ git clone git@github.com:fritzthekid/energie_utils.git
+$ git clone git@github.com:fritzthekid/mastr-utils.git
 $ cd engine_utils
-$ python setup.py
+$ python -m venv .venv
+$ . .venv/bin/activate
+(.venv) $ pip install -e .
 ~~~
 
 ### Usage

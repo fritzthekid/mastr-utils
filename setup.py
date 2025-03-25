@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='energie-utils',
+    name='mastr-utils',
     version='0.1.0',
     packages=find_packages(),
     install_requires=[
@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'mastrtogpx=energie_utils.mastrtogpx:main',
+            'mastrtogpx=mastr_utils.mastrtogpx:main',
         ],
     },
     author='Eduard Moser',
@@ -21,7 +21,7 @@ setup(
     description='Utilities for the Marktstammdatenregister',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/fritzthekid/energie-utils',
+    url='https://github.com/fritzthekid/mastr-utils',
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
