@@ -1,12 +1,21 @@
-# Helper scripts
+# Helper Scripts to Analyze MarktStammdatenRegister
 
-## Create gpx-tracks from MarktStammdatenRegister Downloads
+All tools provided require at least one download from the MarktStammdatenRegister.
+Let's assume it's the file <code>'~/Downloads/Stromerzeuger(17).csv'</code>.
+The file is already a filtered set of the register; otherwise, it cannot be retrieved.
+
+## Create GPX Tracks from MarktStammdatenRegister Downloads
+
+My interest is to find energy plants on a map. The energy plants have many features
+that can be used to filter the results. To view the dots on a map, this tool extracts 
+a GPX file, where each plant is a waypoint. The file can be visualized online, on a mobile phone
+(any tracking app supports GPX), or with apps on a laptop.
 
 ### Install
 
 ~~~
 $ git clone git@github.com:fritzthekid/mastr-utils.git
-$ cd engine_utils
+$ cd mastr-utils
 $ python -m venv .venv
 $ . .venv/bin/activate
 (.venv) $ pip install -e .
@@ -15,7 +24,7 @@ $ . .venv/bin/activate
 ### Usage
 
 ~~~
-$ mastr-to-gpx.py -h
+$ mastrtogpx -h
 usage: mastrtogpx [-h] [-q QUERY] [-o OUTPUT] [-c COLOR] [-m MIN_WEIGHT] [-r RADIUS]
                   [-a] [-s] [-h_query]
                   mastr_file
@@ -32,22 +41,22 @@ options:
   -o OUTPUT, --output OUTPUT
                         Path to the output GPX file [default=None]
   -c COLOR, --color COLOR
-                        Color of Waypoints [default='Amber']
+                        Color of waypoints [default='Amber']
   -m MIN_WEIGHT, --min_weight MIN_WEIGHT
                         Minimum weight of the cluster [default=0]
   -r RADIUS, --radius RADIUS
                         Radius [default=2000]
   -a, --analyse_datastruct
-                        Value Ranges in Bundesland, Bruttoleistung
+                        Value ranges in Bundesland, Bruttoleistung
   -s, --show-columns    Show the columns of the MaStR file [default=False]
   -h_query, --help_query
-                        Show Examples for Query [default=False]
+                        Show examples for query [default=False]
 
 ~~~
 
 Examples:
 
-Show columns, to form a query
+Show columns to form a query
 ~~~
 $ mastrtogpx '~/Downloads/Stromerzeuger(17).csv' -s
 Columns in the MaStR file:
@@ -58,7 +67,7 @@ Columns in the MaStR file:
     ....
 ~~~
 
-Examples for querys:
+Examples for queries:
 ~~~
 Query to filter the data
 Example: -q 'is_active & is_pv'
@@ -69,11 +78,24 @@ Example: -q 'EnergieTräger == "Erdgas"'
 
 Typical commands
 ~~~
-$ mastrtogpx '~/Downloads/Stromerzeuger(17).csv' -q '(BruttoleistungDerEinheit > 20000)' -o tmp/ge10mw.gpx 
-§
+mastrtogpx '~/Downloads/Stromerzeuger(17).csv' -q '(BruttoleistungDerEinheit > 20000)' -o tmp/ge10mw.gpx 
 ~~~
 
 ~~~
-$ mastrtogpx '~/Downloads/Stromerzeuger(17).csv' -q 'is_pv & BetriebsStatus != "Endgültig stillgelegt"' -o tmp/x.gpx
-$
+mastrtogpx '~/Downloads/Stromerzeuger(17).csv' -q 'is_pv & BetriebsStatus != "Endgültig stillgelegt"' -o tmp/x.gpx
 ~~~
+
+### Tools to Visualize GPX Files
+
+Here are links to some online viewers:
+
+- [j-berkemeier](https://www.j-berkemeier.de/ShowGPX.html)
+- [gpx.studio](https://gpx.studio/)
+
+Mobile:
+
+- [OSMAnd](https://osmand.net/)
+
+PC:
+
+- [Viking](https://wiki.openstreetmap.org/wiki/Viking)
