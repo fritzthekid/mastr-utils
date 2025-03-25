@@ -5,13 +5,15 @@ setup(
     version='0.1.0',
     packages=find_packages(),
     install_requires=[
-        pandas
-        matplotlib
-        seaborn
+        'pandas',
+        'matplotlib',
+        'seaborn',
+        'gpxpy',
+	'scikit-learn',
     ],
     entry_points={
         'console_scripts': [
-            # Füge deine Konsolen-Skripte hier hinzu
+            'mastrtogpx=energie_utils.mastrtogpx:main',
         ],
     },
     author='Eduard Moser',

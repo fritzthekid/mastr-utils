@@ -6,6 +6,8 @@ import math
 import shutil
 import matplotlib.pyplot as plt
 import seaborn as sns
+from .cluster import filter_large_weights
+
 # from gpxpy.gpx import GPX, GPXTrackPoint
 # from xml.etree import ElementTree
 from xml.sax.saxutils import escape
@@ -65,6 +67,34 @@ def isnum(s):
         r = False
     return r
 
+import math
+
+# Haversine-Formel
+def haversine(lon1, lat1, lon2, lat2):
+    # Radius der Erde in Metern
+    R = 6371000
+
+    # Umrechnung in Bogenmaß
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    delta_phi = math.radians(lat2 - lat1)
+    delta_lambda = math.radians(lon2 - lon1)
+
+    # Haversine-Formel
+    a = math.sin(delta_phi / 2)**2 + \
+        math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+    distance = R * c
+    return distance  # in Metern
+
+# Beispiel:
+# lon1, lat1 = 13.4050, 52.5200  # Berlin
+# lon2, lat2 = 11.5810, 48.1351  # München
+
+# print(f"Entfernung: {haversine(lon1, lat1, lon2, lat2):.2f} Meter")
+
+
 # Define the Analyse class
 class Analyse:
     # Dictionary to map column names to their descriptions
@@ -113,6 +143,15 @@ class Analyse:
         for c in self.data.columns:
             s += f"{trailer}{c}\n"
         return s
+
+    def analyse_datastruct(self):
+        print(f"Anzahl Einträge: {len(self.data)}")
+        print(f"Bundesländer: {set(self.data['Bundesland'])}")
+        print(f"Anzahl Gemeinden: {len(set(self.data['Ort']))}")
+        print(f"Bruttoleistung min: {min(self.data['BruttoleistungDerEinheit'])}, max: {max(self.data['BruttoleistungDerEinheit'])}")
+        print("Energieträger: ", set(self.data['Energieträger']))
+        print("Betriebsstatus: ", set(self.data['BetriebsStatus']))
+        print("Lage der Einheit: ", set(self.data['LageDerEinheit']))
 
     # Method to query the data based on a condition and dependency
     def query(self, condition, depends=None):
@@ -212,7 +251,7 @@ class Analyse:
         return [arg for arg in [a for a in arguments if not isnum(a)] if arg not in valid_columns]
 
     # Method to generate GPX file
-    def gen_gpx(self, conditions=None, output_file="gpx.gpx",color="Amber"):
+    def gen_gpx(self, conditions=None, output_file="gpx.gpx",color="Amber", min_weight=0, radius=1000):
         if conditions is None:
             gpx_data = self.data
         else:
@@ -222,6 +261,8 @@ class Analyse:
                 return
             gpx_data = self.data.query(conditions)
 
+        if min_weight > 0:
+            gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
         if len(gpx_data) == 0:
             print(f"No data found for condition: {conditions}")
             return
