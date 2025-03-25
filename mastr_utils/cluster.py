@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from math import radians
-# from geopy.distance import great_circle
-# from energie_utils.analyse_mastr import Analyse
 
 def cluster_punkte_wolke(punkte, cluster_radius_m = 1000, min_weight = 0):
     # Umwandeln in Radian für DBSCAN (Haversine-Metrik erwartet das)
@@ -43,8 +41,3 @@ def filter_large_weights(data, cluster_radius_m = 1000, min_weight = 0):
             idx = cluster_resultate[j][3]
             redata.loc[idx,col] = float(cluster_resultate[i][j])
     return redata
-
-if __name__ == '__main__':
-    analyse = Analyse(file_path='~/Downloads/Stromerzeuger(17).csv')
-    redata = filter_large_weights(analyse, min_weight = 90000)
-    pass
