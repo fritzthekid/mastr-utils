@@ -4,6 +4,12 @@ All tools provided require at least one download from the MarktStammdatenRegiste
 Let's assume it's the file <code>'~/Downloads/Stromerzeuger(17).csv'</code>.
 The file is already a filtered set of the register; otherwise, it cannot be retrieved.
 
+**Marktstammdatenregister** [MaStR](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht)
+
+The extended overview is necessary because only here is information such as the geographical coordinates of the installations included.
+
+Actually, there is only one tool so far: **<code>mastrtogpx</code>**.
+
 ## Create GPX Tracks from MarktStammdatenRegister Downloads
 
 My interest is to find energy plants on a map. The energy plants have many features

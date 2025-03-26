@@ -38,6 +38,7 @@ def filter_large_weights(data, cluster_radius_m = 1000, min_weight = 0):
 
     for i in range(len(cluster_resultate[:])):
         for j,col in enumerate(mydata.columns):
-            idx = cluster_resultate[j][3]
+            idx = cluster_resultate[i][3]
             redata.loc[idx,col] = float(cluster_resultate[i][j])
+            # print(f"idx: {idx}, col: {col}, val: {float(cluster_resultate[i][j])}")
     return redata

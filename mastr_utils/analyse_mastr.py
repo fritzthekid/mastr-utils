@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from .cluster import filter_large_weights
 
-# from gpxpy.gpx import GPX, GPXTrackPoint
+from gpxpy.gpx import GPX, GPXWaypoint
 # from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
@@ -203,48 +203,6 @@ class Analyse:
         self.fig_num += 1
         plt.close()
 
-    # # Method to generate GPX file
-    # def gen_gpx(self, condition, output_file, color="Amber"):
-    #     gpx_data = self.data.query(condition)
-    #     gpx = GPX()
-    #     # Create first track in our GPX:
-    #     # gpx_track = GPXTrack()
-    #     # gpx.tracks.append(gpx_track)
-
-    #     # Create first segment in our GPX track:
-    #     # gpx_segment = GPXTrackSegment()
-    #     # gpx_track.segments.append(gpx_segment)
-    #     for i in gpx_data.index:
-    #         if ( math.isnan(gpx_data['Koordinate: Breitengrad (WGS84)'][i]) or 
-    #              math.isnan(gpx_data['Koordinate: Längengrad (WGS84)'][i]) or
-    #              gpx_data['Koordinate: Längengrad (WGS84)'][i] == "" or
-    #              gpx_data['Koordinate: Breitengrad (WGS84)'][i] == "" ):
-    #             continue
-    #         point = GPXTrackPoint(
-    #             latitude=gpx_data['Koordinate: Breitengrad (WGS84)'][i],
-    #             longitude=gpx_data['Koordinate: Längengrad (WGS84)'][i],
-    #             name=f"P{i}",
-    #             comment=f"{gpx_data['Anzeige-Name der Einheit'][i]}",
-    #             symbol=f"Navaid, {color}"
-    #         )
-    #         point.description=f"Leistung: {str(gpx_data['Bruttoleistung der Einheit'][i])} kWp"
-    #         # point.extensions.append(f"Betriebs-Status: {gpx_data['Betriebs-Status'][i]}")
-    #         # point.extensions.append(f"Inbetriebnahmedatum: {gpx_data['Inbetriebnahmedatum der Einheit'][i]}")
-    #         #gpx_extension_hr = ElementTree.fromstring(f"""<gpxtpx:TrackPointExtension xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1">
-    #         #    <gpxtpx:hr>{f"MaStR {gpx_data['MaStR-Nr. der Einheit'][i]}"}</gpxtpx:hr>
-    #         #    </gpxtpx:TrackPointExtension>
-    #         #""")
-    #         #point.extensions.append(gpx_extension_hr)
-    #         point.extensions = [
-    #             f"<extmastr>MaStR={gpx_data['MaStR-Nr. der Einheit'][i]}</extmastr>",
-    #             # 'Betriebs-Status' : gpx_data['Betriebs-Status'][i],
-    #             # 'Inbetriebnahmedatum' : gpx_data['Inbetriebnahmedatum der Einheit'][i],
-    #         ]
-    #         gpx.waypoints.append(point)
-    #
-    #     with open(output_file, 'w') as f:
-    #         f.write(gpx.to_xml())
-
     def validate(self, condition):
         valid_columns = self.data.columns
         arguments = re.findall(r'\b\w+\b', re.sub("\".*\"","",condition))
@@ -252,6 +210,58 @@ class Analyse:
 
     # Method to generate GPX file
     def gen_gpx(self, conditions=None, output_file="gpx.gpx",color="Amber", min_weight=0, radius=1000):
+        if conditions is None:
+            gpx_data = self.data
+        else:
+            valc = self.validate(conditions)
+            if len(valc) > 0:
+                print(ValueError(f"Invalid condition, with unknown arguments: {valc}"))
+                return
+            gpx_data = self.data.query(conditions)
+
+        if min_weight > 0:
+            gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
+        if len(gpx_data) == 0:
+            print(f"No data found for condition: {conditions}")
+            return
+        if not all(arg in gpx_data.columns for arg in ['KoordinateBreitengrad_wgs84_', 
+                                                       'KoordinateLängengrad_wgs84_', 
+                                                       'BruttoleistungDerEinheit',
+                                                       'AnzeigeNameDerEinheit',
+                                                       'MaStRNrDerEinheit','BetriebsStatus',
+                                                       'InbetriebnahmedatumDerEinheit']):
+            print("Die Daten enthalten nicht alle erforderlichen Spalten")
+            print("     es wird die \"Erweiterte Einheitenübersicht\" der Daten benötigt")
+            return
+
+        gpx = GPX()
+        for i in gpx_data.index:
+            if ( math.isnan(gpx_data['KoordinateBreitengrad_wgs84_'][i]) or 
+                 math.isnan(gpx_data['KoordinateLängengrad_wgs84_'][i]) or
+                 gpx_data['KoordinateLängengrad_wgs84_'][i] == "" or
+                 gpx_data['KoordinateBreitengrad_wgs84_'][i] == "" ):
+                continue
+            point = GPXWaypoint(
+                latitude=gpx_data['KoordinateBreitengrad_wgs84_'][i],
+                longitude=gpx_data['KoordinateLängengrad_wgs84_'][i],
+                name=f"P{i}",
+                comment=f"{gpx_data['AnzeigeNameDerEinheit'][i]}",
+                symbol=f"Navaid, {color}"
+            )
+            desc = f"Name: {gpx_data['AnzeigeNameDerEinheit'][i]}"
+            desc += f"<ul><li>Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp<br>\n"
+            desc += f"<li>Betriebs-Status: {gpx_data['BetriebsStatus'][i]}</li>\n"
+            desc += f"<li>Energieträger: {gpx_data['Energieträger'][i]}</li>\n"
+            desc += f"<li>Inbetriebnahmedatum der Einheit: {gpx_data['InbetriebnahmedatumDerEinheit'][i]}</li>\n"
+            desc += f"<li>MaStR: {gpx_data['MaStRNrDerEinheit'][i]}</li></ul>"
+            point.description = desc
+            gpx.waypoints.append(point)
+    
+        with open(output_file, 'w') as f:
+            f.write(gpx.to_xml())
+
+    # Method to generate GPX file
+    def gen_gpx_(self, conditions=None, output_file="gpx.gpx",color="Amber", min_weight=0, radius=1000):
         if conditions is None:
             gpx_data = self.data
         else:
