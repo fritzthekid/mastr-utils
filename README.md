@@ -29,6 +29,8 @@ $ . .venv/bin/activate
 
 ### Usage
 
+A more detailed Description can be found [here (in German)](./doc/dokumentation.md)
+
 ~~~
 $ mastrtogpx -h
 usage: mastrtogpx [-h] [-q QUERY] [-o OUTPUT] [-c COLOR] [-m MIN_WEIGHT] [-r RADIUS]
