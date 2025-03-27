@@ -6,10 +6,19 @@
     <title>MaStR to GPX Converter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
 </head>
 <body>
     <div class="container">
-        <h1>MaStR to GPX Converter</h1>
+        <div style="text-align: center;">
+            <br>
+            <img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz">
+            <br>
+        </div>
+        <div style="text-align: center;">
+            <h1>MaStR to GPX Converter</h1>
+            <p>Convert MaStR CSV files to GPX files for use with GPS devices.</p>
+        </div>
         <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
             <label for="mastr_file">Upload MaStR CSV File:</label>
             <input type="file" name="mastr_file" id="mastr_file" required><br><br>
@@ -21,13 +30,13 @@
             <input type="text" name="color" id="color" value="Amber"><br><br>
 
             <label for="min_weight">Minimum Weight:</label>
-            <input type="number" name="min_weight" id="min_weight" value="0"><br><br>
+            <input type="number" name="min_weight" id="min_weight" value="0"><br>
 
             <label for="radius">Radius:</label>
-            <input type="number" name="radius" id="radius" value="2000"><br><br>
+            <input type="number" name="radius" id="radius" value="2000"><br>
 
             <label for="output_file">Output File Name (optional):</label>
-            <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx"><br><br>
+            <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx"><br>
 
             <button type="submit">Convert</button>
         </form>

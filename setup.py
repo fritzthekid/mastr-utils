@@ -10,6 +10,9 @@ setup(
         'seaborn',
         'gpxpy',
 	'scikit-learn',
+	'flask',
+	'flask-cors',
+	'numpy',
     ],
     entry_points={
         'console_scripts': [
