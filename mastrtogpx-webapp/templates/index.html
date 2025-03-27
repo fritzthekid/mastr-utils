@@ -16,28 +16,38 @@
             <br>
         </div>
         <div style="text-align: center;">
-            <h1>MaStR to GPX Converter</h1>
-            <p>Convert MaStR CSV files to GPX files for use with GPS devices.</p>
+            <h1>MaStR zu GPX Konverter</h1>
+            <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu GPX-Dateien für eine GPS App (Handy, PC, Online). 
+                (<a href="https://github.com/fritzthekid/mastr-utils/blob/main/doc/dokumentation.md" target="_blank" rel="noopener noreferrer">Dokumentation)</a></p>
         </div>
         <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
             <label for="mastr_file">Upload MaStR CSV File:</label>
-            <input type="file" name="mastr_file" id="mastr_file" required><br><br>
-
+            <input type="file" name="mastr_file" id="mastr_file" required><br>
+            <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
             <label for="query">Query:</label>
-            <input type="text" name="query" id="query" placeholder="e.g., is_pv & BruttoleistungDerEinheit > 10000"><br><br>
-
+            <span style="display:inline-block; width: 20px;"></span>
+            <input type="text" name="query" id="query" placeholder="e.g., is_pv & BruttoleistungDerEinheit > 10000"><br>
+            </div>
+            <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
             <label for="color">Waypoint Color:</label>
-            <input type="text" name="color" id="color" value="Amber"><br><br>
-
-            <label for="min_weight">Minimum Weight:</label>
-            <input type="number" name="min_weight" id="min_weight" value="0"><br>
-
-            <label for="radius">Radius:</label>
-            <input type="number" name="radius" id="radius" value="2000"><br>
-
-            <label for="output_file">Output File Name (optional):</label>
-            <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx"><br>
-
+            <span style="display:inline-block; width: 20px;"></span>
+            <input type="text" name="color" id="color" value="Amber"><br>
+            </div>
+            <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+                <label for="min_weight">Minimale Bruttoleistung, wenn unterschiedlich von 0 folgt flächiger Suche:</label>
+                <span style="display:inline-block; width: 20px;"></span>
+                <input type="number" name="min_weight" id="min_weight" value="0"><br>
+            </div>
+            <!-- div class="form-group" -->
+            <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+                <label for="radius">Radius: </label><span style="display:inline-block; width: 20px;"></span>
+                <input type="number" name="radius" id="radius" value="2000" size="10"><br>
+            </div>
+            <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+                <label for="output_file">Output File Name (optional):</label>
+                <span style="display:inline-block; width: 20px;"></span>
+                <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx"><br>
+            </div>
             <button type="submit">Convert</button>
         </form>
         <div id="result"></div> <!-- Placeholder for the download button -->
