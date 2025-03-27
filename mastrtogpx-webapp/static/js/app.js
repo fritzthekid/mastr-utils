@@ -63,6 +63,10 @@ function addGpxToMap(gpxUrl) {
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
+            // 4. Optional: Customize Marker Icons
+            // If you want to customize the square markers later, 
+            //     you can replace the startIconUrl and endIconUrl 
+            //     with URLs to your own marker images.
             startIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/images/pin-icon-start.png',
             endIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/images/pin-icon-end.png',
             shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/images/pin-shadow.png'
