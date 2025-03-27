@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="13.875772mm"
+   height="2.8438716mm"
+   viewBox="0 0 13.875772 2.8438716"
+   version="1.1"
+   id="svg1088"
+   inkscape:export-filename="bluedot.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="dots.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1090"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="2.2526232"
+     inkscape:cx="-2.2196345"
+     inkscape:cy="34.848261"
+     inkscape:window-width="1854"
+     inkscape:window-height="1011"
+     inkscape:window-x="1986"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2043"
+       originx="-103.79994"
+       originy="-39.555475" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1085" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-103.79995,-39.555475)">
+    <ellipse
+       style="fill:#fb5e00;fill-opacity:1;stroke:#00000f;stroke-width:0.0824363;stroke-linejoin:round"
+       id="path1987"
+       cx="105.09093"
+       cy="40.985622"
+       rx="1.2497605"
+       ry="1.347711" />
+    <ellipse
+       style="fill:#56c800;fill-opacity:1;stroke:#00000f;stroke-width:0.0824363;stroke-linejoin:round"
+       id="path1987-3"
+       cx="111.05186"
+       cy="41.010418"
+       rx="1.2497605"
+       ry="1.347711"
+       inkscape:export-filename="greendot.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="fill:#a644e6;fill-opacity:1;stroke:#00000f;stroke-width:0.0824363;stroke-linejoin:round"
+       id="path1987-6"
+       cx="116.38474"
+       cy="40.944405"
+       rx="1.2497605"
+       ry="1.347711"
+       inkscape:export-filename="bluedot.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+  </g>
+</svg>

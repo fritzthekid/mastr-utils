@@ -63,16 +63,17 @@ function addGpxToMap(gpxUrl) {
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
-            startIconUrl: null, // Disable the default start icon
-            endIconUrl: null,   // Disable the default end icon
-            shadowUrl: null     // Disable the shadow
+            wptIconUrls: {
+                '': '/static/images/pin-icon-wpt.png' // Correct path to the waypoint icon
+            },
+            shadowUrl: null // Disable the shadow
         }
     }).on('loaded', function (e) {
         console.log('GPX file loaded successfully:', gpxUrl);
         map.fitBounds(e.target.getBounds()); // Adjust the map view to fit the GPX data
     }).on('addpoint', function (e) {
         const latlng = e.point.getLatLng();
-        const description = e.point.desc || 'No description available'; // Use the <desc> tag or a default message
+        const description = e.point.desc || 'No description available';
         L.marker(latlng).bindPopup(`<b>Description:</b> ${description}`).addTo(map);
     }).addTo(map);
 }
