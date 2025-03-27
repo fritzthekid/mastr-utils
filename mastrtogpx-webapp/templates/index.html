@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaStR to GPX Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>MaStR to GPX Converter</h1>
+        <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
+            <label for="mastr_file">Upload MaStR CSV File:</label>
+            <input type="file" name="mastr_file" id="mastr_file" required><br><br>
+
+            <label for="query">Query:</label>
+            <input type="text" name="query" id="query" placeholder="e.g., is_pv & BruttoleistungDerEinheit > 10000"><br><br>
+
+            <label for="color">Waypoint Color:</label>
+            <input type="text" name="color" id="color" value="Amber"><br><br>
+
+            <label for="min_weight">Minimum Weight:</label>
+            <input type="number" name="min_weight" id="min_weight" value="0"><br><br>
+
+            <label for="radius">Radius:</label>
+            <input type="number" name="radius" id="radius" value="2000"><br><br>
+
+            <label for="output_file">Output File Name (optional):</label>
+            <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx"><br><br>
+
+            <button type="submit">Convert</button>
+        </form>
+        <div id="result"></div> <!-- Placeholder for the download button -->
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
