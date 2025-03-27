@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script> <!-- For GPX support -->
 </head>
 <body>
     <div class="container">
@@ -54,6 +57,7 @@
             <button type="submit">Convert</button>
         </form>
         <div id="result"></div> <!-- Placeholder for the download button -->
+        <div id="map" style="height: 500px; margin-top: 20px;"></div>
     </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
