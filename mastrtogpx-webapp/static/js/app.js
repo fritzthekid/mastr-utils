@@ -63,18 +63,16 @@ function addGpxToMap(gpxUrl) {
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
-            // 4. Optional: Customize Marker Icons
-            // If you want to customize the square markers later, 
-            //     you can replace the startIconUrl and endIconUrl 
-            //     with URLs to your own marker images.
-            startIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/images/pin-icon-start.png',
-            endIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/images/pin-icon-end.png',
-            shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/images/pin-shadow.png'
+            startIconUrl: null, // Disable the default start icon
+            endIconUrl: null,   // Disable the default end icon
+            shadowUrl: null     // Disable the shadow
         }
     }).on('loaded', function (e) {
         console.log('GPX file loaded successfully:', gpxUrl);
         map.fitBounds(e.target.getBounds()); // Adjust the map view to fit the GPX data
-    }).on('error', function (e) {
-        console.error('Error loading GPX file:', e);
+    }).on('addpoint', function (e) {
+        const latlng = e.point.getLatLng();
+        const description = e.point.desc || 'No description available'; // Use the <desc> tag or a default message
+        L.marker(latlng).bindPopup(`<b>Description:</b> ${description}`).addTo(map);
     }).addTo(map);
 }
