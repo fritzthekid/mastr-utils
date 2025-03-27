@@ -5,12 +5,49 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('#convert-form');
     const resultDiv = document.querySelector('#result');
+    const mapContainer = document.querySelector('#map');
+    let map;
+
+    // Initialize the map
+    function initializeMap() {
+        map = L.map('map').setView([51.1657, 10.4515], 6); // Centered on Germany
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors © CARTO'
+        }).addTo(map);
+    }
+
+    // Add GPX to the map
+    function addGpxToMap(gpxUrl) {
+        if (!map) initializeMap();
+        const gpxLayer = new L.GPX(gpxUrl, {
+            async: true,
+            marker_options: {
+                startIconUrl: null, // Disable the default start icon
+                endIconUrl: null,   // Disable the default end icon
+                shadowUrl: null     // Disable the shadow
+            }
+        }).on('loaded', function (e) {
+            map.fitBounds(e.target.getBounds());
+        }).on('addpoint', function (e) {
+            // Replace the default marker with a circle marker
+            const latlng = e.point.getLatLng();
+            L.circleMarker(latlng, {
+                radius: 5, // Size of the dot
+                color: '#ff0000', // Border color
+                fillColor: '#ff0000', // Fill color
+                fillOpacity: 1.0 // Fully opaque
+            }).addTo(map);
+        }).addTo(map);
+    }
 
     form.addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent the default form submission
 
         // Clear previous results
         resultDiv.innerHTML = '';
+        if (map) map.remove(); // Remove the existing map if any
+        mapContainer.innerHTML = ''; // Clear the map container
 
         // Prepare form data
         const formData = new FormData(form);
@@ -32,6 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 downloadLink.classList.add('download-button'); // Optional: Add a CSS class
                 downloadLink.download = ''; // Ensure it triggers a download
                 resultDiv.appendChild(downloadLink);
+
+                // Visualize the GPX file on the map
+                addGpxToMap(result.download_url);
             } else {
                 // Display the error message
                 resultDiv.textContent = `Error: ${result.message}`;
