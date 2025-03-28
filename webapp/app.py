@@ -2,6 +2,8 @@
 from flask import Flask, request, jsonify, render_template, send_file
 from flask_cors import CORS
 import subprocess
+from mastr_utils.analyse_mastr import tmpdir
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -87,6 +89,14 @@ def download_file(filename):
         return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
+
+@app.route('/download-log', methods=['GET'])
+def download_log():
+    log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
+    try:
+        return send_file(log_file, as_attachment=True)
+    except FileNotFoundError:
+        return jsonify({'status': 'error', 'message': 'Log file not found.'}), 404
 
 @app.route('/favicon.ico')
 def favicon():

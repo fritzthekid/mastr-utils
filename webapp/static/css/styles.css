@@ -29,6 +29,7 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+input[type="file"],
 input[type="text"],
 input[type="number"],
 select {
@@ -62,12 +63,23 @@ footer {
     width: 100%;
 }
 
-#convert-form {
-    max-width: 600px;
-    margin: 0 auto;
+/* Flex container for form and map */
+.form-map-container {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px; /* Space between the form and the map */
+    margin-bottom: 20px; /* Space between the form-map container and the buttons */
+}
+
+/* Form styling */
+#convert-form {
+    flex: 1; /* Allow the form to take up equal space as the map */
+    max-width: 400px; /* Limit the width of the form */
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
@@ -101,5 +113,41 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Map styling */
+#map {
+    flex: 1; /* Allow the map to take up equal space as the form */
+    max-width: 400px; /* Limit the width of the map */
+    aspect-ratio: 1 / 1; /* Make the map square */
+    border: 2px solid #ccc; /* Add a simple border */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
+}
+
+/* Buttons container */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between the buttons */
+}
+
+/* Button styling */
+.buttons-container button,
+.buttons-container .button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline for links */
+    text-align: center;
+}
+
+.buttons-container button:hover,
+.buttons-container .button:hover {
     background-color: #45a049;
 }

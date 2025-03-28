@@ -23,41 +23,53 @@
             <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu GPX-Dateien für eine GPS App (Handy, PC, Online). 
                 (<a href="https://github.com/fritzthekid/mastr-utils/blob/main/doc/dokumentation.md" target="_blank" rel="noopener noreferrer">Dokumentation)</a></p>
         </div>
-        <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="mastr_file">Upload MaStR CSV File:</label>
-                <input type="file" name="mastr_file" id="mastr_file" required>
-            </div>
+        <!-- Flex container for form and map -->
+        <div class="form-map-container">
+            <!-- Form Section -->
+            <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="mastr_file">Upload MaStR Data File:</label>
+                    <input type="file" name="mastr_file" id="mastr_file" required>
+                </div>
 
-            <div class="form-group">
-                <label for="query">Query:</label>
-                <input type="text" name="query" id="query" placeholder="e.g., is_pv & BruttoleistungDerEinheit > 10000">
-            </div>
+                <div class="form-group">
+                    <label for="query">Query:</label>
+                    <input type="text" name="query" id="query" placeholder="e.g., is_pv & BruttoleistungDerEinheit > 10000">
+                </div>
 
-            <div class="form-group">
-                <label for="color">Waypoint Color:</label>
-                <input type="text" name="color" id="color" value="Amber">
-            </div>
+                <div class="form-group">
+                    <label for="color">Waypoint Color:</label>
+                    <input type="text" name="color" id="color" value="Amber">
+                </div>
 
-            <div class="form-group">
-                <label for="min_weight">Minimum Weight:</label>
-                <input type="number" name="min_weight" id="min_weight" value="0">
-            </div>
+                <div class="form-group">
+                    <label for="min_weight">Min. Bruttoleistung der Fläche [kW]:</label>
+                    <input type="number" name="min_weight" id="min_weight" value="0">
+                </div>
 
-            <div class="form-group">
-                <label for="radius">Radius:</label>
-                <input type="number" name="radius" id="radius" value="2000">
-            </div>
+                <div class="form-group">
+                    <label for="radius">Radius:</label>
+                    <input type="number" name="radius" id="radius" value="2000">
+                </div>
 
-            <div class="form-group">
-                <label for="output_file">Output File Name (optional):</label>
-                <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
-            </div>
+                <div class="form-group">
+                    <label for="output_file">Output File Name (optional):</label>
+                    <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
+                </div>
+                <button type="submit" form="convert-form">Convert</button>
+            </form>
 
-            <button type="submit">Convert</button>
-        </form>
-        <div id="result"></div> <!-- Placeholder for the download button -->
-        <div id="map" style="height: 500px; margin-top: 20px;"></div>
+            <!-- Map Section -->
+            <div id="map" style="height: 500px; margin-top: 20px;"></div>
+        </div>
+
+        <!-- Result Section -->
+        <div id="result" style="margin-top: 20px;"></div>
+
+        <!-- Buttons Section -->
+        <div class="buttons-container">
+            <a href="/download-log" class="button">Download Logs</a>
+        </div>
     </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>

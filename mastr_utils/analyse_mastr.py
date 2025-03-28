@@ -7,6 +7,7 @@ import shutil
 import matplotlib.pyplot as plt
 import seaborn as sns
 from .cluster import filter_large_weights
+import logging
 
 from gpxpy.gpx import GPX, GPXWaypoint
 # from xml.etree import ElementTree
@@ -18,8 +19,16 @@ plt.rcParams['svg.fonttype'] = 'none'
 rootpath = os.path.dirname(os.path.abspath(__file__))
 # shutil.rmtree('/tmp/anamastr-*', ignore_errors=True)
 # tmpdir = f"/tmp/anamastr-{os.getpid()}"
-tmpdir = f"/tmp/anamastr"
+tmpdir = f"{rootpath}/../tmp/anamastr"
 os.makedirs(tmpdir, exist_ok=True)
+
+# Configure logging
+log_file = f"{tmpdir}/mastr_analyse.log"
+logging.basicConfig(
+    filename=log_file,
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 # List of all the Bundesland in Germany
 bundeslaender = [
@@ -107,16 +116,22 @@ class Analyse:
 
     # Initialize the class with data from an Excel file
     def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0):
-        self.fig_num = fig_num
-        self.figname = figname
-        if file_path.endswith('.csv'):
-            self.data = pd.read_csv(file_path, sep=';', encoding='utf-8',decimal=',')
-        elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
-            self.data = pd.read_excel(file_path)
-        elif file_path.endswith('.ods'):
-            self.data = pd.read_excel(file_path, engine='odf')
-        else:
-            raise ValueError("Invalid file format. Please provide a CSV, XLS, or ODS file.")
+        logging.info(f"Initializing Analyse with file_path={file_path}")
+        try:
+            self.fig_num = fig_num
+            self.figname = figname
+            if file_path.endswith('.csv'):
+                self.data = pd.read_csv(file_path, sep=';', encoding='utf-8', decimal=',')
+            elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
+                self.data = pd.read_excel(file_path)
+            elif file_path.endswith('.ods'):
+                self.data = pd.read_excel(file_path, engine='odf')
+            else:
+                raise ValueError("Invalid file format. Please provide a CSV, XLS, or ODS file.")
+            logging.info(f"Data loaded successfully from {file_path}")
+        except Exception as e:
+            logging.error(f"Error initializing Analyse: {e}")
+            raise
         for i in self.data.index:
             self.data['Inbetriebnahmedatum der Einheit'].at[i] = str_to_datetime(self.data['Inbetriebnahmedatum der Einheit'][i])
         
@@ -209,56 +224,52 @@ class Analyse:
         return [arg for arg in [a for a in arguments if not isnum(a)] if arg not in valid_columns]
 
     # Method to generate GPX file
-    def gen_gpx(self, conditions=None, output_file="gpx.gpx",color="Amber", min_weight=0, radius=1000):
-        if conditions is None:
-            gpx_data = self.data
-        else:
-            valc = self.validate(conditions)
-            if len(valc) > 0:
-                print(ValueError(f"Invalid condition, with unknown arguments: {valc}"))
+    def gen_gpx(self, conditions=None, output_file="gpx.gpx", color="Amber", min_weight=0, radius=1000):
+        logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, color={color}")
+        try:
+            if conditions is None:
+                gpx_data = self.data
+            else:
+                valc = self.validate(conditions)
+                if len(valc) > 0:
+                    error_message = f"Invalid condition, with unknown arguments: {valc}"
+                    logging.error(error_message)
+                    raise ValueError(error_message)
+                gpx_data = self.data.query(conditions)
+
+            if min_weight > 0:
+                gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
+            if len(gpx_data) == 0:
+                logging.warning(f"No data found for condition: {conditions}")
                 return
-            gpx_data = self.data.query(conditions)
 
-        if min_weight > 0:
-            gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
-        if len(gpx_data) == 0:
-            print(f"No data found for condition: {conditions}")
-            return
-        if not all(arg in gpx_data.columns for arg in ['KoordinateBreitengrad_wgs84_', 
-                                                       'KoordinateLängengrad_wgs84_', 
-                                                       'BruttoleistungDerEinheit',
-                                                       'AnzeigeNameDerEinheit',
-                                                       'MaStRNrDerEinheit','BetriebsStatus',
-                                                       'InbetriebnahmedatumDerEinheit']):
-            print("Die Daten enthalten nicht alle erforderlichen Spalten")
-            print("     es wird die \"Erweiterte Einheitenübersicht\" der Daten benötigt")
-            return
+            gpx = GPX()
+            for i in gpx_data.index:
+                if (math.isnan(gpx_data['KoordinateBreitengrad_wgs84_'][i]) or
+                        math.isnan(gpx_data['KoordinateLängengrad_wgs84_'][i])):
+                    continue
+                point = GPXWaypoint(
+                    latitude=gpx_data['KoordinateBreitengrad_wgs84_'][i],
+                    longitude=gpx_data['KoordinateLängengrad_wgs84_'][i],
+                    name=f"P{i}",
+                    comment=f"{gpx_data['AnzeigeNameDerEinheit'][i]}",
+                    symbol=f"Navaid, {color}"
+                )
+                desc = f"Name: {gpx_data['AnzeigeNameDerEinheit'][i]}"
+                desc += f"<ul><li>Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp<br>\n"
+                desc += f"<li>Betriebs-Status: {gpx_data['BetriebsStatus'][i]}</li>\n"
+                desc += f"<li>Energieträger: {gpx_data['Energieträger'][i]}</li>\n"
+                desc += f"<li>Inbetriebnahmedatum der Einheit: {gpx_data['InbetriebnahmedatumDerEinheit'][i]}</li>\n"
+                desc += f"<li>MaStR: {gpx_data['MaStRNrDerEinheit'][i]}</li></ul>"
+                point.description = desc
+                gpx.waypoints.append(point)
 
-        gpx = GPX()
-        for i in gpx_data.index:
-            if ( math.isnan(gpx_data['KoordinateBreitengrad_wgs84_'][i]) or 
-                 math.isnan(gpx_data['KoordinateLängengrad_wgs84_'][i]) or
-                 gpx_data['KoordinateLängengrad_wgs84_'][i] == "" or
-                 gpx_data['KoordinateBreitengrad_wgs84_'][i] == "" ):
-                continue
-            point = GPXWaypoint(
-                latitude=gpx_data['KoordinateBreitengrad_wgs84_'][i],
-                longitude=gpx_data['KoordinateLängengrad_wgs84_'][i],
-                name=f"P{i}",
-                comment=f"{gpx_data['AnzeigeNameDerEinheit'][i]}",
-                symbol=f"Navaid, {color}"
-            )
-            desc = f"Name: {gpx_data['AnzeigeNameDerEinheit'][i]}"
-            desc += f"<ul><li>Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp<br>\n"
-            desc += f"<li>Betriebs-Status: {gpx_data['BetriebsStatus'][i]}</li>\n"
-            desc += f"<li>Energieträger: {gpx_data['Energieträger'][i]}</li>\n"
-            desc += f"<li>Inbetriebnahmedatum der Einheit: {gpx_data['InbetriebnahmedatumDerEinheit'][i]}</li>\n"
-            desc += f"<li>MaStR: {gpx_data['MaStRNrDerEinheit'][i]}</li></ul>"
-            point.description = desc
-            gpx.waypoints.append(point)
-    
-        with open(output_file, 'w') as f:
-            f.write(gpx.to_xml())
+            with open(output_file, 'w') as f:
+                f.write(gpx.to_xml())
+            logging.info(f"GPX file generated successfully: {output_file}")
+        except Exception as e:
+            logging.error(f"Error generating GPX file: {e}")
+            raise
 
     # Method to generate GPX file
     def gen_gpx_(self, conditions=None, output_file="gpx.gpx",color="Amber", min_weight=0, radius=1000):
