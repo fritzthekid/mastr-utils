@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, render_template, send_file
 from flask_cors import CORS
 import subprocess
 from mastr_utils.analyse_mastr import tmpdir
+import logging  # Import logging to use the configuration from analyse_mastr.py
 
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ def index():
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    print('Converting...')
+    logging.info('Converting...')  # Replace print with logging
     
     # Handle file upload
     if 'mastr_file' not in request.files:
@@ -29,7 +30,6 @@ def convert():
     upload_folder = '/tmp'
     file_path = f"{upload_folder}/{file.filename}"
     file.save(file_path)
-    print(f"Uploaded file saved to: {file_path}")
 
     # Retrieve other form data
     query = request.form.get('query', '')
@@ -45,15 +45,6 @@ def convert():
     else:
         output_file = f"{output_folder}/{file.filename.rsplit('.', 1)[0]}.gpx"
 
-    # Debugging logs
-    print(f'Mastr file: {file_path}')
-    print(f'Query: {query}')
-    print(f'Output: {output_file}')
-    print(f'Color: {color}')
-    print(f'Min weight: {min_weight}')
-    print(f'Radius: {radius}')
-    print('Converting...')
-
     query_part = ['-q', query]
     if query == '':
         query_part = []
@@ -67,18 +58,19 @@ def convert():
         '-r', str(radius)
     ]
 
-    print('Command:', command)
+    # Log the command instead of printing it
+    logging.info(f'Command: {command}')
     
     try:
         subprocess.run(command, check=True)
-        print('Conversion completed successfully.')
+        logging.info('Conversion completed successfully.')
         return jsonify({
             'status': 'success',
             'message': 'Conversion completed successfully.',
             'download_url': f"/download/{output_file.rsplit('/', 1)[-1]}"
         })
     except subprocess.CalledProcessError as e:
-        print('Error:', e)
+        logging.error(f'Error during conversion: {e}')
         return jsonify({'status': 'error', 'message': str(e)})
 
 @app.route('/download/<filename>', methods=['GET'])
