@@ -1,5 +1,5 @@
 # from mastr_utils import Analyse
-from flask import Flask, request, jsonify, render_template, send_file
+from flask import Flask, request, jsonify, render_template, send_file, send_from_directory
 from flask_cors import CORS
 import subprocess
 from mastr_utils.analyse_mastr import tmpdir
@@ -93,6 +93,13 @@ def download_log():
 @app.route('/favicon.ico')
 def favicon():
     return '', 204  # Return an empty response with a 204 No Content status
+
+@app.route('/tmp/<path:filename>')
+def serve_gpx_file(filename):
+    try:
+        return send_from_directory('/tmp', filename, mimetype='application/gpx+xml')
+    except FileNotFoundError:
+        return "File not found", 404
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('#convert-form');
     const resultDiv = document.querySelector('#result');
+    const buttonsContainer = document.querySelector('.buttons-container');
 
     form.addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent the default form submission
@@ -25,23 +26,27 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (result.status === 'success') {
-                // Display the download button
-                const downloadLink = document.createElement('a');
+                // Display success message
+                resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
+
+                // Create or update the "Download GPX File" button
+                let downloadLink = document.querySelector('#download-gpx');
+                if (!downloadLink) {
+                    downloadLink = document.createElement('a');
+                    downloadLink.id = 'download-gpx';
+                    downloadLink.classList.add('button'); // Add the same CSS class as other buttons
+                    buttonsContainer.appendChild(downloadLink);
+                }
                 downloadLink.href = result.download_url;
                 downloadLink.textContent = 'Download GPX File';
-                downloadLink.classList.add('download-button'); // Optional: Add a CSS class
-                downloadLink.download = ''; // Ensure it triggers a download
-                resultDiv.appendChild(downloadLink);
-
-                // Visualize the GPX file on the map
-                addGpxToMap(result.download_url);
+                downloadLink.style.display = 'inline-block'; // Ensure the button is visible
             } else {
-                // Display the error message
-                resultDiv.textContent = `Error: ${result.message}`;
+                // Display error message
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${result.message}</p>`;
             }
         } catch (error) {
             console.error('Error:', error);
-            resultDiv.textContent = 'An unexpected error occurred.';
+            resultDiv.innerHTML = '<p style="color: red;">An unexpected error occurred.</p>';
         }
     });
 
@@ -53,26 +58,30 @@ document.addEventListener('DOMContentLoaded', function () {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
     }
-
+    
     initializeMap();
+    addGpxToMap('/tmp/xxx.gpx');
 });
 
 function addGpxToMap(gpxUrl) {
-    if (!map) initializeMap();
+    if (!map) {
+        console.error('Map is not initialized.');
+        return;
+    }
 
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
-            wptIconUrls: {
-                '': '/static/images/pin-icon-wpt.png' // Correct path to the waypoint icon
-            },
-            shadowUrl: null // Disable the shadow
+            startIconUrl: null, // Disable the default start icon
+            endIconUrl: null,   // Disable the default end icon
+            shadowUrl: null     // Disable the shadow
         }
     }).on('loaded', function (e) {
         console.log('GPX file loaded successfully:', gpxUrl);
         map.fitBounds(e.target.getBounds()); // Adjust the map view to fit the GPX data
     }).on('addpoint', function (e) {
         const latlng = e.point.getLatLng();
+        console.log('Waypoint added:', latlng); // Debugging: Log the waypoint coordinates
         const description = e.point.desc || 'No description available';
         L.marker(latlng).bindPopup(`<b>Description:</b> ${description}`).addTo(map);
     }).addTo(map);
