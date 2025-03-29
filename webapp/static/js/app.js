@@ -68,7 +68,7 @@ function addGpxToMap(gpxUrl) {
             shadowUrl: '',
             // wptIcons: false,     // unterdrückt automatische Wegpunkt-Icons
             wptIconUrls: {
-                'Navaid, Amber': '/static/images/dots.svg',  // verhindert Fehler
+                'Navaid, Amber': '/static/images/mypin.svg',  // verhindert Fehler
               },
             // wptIconUrls: {}      // verhindert fallback zu pin-icon-wpt.png
             iconSize: [16, 16],
@@ -87,7 +87,7 @@ function addGpxToMap(gpxUrl) {
         
         const typ = point.meta?.type || 'default'; // falls du <type> verwendest
         const icon = L.icon({
-            iconUrl: '/static/images/dots.svg', // `icons/${typ}.svg`,
+            iconUrl: '/static/images/mypin.svg', // `icons/${typ}.svg`,
             iconSize: [16, 16],
             iconAnchor: [8, 16]
         });
