@@ -59,21 +59,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function addGpxToMap(gpxUrl) {
     if (!map) initializeMap();
-
+      
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
+            startIconUrl: '',
+            endIconUrl: '',
+            shadowUrl: '',
+            // wptIcons: false,     // unterdrückt automatische Wegpunkt-Icons
             wptIconUrls: {
-                '': '/static/images/pin-icon-wpt.png' // Correct path to the waypoint icon
-            },
-            shadowUrl: null // Disable the shadow
+                'Navaid, Amber': '/static/images/dots.svg',  // verhindert Fehler
+              },
+            // wptIconUrls: {}      // verhindert fallback zu pin-icon-wpt.png
+            iconSize: [16, 16],
+            iconAnchor: [8, 16],
         }
-    }).on('loaded', function (e) {
-        console.log('GPX file loaded successfully:', gpxUrl);
-        map.fitBounds(e.target.getBounds()); // Adjust the map view to fit the GPX data
-    }).on('addpoint', function (e) {
-        const latlng = e.point.getLatLng();
-        const description = e.point.desc || 'No description available';
-        L.marker(latlng).bindPopup(`<b>Description:</b> ${description}`).addTo(map);
-    }).addTo(map);
-}
+        })
+        .on('addpoint', function (e) {
+        const point = e.point;
+        const latlng = point._latlng || point.latlng;
+        if (!latlng) return;
+        
+        const name = point.name || '';
+        const desc = point.desc || '';  // Beschreibung aus <desc>
+        
+        const popupContent = `<b>${name}</b><br>${desc}`;
+        
+        const typ = point.meta?.type || 'default'; // falls du <type> verwendest
+        const icon = L.icon({
+            iconUrl: '/static/images/dots.svg', // `icons/${typ}.svg`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 16]
+        });
+        
+        L.marker(latlng, { icon }).bindPopup(popupContent).addTo(map);
+        })
+        .on('loaded', function (e) {
+        map.fitBounds(e.target.getBounds());
+        
+        // Notfall: Standard-„Marker“-Marker entfernen, falls noch einer da ist
+        map.eachLayer(layer => {
+            if (layer instanceof L.Marker &&
+                layer.getPopup()?.getContent?.() === 'Marker') {
+            map.removeLayer(layer);
+            }
+        });
+        })
+        .addTo(map);          
+    }

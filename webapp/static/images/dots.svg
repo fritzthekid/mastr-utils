@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="13.875772mm"
-   height="2.8438716mm"
-   viewBox="0 0 13.875772 2.8438716"
+   width="2.5819573mm"
+   height="2.7778583mm"
+   viewBox="0 0 2.5819573 2.7778583"
    version="1.1"
    id="svg1088"
    inkscape:export-filename="bluedot.png"
@@ -28,8 +28,8 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="2.2526232"
-     inkscape:cx="-2.2196345"
-     inkscape:cy="34.848261"
+     inkscape:cx="-2.4415979"
+     inkscape:cy="34.84826"
      inkscape:window-width="1854"
      inkscape:window-height="1011"
      inkscape:window-x="1986"
@@ -39,8 +39,8 @@
     <inkscape:grid
        type="xygrid"
        id="grid2043"
-       originx="-103.79994"
-       originy="-39.555475" />
+       originx="-103.79993"
+       originy="-39.596693" />
   </sodipodi:namedview>
   <defs
      id="defs1085" />
@@ -48,33 +48,13 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-103.79995,-39.555475)">
+     transform="translate(-103.79995,-39.596693)">
     <ellipse
-       style="fill:#fb5e00;fill-opacity:1;stroke:#00000f;stroke-width:0.0824363;stroke-linejoin:round"
+       style="fill:#fb5e00;fill-opacity:1;stroke:#00000f;stroke-width:0.182;stroke-linejoin:round;stroke-dasharray:none"
        id="path1987"
        cx="105.09093"
        cy="40.985622"
        rx="1.2497605"
        ry="1.347711" />
-    <ellipse
-       style="fill:#56c800;fill-opacity:1;stroke:#00000f;stroke-width:0.0824363;stroke-linejoin:round"
-       id="path1987-3"
-       cx="111.05186"
-       cy="41.010418"
-       rx="1.2497605"
-       ry="1.347711"
-       inkscape:export-filename="greendot.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
-    <ellipse
-       style="fill:#a644e6;fill-opacity:1;stroke:#00000f;stroke-width:0.0824363;stroke-linejoin:round"
-       id="path1987-6"
-       cx="116.38474"
-       cy="40.944405"
-       rx="1.2497605"
-       ry="1.347711"
-       inkscape:export-filename="bluedot.png"
-       inkscape:export-xdpi="96"
-       inkscape:export-ydpi="96" />
   </g>
 </svg>
