@@ -34,6 +34,10 @@ def convert():
     # Retrieve other form data
     query = request.form.get('query', '')
     color = request.form.get('color', 'Amber')
+    if color == 'Amber' or color == 'Red' or color == 'Blue':
+        color = color
+    else:
+        color = None
     min_weight = request.form.get('min_weight', 0)
     radius = request.form.get('radius', 2000)
     output_file_basename = request.form.get('output_file', '').strip()
@@ -48,12 +52,14 @@ def convert():
     query_part = ['-q', query]
     if query == '':
         query_part = []
-
+    if False: # color is not None:
+        symbol_part += ['-c', color]
+    else:
+        symbol_part = ['-e']
     command = [
         'mastrtogpx', file_path,
-    ] + query_part + [
+    ] + query_part + symbol_part + [
         '-o', output_file,
-        '-c', color,
         '-m', str(min_weight),
         '-r', str(radius)
     ]

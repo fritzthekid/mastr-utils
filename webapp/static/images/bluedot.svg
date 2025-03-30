@@ -11,7 +11,7 @@
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   sodipodi:docname="dots.svg"
+   sodipodi:docname="bluedot.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@
      id="layer1"
      transform="translate(-103.75017,-39.546911)">
     <ellipse
-       style="fill:#fb5e00;fill-opacity:0.501961;stroke:#fb5e00;stroke-width:0.182;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.627451"
+       style="fill:#4f4fc1;fill-opacity:0.50196081;stroke:#4f4fc1;stroke-width:0.182;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.75294119"
        id="path1987"
        cx="105.09093"
        cy="40.985622"

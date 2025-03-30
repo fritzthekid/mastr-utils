@@ -32,6 +32,7 @@ def main():
         parser.add_argument("-m", "--min_weight", help="Minimum weight of the cluster [default=0]", default=0)
         parser.add_argument("-r", "--radius", help="Radius [default=2000]", default=2000)
         parser.add_argument("-a", "--analyse_datastruct", help="Value Ranges in Bundesland, Bruttoleistung", action="store_true")
+        parser.add_argument("-e", "--energietraeger", help="Symbol = Energieträger", action="store_true")
         parser.add_argument("-s", "--show-columns", help="Show the columns of the MaStR file [default=False]", action="store_true")
         parser.add_argument("-h_query", "--help_query", help="Show Examples for Query [default=False]", action="store_true")
         args = parser.parse_args()
@@ -62,8 +63,13 @@ def main():
             print("Please provide an output file (-o option)")
             parser.print_help()
             return
-        analyse.gen_gpx(conditions=args.query, output_file=args.output, color = args.color, 
-                        min_weight = int(args.min_weight), radius = int(args.radius))
+        
+        if args.energietraeger:
+            symbol_part = [True, None]
+        else:
+            symbol_part = [False, args.color]        
+        analyse.gen_gpx(conditions=args.query, output_file=args.output,
+                        min_weight = int(args.min_weight), symbol_part = symbol_part)
         logging.info("Conversion completed successfully")
     except Exception as e:
         logging.error(f"Error during mastrtogpx conversion: {e}")

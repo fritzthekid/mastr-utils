@@ -2,16 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="2.6815209mm"
-   height="2.8774219mm"
-   viewBox="0 0 2.6815209 2.8774219"
+   width="2.1070786mm"
+   height="2.8774176mm"
+   viewBox="0 0 2.1070785 2.8774176"
    version="1.1"
    id="svg1088"
    inkscape:export-filename="bluedot.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   sodipodi:docname="dots.svg"
+   sodipodi:docname="mypin.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -26,10 +26,10 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     showgrid="true"
-     inkscape:zoom="25.485522"
-     inkscape:cx="-2.6878005"
-     inkscape:cy="8.2595914"
+     showgrid="false"
+     inkscape:zoom="72.083942"
+     inkscape:cx="-1.0057719"
+     inkscape:cy="5.8334767"
      inkscape:window-width="1854"
      inkscape:window-height="1011"
      inkscape:window-x="1986"
@@ -39,8 +39,8 @@
     <inkscape:grid
        type="xygrid"
        id="grid2043"
-       originx="-103.75015"
-       originy="-39.54691" />
+       originx="-103.61469"
+       originy="-37.744415" />
   </sodipodi:namedview>
   <defs
      id="defs1085" />
@@ -48,13 +48,11 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-103.75017,-39.546911)">
-    <ellipse
-       style="fill:#fb5e00;fill-opacity:0.501961;stroke:#fb5e00;stroke-width:0.182;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.627451"
+     transform="translate(-103.61472,-37.744417)">
+    <path
        id="path1987"
-       cx="105.09093"
-       cy="40.985622"
-       rx="1.2497605"
-       ry="1.347711" />
+       style="fill:#fb5e00;fill-opacity:0.3137255;stroke:#00000f;stroke-width:0.182;stroke-linejoin:round"
+       d="m 105.60779,39.162115 c -0.21109,0.5972 -0.2219,0.646017 -0.83277,1.368724 -0.67869,-0.692387 -0.64634,-0.57588 -1.00483,-1.347713 -0.26459,-0.793749 0.31461,-1.347709 1.00483,-1.347709 0.69022,0 0.93582,0.794819 0.83277,1.326698 z"
+       sodipodi:nodetypes="ccccc" />
   </g>
 </svg>

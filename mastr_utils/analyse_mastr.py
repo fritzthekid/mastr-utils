@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from .cluster import filter_large_weights
 import logging
+from .symbols import energie_symbols
 
 from gpxpy.gpx import GPX, GPXWaypoint
 # from xml.etree import ElementTree
@@ -224,8 +225,8 @@ class Analyse:
         return [arg for arg in [a for a in arguments if not isnum(a)] if arg not in valid_columns]
 
     # Method to generate GPX file
-    def gen_gpx(self, conditions=None, output_file="gpx.gpx", color="Amber", min_weight=0, radius=1000):
-        logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, color={color}")
+    def gen_gpx(self, conditions=None, output_file="gpx.gpx", symbol_part=[False, "Amber"], min_weight=0, radius=1000):
+        logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, symbol_part={symbol_part}")
         try:
             if conditions is None:
                 gpx_data = self.data
@@ -248,12 +249,19 @@ class Analyse:
                 if (math.isnan(gpx_data['KoordinateBreitengrad_wgs84_'][i]) or
                         math.isnan(gpx_data['KoordinateLängengrad_wgs84_'][i])):
                     continue
+                if symbol_part[0]:
+                    if gpx_data['Energieträger'][i] in energie_symbols:
+                        this_symbol = gpx_data['Energieträger'][i]
+                    else:
+                        this_symbol = "Navaid, Amber"
+                else:
+                    this_symbol = f"Navaid, {symbol_part[1]}"
                 point = GPXWaypoint(
                     latitude=gpx_data['KoordinateBreitengrad_wgs84_'][i],
                     longitude=gpx_data['KoordinateLängengrad_wgs84_'][i],
                     name=f"P{i}",
                     comment=f"{gpx_data['AnzeigeNameDerEinheit'][i]}",
-                    symbol=f"Navaid, {color}"
+                    symbol=this_symbol
                 )
                 desc = f"Name: {gpx_data['AnzeigeNameDerEinheit'][i]}"
                 desc += f"<ul><li>Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp<br>\n"

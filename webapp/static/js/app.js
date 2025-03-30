@@ -68,11 +68,22 @@ function addGpxToMap(gpxUrl) {
             shadowUrl: '',
             // wptIcons: false,     // unterdrückt automatische Wegpunkt-Icons
             wptIconUrls: {
+                '': '/static/images/mypin.png',
                 'Navaid, Amber': '/static/images/mypin.svg',  // verhindert Fehler
-              },
+                'Solare Strahlungsenergie': '/static/images/solar.svg',
+                'Biomasse': '/static/images/greenpin.svg',
+                'Speicher': '/static/images/batterie.svg',
+                'Wasser': '/static/images/wasser.svg',
+                'Wind': '/static/images/wind.svg',
+                'Geothermie': '/static/images/greenpin.svg',
+                'Steinkohle': '/static/images/fire.svg',
+                'Erdgas': '/static/images/fire.svg',
+                'andere Gase': '/static/images/fire.svg',
+                'Mineralölprodukte': '/static/images/fire.svg',
+            },
             // wptIconUrls: {}      // verhindert fallback zu pin-icon-wpt.png
-            iconSize: [16, 16],
-            iconAnchor: [8, 16],
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
         }
         })
         .on('addpoint', function (e) {
@@ -84,10 +95,13 @@ function addGpxToMap(gpxUrl) {
         const desc = point.desc || '';  // Beschreibung aus <desc>
         
         const popupContent = `<b>${name}</b><br>${desc}`;
-        
-        const typ = point.meta?.type || 'default'; // falls du <type> verwendest
+            const typ = point.meta?.sym || 'default'; // point.meta?.type || 'default'; // falls du <type> verwendest
         const icon = L.icon({
-            iconUrl: '/static/images/mypin.svg', // `icons/${typ}.svg`,
+            iconUrl: `/static/images/graydot.svg`, // '/static/images/mypin.svg', // `icons/${typ}.svg`,
+            // iconUrls: {
+            //    '' : '/static/images/graydot.png',
+            //    // 'Navaid, Amber': '/static/images/reddot.svg',  // verhindert Fehler
+            //},
             iconSize: [16, 16],
             iconAnchor: [8, 16]
         });
