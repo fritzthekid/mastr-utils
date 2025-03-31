@@ -16,16 +16,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(form);
 
         try {
-            // Send the form data to the server using POST
+            // Send the form data to the server
             const response = await fetch('/convert', {
                 method: 'POST',
-                body: formData // Send form data as POST arguments
+                body: formData
             });
 
             const result = await response.json();
 
             if (result.status === 'success') {
-                // Display the download button
+                // Display success message
+                resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
+
+                // Add the download button
                 const downloadLink = document.createElement('a');
                 downloadLink.href = result.download_url;
                 downloadLink.textContent = 'Download GPX File';
@@ -36,12 +39,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Visualize the GPX file on the map
                 addGpxToMap(result.download_url);
             } else {
-                // Display the error message
-                resultDiv.textContent = `Error: ${result.message}`;
+                // Display error message with proper formatting
+                resultDiv.innerHTML = `<pre style="color: red;">Error: ${result.message}</pre>`;
             }
         } catch (error) {
             console.error('Error:', error);
-            resultDiv.textContent = 'An unexpected error occurred.';
+            resultDiv.innerHTML = '<pre style="color: red;">An unexpected error occurred.</pre>';
         }
     });
 
