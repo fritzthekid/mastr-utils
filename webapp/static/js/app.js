@@ -57,24 +57,30 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeMap();
 });
 
+let currentGpxLayer = null; // Variable to track the current GPX layer
+
 function addGpxToMap(gpxUrl) {
-    
-    if (!map) initializeMap();
-      
-    // if (gpxLayer) {
-    //    map.removeLayer(gpxLayer);
-    // }
-    
+    if (!map) {
+        console.error('Map is not initialized.');
+        return;
+    }
+
+    // Remove the existing GPX layer if it exists
+    if (currentGpxLayer) {
+        map.removeLayer(currentGpxLayer);
+        currentGpxLayer = null;
+    }
+
+    // Add the new GPX layer
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
             startIconUrl: '',
             endIconUrl: '',
             shadowUrl: '',
-            // wptIcons: false,     // unterdrückt automatische Wegpunkt-Icons
             wptIconUrls: {
                 '': '/static/images/mypin.png',
-                'Navaid, Amber': '/static/images/mypin.svg',  // verhindert Fehler
+                'Navaid, Amber': '/static/images/mypin.svg',
                 'Solare Strahlungsenergie': '/static/images/solar.svg',
                 'Biomasse': '/static/images/greenpin.svg',
                 'Speicher': '/static/images/batterie.svg',
@@ -86,43 +92,32 @@ function addGpxToMap(gpxUrl) {
                 'andere Gase': '/static/images/fire.svg',
                 'Mineralölprodukte': '/static/images/fire.svg',
             },
-            // wptIconUrls: {}      // verhindert fallback zu pin-icon-wpt.png
             iconSize: [32, 32],
             iconAnchor: [16, 32],
         }
-        })
+    })
         .on('addpoint', function (e) {
-        const point = e.point;
-        const latlng = point._latlng || point.latlng;
-        if (!latlng) return;
-        
-        const name = point.name || '';
-        const desc = point.desc || '';  // Beschreibung aus <desc>
-        
-        const popupContent = `<b>${name}</b><br>${desc}`;
-            const typ = point.meta?.sym || 'default'; // point.meta?.type || 'default'; // falls du <type> verwendest
-        const icon = L.icon({
-            iconUrl: `/static/images/graydot.svg`, // '/static/images/mypin.svg', // `icons/${typ}.svg`,
-            // iconUrls: {
-            //    '' : '/static/images/graydot.png',
-            //    // 'Navaid, Amber': '/static/images/reddot.svg',  // verhindert Fehler
-            //},
-            iconSize: [16, 16],
-            iconAnchor: [8, 16]
-        });
-        
-        L.marker(latlng, { icon }).bindPopup(popupContent).addTo(map);
+            const point = e.point;
+            const latlng = point._latlng || point.latlng;
+            if (!latlng) return;
+
+            const name = point.name || '';
+            const desc = point.desc || ''; // Description from <desc>
+
+            const popupContent = `<b>${name}</b><br>${desc}`;
+            const icon = L.icon({
+                iconUrl: `/static/images/graydot.svg`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 16]
+            });
+
+            L.marker(latlng, { icon }).bindPopup(popupContent).addTo(map);
         })
         .on('loaded', function (e) {
-        map.fitBounds(e.target.getBounds());
-        
-        // Notfall: Standard-„Marker“-Marker entfernen, falls noch einer da ist
-        map.eachLayer(layer => {
-            if (layer instanceof L.Marker &&
-                layer.getPopup()?.getContent?.() === 'Marker') {
-            map.removeLayer(layer);
-            }
-        });
+            map.fitBounds(e.target.getBounds());
         })
-        .addTo(map);          
-    }
+        .addTo(map);
+
+    // Update the current GPX layer
+    currentGpxLayer = gpxLayer;
+}
