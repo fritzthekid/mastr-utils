@@ -21,7 +21,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def main():
+def main(testargs=None):
     logging.info("Starting mastrtogpx conversion")
     try:
         parser = argparse.ArgumentParser(description="Convert MaStR file to GPX file")
@@ -35,8 +35,13 @@ def main():
         parser.add_argument("-e", "--energietraeger", help="Symbol = Energieträger", action="store_true")
         parser.add_argument("-s", "--show-columns", help="Show the columns of the MaStR file [default=False]", action="store_true")
         parser.add_argument("-h_query", "--help_query", help="Show Examples for Query [default=False]", action="store_true")
-        args = parser.parse_args()
 
+        # args = parser.parse_args([f"{tmpdir}/../tests/data/stromerzeuger_ludwigsburg.csv", "-o", "/tmp/x.gpx", "-s", "-e"])
+        # pass
+        if testargs is None:
+            args = parser.parse_args()
+        else:
+            args = parser.parse_args(testargs)
         # Show the query examples
         if args.help_query:
             print("Query to filter the data")

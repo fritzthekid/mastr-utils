@@ -5,22 +5,36 @@ import os
 from flask import jsonify
 import sys
 import re
+
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/..")
+
 from mastr_utils.analyse_mastr import Analyse
+from mastr_utils.mastrtogpx import main as dogpx
+
+testdir = os.path.dirname(os.path.abspath(__file__))
+
 
 # import mastr_utils
 # from mastr_utils.analyse_mastr import rootdir
 
-testdir = os.path.dirname(os.path.abspath(__file__))
+# testdir = os.path.dirname(os.path.abspath(__file__))
 
 teststr_1 = f"mastrtogpx {testdir}/data/stromerzeuger_ludwigsburg.csv -q ge_1mw -o {testdir}/tmp/x.gpx"
 teststr_2 = "mastrtogpx ~/Downloads/Stromerzeuger(18).csv -q is_speicher&ge_10kw -o tmp/x.gpx -c Blue"
 
 teststr_3 = None
 teststr_4 = None # "mastrtogpx ~/Downloads/Stromerzeuger(20).csv -q 'BruttoleistungDerEinheit > 1000000000000' -o tmp/x.gpx -e".split()
-teststr_5 = "/tmp/Stromerzeuger(20).csv -q BruttoleistungDerEinheit > 6000 -o /tmp/x.gpx -c x -m 10000 -r 20000 -e"
 
-
+def print_properties_testfile(file):
+    print(f"len: {len(re.findall("\n", file))}")
+    print(f"<wpt: {len(re.findall("<wpt", file))}")
+    print(f"</wpt {len(re.findall("</wpt>", file))}")
+    symbols = []
+    for symbol in re.findall("<sym>(.*?)</sym>", file):
+        symbols.append(symbol)
+    print(f"symobls {len(symbols)}")
+    print(f"set(symbols): {set(symbols)}")
+          
 def do_test0():
     command = teststr_1.split()
     try:
@@ -39,6 +53,9 @@ def do_test0():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': 'An unexpected error occurred.'})
     
+def do_gen_gpx(**argv):
+    pass
+
 def test_0():
     analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv")
     analyse.gen_gpx(
@@ -61,4 +78,36 @@ def test_0():
                                     'Steinkohle', 'Wasser', 'Wind'
                                     ]
 
-    #test_0()
+def test_4():
+    teststr_5 = f"{testdir}/data/stromerzeuger_pv_brd.csv,-q,BruttoleistungDerEinheit > 10000,-o,{testdir}/tmp/x.gpx,-c,x,-m,90000,-r,2000,-e"
+
+    args = teststr_5.split(',')
+    # args = [f"{testdir}/tests/data/stromerzeuger_ludwigsburg.csv", "-o", "{}/x.gpx", "-s", "-e"]
+    dogpx(args)
+    file = open(f"{testdir}/tmp/x.gpx").read()
+    assert len(re.findall("\n", file)) == 212
+    assert len(re.findall("<wpt", file)) == 21
+    assert len(re.findall("</wpt>", file)) == 21
+    symbols = []
+    for symbol in re.findall("<sym>(.*?)</sym>", file):
+        symbols.append(symbol)
+    assert len(symbols) == 21
+    assert set(symbols) == {'Solare Strahlungsenergie'}
+    
+def test_5():
+    teststr = f"{testdir}/data/stromerzeuger_wind_bawue.csv,-q,BruttoleistungDerEinheit > 6000,-o,{testdir}/tmp/x20.gpx,-c,x,-m,20000,-r,20000,-e"
+
+    args = teststr.split(',')
+    # args = [f"{testdir}/tests/data/stromerzeuger_ludwigsburg.csv", "-o", "{}/x.gpx", "-s", "-e"]
+    dogpx(args)
+    file = open(f"{testdir}/tmp/x20.gpx").read()
+    print_properties_testfile(file)
+    assert len(re.findall("\n", file)) == 82
+    assert len(re.findall("<wpt", file)) == 8
+    assert len(re.findall("</wpt>", file)) == 8
+    symbols = []
+    for symbol in re.findall("<sym>(.*?)</sym>", file):
+        symbols.append(symbol)
+    assert len(symbols) == 8
+    pass
+    assert set(symbols) == {'Wind'}
