@@ -58,8 +58,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function addGpxToMap(gpxUrl) {
+    
     if (!map) initializeMap();
       
+    // if (gpxLayer) {
+    //    map.removeLayer(gpxLayer);
+    // }
+    
     const gpxLayer = new L.GPX(gpxUrl, {
         async: true,
         marker_options: {

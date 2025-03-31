@@ -27,15 +27,16 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="25.485522"
-     inkscape:cx="16.460326"
-     inkscape:cy="13.949096"
+     inkscape:zoom="22.627417"
+     inkscape:cx="16.683301"
+     inkscape:cy="14.208427"
      inkscape:window-width="1854"
      inkscape:window-height="1011"
      inkscape:window-x="1986"
      inkscape:window-y="32"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1">
+     inkscape:current-layer="layer1"
+     showguides="true">
     <inkscape:grid
        type="xygrid"
        id="grid2043"
@@ -50,12 +51,24 @@
      id="layer1"
      transform="translate(-101.77362,-35.62775)">
     <path
-       style="fill:#38cc00;fill-opacity:0.25098041;stroke:#38cc00;stroke-width:0.182;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#f0f0ff;fill-opacity:0.501961;stroke:#1561d6;stroke-width:0.182;stroke-linejoin:round;stroke-opacity:0.0627451"
        d="m 101.86462,40.216667 2.64583,2.38125 2.64583,-2.38125 V 35.71875 h -5.29166 z"
-       id="path14237" />
+       id="path14237-3" />
+    <path
+       style="fill:#f0f0ff;fill-opacity:0.501961;stroke:#15ab1b;stroke-width:0.182;stroke-linejoin:round;stroke-opacity:1"
+       d="m 101.86462,40.216667 2.64583,2.38125 2.64583,-2.38125 -1.58749,0.529166 h -2.11667 z"
+       id="path14237"
+       sodipodi:nodetypes="cccccc" />
+    <rect
+       style="fill:#151316;fill-opacity:0.12549;stroke:#15ab1b;stroke-width:0.2;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="rect29654"
+       width="0.52916664"
+       height="0.52916664"
+       x="104.24587"
+       y="40.216667" />
     <path
        id="path15039"
-       style="fill:#38cc00;fill-opacity:0.25098041;stroke:#38cc00;stroke-width:0.182;stroke-linejoin:round"
+       style="fill:#151316;fill-opacity:0.1254902;stroke:#353518;stroke-width:1.13385828;stroke-linejoin:round;stroke-opacity:1;stroke-dasharray:none"
        inkscape:transform-center-x="-0.021340032"
        inkscape:transform-center-y="0.16352149"
        transform="matrix(0.26458333,0,0,0.26458333,103.82579,37.515217)"
