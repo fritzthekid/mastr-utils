@@ -16,10 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(form);
 
         try {
-            // Send the form data to the server
+            // Send the form data to the server using POST
             const response = await fetch('/convert', {
                 method: 'POST',
-                body: formData
+                body: formData // Send form data as POST arguments
             });
 
             const result = await response.json();
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const downloadLink = document.createElement('a');
                 downloadLink.href = result.download_url;
                 downloadLink.textContent = 'Download GPX File';
-                downloadLink.classList.add('download-button'); // Optional: Add a CSS class
+                downloadLink.classList.add('button'); // Use the same button style
                 downloadLink.download = ''; // Ensure it triggers a download
                 resultDiv.appendChild(downloadLink);
 
@@ -65,11 +65,12 @@ function addGpxToMap(gpxUrl) {
         return;
     }
 
-    // Remove the existing GPX layer if it exists
-    if (currentGpxLayer) {
-        map.removeLayer(currentGpxLayer);
-        currentGpxLayer = null;
-    }
+    // Remove all non-tile layers (e.g., markers, GPX layers)
+    map.eachLayer(function (layer) {
+        if (!(layer instanceof L.TileLayer)) {
+            map.removeLayer(layer);
+        }
+    });
 
     // Add the new GPX layer
     const gpxLayer = new L.GPX(gpxUrl, {
