@@ -238,11 +238,13 @@ class Analyse:
                     raise ValueError(error_message)
                 gpx_data = self.data.query(conditions)
 
+            if len(gpx_data) == 0:
+                logging.error(f"No data found for condition: {conditions}")
+                raise ValueError(f"No data found for condition: {conditions}")
+                return
+
             if min_weight > 0:
                 gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
-            if len(gpx_data) == 0:
-                logging.warning(f"No data found for condition: {conditions}")
-                return
 
             gpx = GPX()
             for i in gpx_data.index:
@@ -278,57 +280,6 @@ class Analyse:
         except Exception as e:
             logging.error(f"Error generating GPX file: {e}")
             raise
-
-    # Method to generate GPX file
-    def gen_gpx_(self, conditions=None, output_file="gpx.gpx",color="Amber", min_weight=0, radius=1000):
-        if conditions is None:
-            gpx_data = self.data
-        else:
-            valc = self.validate(conditions)
-            if len(valc) > 0:
-                print(ValueError(f"Invalid condition, with unknown arguments: {valc}"))
-                return
-            gpx_data = self.data.query(conditions)
-
-        if min_weight > 0:
-            gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
-        if len(gpx_data) == 0:
-            print(f"No data found for condition: {conditions}")
-            return
-        if not all(arg in gpx_data.columns for arg in ['KoordinateBreitengrad_wgs84_', 
-                                                       'KoordinateLängengrad_wgs84_', 
-                                                       'BruttoleistungDerEinheit',
-                                                       'AnzeigeNameDerEinheit',
-                                                       'MaStRNrDerEinheit','BetriebsStatus',
-                                                       'InbetriebnahmedatumDerEinheit']):
-            print("Die Daten enthalten nicht alle erforderlichen Spalten")
-            print("     es wird die \"Erweiterte Einheitenübersicht\" der Daten benötigt")
-            return
-
-        with open(output_file, "w") as f:
-            f.writelines("""<?xml version="1.0"?>
-<gpx version="1.1">
-""")
-            for i in gpx_data.index: #[:10]:
-                if ( math.isnan(gpx_data['KoordinateBreitengrad_wgs84_'][i]) or 
-                    math.isnan(gpx_data['KoordinateLängengrad_wgs84_'][i]) or
-                    gpx_data['KoordinateLängengrad_wgs84_'][i] == "" or
-                    gpx_data['KoordinateBreitengrad_wgs84_'][i] == "" ):
-                    continue
-                f.write(f"""<wpt lat="{gpx_data['KoordinateBreitengrad_wgs84_'][i]}" lon="{gpx_data['KoordinateLängengrad_wgs84_'][i]}">\n""")
-                f.write(f"  <name>{i}</name>\n")
-                # anzeigename = f(gpx_data['Anzeige-Name der Einheit'][i])
-                # f.write(f"  <desc>{anzeigename}</desc>\n")
-                f.write(f"  <desc><![CDATA[{escape(str(gpx_data['AnzeigeNameDerEinheit'][i]))}\n")
-                f.write(f"     Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp</cmt>\n")
-                f.write(f"     Betriebs-Status: {gpx_data['BetriebsStatus'][i]}\n")
-                f.write(f"     Energieträger: {gpx_data['Energieträger'][i]}\n")
-                f.write(f"     Inbetriebnahmedatum der Einheit: {gpx_data['InbetriebnahmedatumDerEinheit'][i]}\n")
-                f.write(f"     MaStR: {gpx_data['MaStRNrDerEinheit'][i]}\n")
-                f.write(f"   ]]></desc>\n")
-                f.write(f"  <sym>Navaid, {color}</sym>\n")
-                f.write(f"""</wpt>\n""")
-            f.write("</gpx>\n")
 
 # Main program execution
 if __name__ == "__main__":
