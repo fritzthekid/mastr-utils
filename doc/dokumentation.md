@@ -1,33 +1,36 @@
 # Dokumentation
 
-Die Tools in diesem Repository sollen bei der Auswertung der Daten des
-Marktstammdatenregisters helfen.
+**Das wichtigste**: Diese Tools und die Webanwendung werdeen angeboten wie in der LICENCE angegeben. Es gibt keine Gewährm, keinen Support oder ähnliches.
 
-Zurzeit gibt es nur ein Kommandozeilen-Tool (mastrtogpx)und eine wepapp zum Lokalisieren der Anlagen
-und von Anlagen-Parks, dabei werden benachbarte Anlagen zusammengefasst.
+Dieses Repository enthält Tools zur Auswertung der Daten des Marktstammdatenregisters (MaStR). Derzeit sind folgende Anwendungen verfügbar:
+
+1. **mastrtogpx**: Ein Kommandozeilen-Tool zur Konvertierung von MaStR-Daten in das GPX-Format.
+2. **Webanwendung**: Eine Anwendung zur Lokalisierung von Anlagen und Anlagen-Parks, wobei benachbarte Anlagen zusammengefasst werden.
 
 ## Ablaufe der Anlagensuche
 
 ### Abruf der Daten
 
-Aufruf des [marktStammdatenregisters](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht)
+1. Aufruf des [**MarktStammdatenregisters**](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht)
 
-Dann muss ein Filter zusammengesetzt werden. Das Ergebnis sollte 10000 Anlagen nicht übersteigen.
-Typische Filter wären ein Bundesland, ein Anlagetyp und eine mindest Bruttoleistung;
+2. **Filterung der Daten**: Erstellen Sie einen Filter, um die gewünschten Anlagen einzugrenzen. Achten Sie darauf, dass das Ergebnis **10.000 Anlagen nicht übersteigt**. Typische Filterkriterien könnten sein:
+   - **Bundesland**: Auswahl des spezifischen Bundeslandes.
+   - **Anlagentyp**: Auswahl des gewünschten Anlagentyps.
+   - **Mindestbruttoleistung**: Festlegung einer minimalen Bruttoleistung.
 
 ![MaStR Query](img/mastr_query.png)
 
-Die Query liefert am 31.03.2025 844 Anlagen (in Betrieb und in Planung).
+*Hinweis*: Am 31.03.2025 lieferte eine solche Abfrage beispielsweise 844 Anlagen (sowohl in Betrieb als auch in Planung).
 
-Die Tabelle muss jetzt export werden, z.B. in Downloads/Stromerzeuger.csv
+3. **Export der Daten**: Exportieren Sie die gefilterte Tabelle, beispielsweise als `Downloads/Stromerzeuger.csv`.
 
 ### Nutzung des Tools
 
-Aufruf am Web-Broser [MaStR zu GPX Konverter](http://<server>:<port>/)
-
-server und port sind bisher nicht verfügbar.
+1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `http://<server>:<port>`. *(Hinweis: Aktuell sind die spezifischen Server- und Portinformationen nicht verfügbar.)*
 
 ![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
+
+2. **Eingabe der Daten**:
 
 In der Form muss eingegeben werden:
 - File von Marktstammdatenregister
@@ -41,8 +44,7 @@ In der Form muss eingegeben werden:
 
 Jetzt starten der App mit **Convert**
 
-Auf der rechten Seite sollte jetzt auf der Karte die Energieanlagen erscheinen. Mit der linken Maustaste kann die
-Beschreibung der jeweils getroffenen Anlage ausgegeben werden:
+3. **Ergebnisanzeige**: Die Anwendung visualisiert die Anlagen auf einer Karte und fasst benachbarte Anlagen gemäß den angegebenen Kriterien zusammen.
 
 ![popup](img/popup_one_item.png)
 
@@ -50,6 +52,11 @@ Bei flächiger Suche werden die Anlagen zusammengefasst und die Eigenschaften ei
 (allerdings mit der Gesamtbruttoleistung aller Anlagen.)
 
 ![flaechige Suche](img/flaechige_suche.png)
+
+**Hinweise**
+
+- Stellen Sie sicher, dass die exportierte CSV-Datei die erwartete Struktur und Datenfelder enthält, um eine korrekte Verarbeitung in der Webanwendung zu gewährleisten.
+- Bei Fragen oder Problemen konsultieren Sie bitte die bereitgestellten Hilfedokumentationen.
 
 ### Download gpx
 
@@ -59,36 +66,39 @@ Hier endet die Beschreibung der Web Applikation
 
 ----
 
+# Mastr-Utils (lokale Version)
 
-## Kommandozeilen Tool zum Lokalisieren von Energieanlagen
+## Installation
 
-Um die Anlagen zu lokalisieren, wird mit dem Tool eine GPX-Datei erzeugt, in der
-die Anlagen als GPX-Waypoints (Wegpunkte) markiert sind. Informationen zur Energieanlage sind zusammen mit dem Punkt 
-aufgeführt und können dann
-mit den jeweiligen Tools direkt angezeigt werden.
+1. **Repository klonen**:
+   ```bash
+   git clone https://github.com/fritzthekid/mastr-utils.git
+   ```
+2. **In das Projektverzeichnis wechseln**:
+   ```bash
+   cd mastr-utils
+   ```
+3. **Virtuelle Umgebung erstellen und aktivieren**:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # Für Unix-/Linux-Systeme
+   venv\Scripts\activate     # Für Windows-Systeme
+   ```
+4. **Abhängigkeiten installieren**:
+   ```bash
+   pip install -e .
+   ```
 
-Die Dateien können in einer Vielzahl von Handy-Apps, Laptop-Apps, aber auch direkt online
-auf Karten visualisiert werden.
+## Nutzung des Kommandozeilen Tool zum Lokalisieren von Energieanlagen
 
-Bisher gibt es nur eine Kommandozeilenvariante - diese ist bisher nur mit Linux getestet, sollte aber auch plattformunabhängig funktionieren.
+Die Nutzung des Tools **mastrtogpx** wird wie oben beschrieben durchgeführt.
 
-Typische Anwendungsfälle sind:
+Die kleine Hilfe liefert die Argumente:
 
-- Suchen großer Solaranlagen ( > 10 MW )
-- Suchen großer Solarparks ( > 90 MW ). Hierbei wird die flächige Suche unterstützt, da
-  die Anlagen in der Nähe mit berücksichtigt werden müssen. Das gilt, da große Solarparks
-  häufig aus mehreren kleineren zusammengesetzt sind. Zwischen den Anlagen sind dann unter anderem Wildkorridore.
-- Suchen von Batteriespeichern in der Nähe, auch große Speicher.
-- Suchen von Windkraftanlagen und Windkraftanlagenparks.
-- Alle Arten von Energieanlagen in unmittelbarer Nähe.
-
-## Anwendung des Tools
-
-Für jeden der obigen Fälle gibt es unterschiedliche Vorgehensweisen.
-In jedem Fall muss vom Marktstammdatenregister [MaStR](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht) eine gefilterte CSV-Datei heruntergeladen werden. Nennen wir es im folgenden Beispiel 
-<code>~/Downloads/Stromerzeuger(17).csv</code>. Dieses Beispiel enthält nur die großen PV-Anlagen in ganz Deutschland.
-
-Das Tool liefert mit <code>mastrtogpx -h</code> eine kleine Hilfe, in der die einstellbaren Parameter erläutert werden. Ein Aufruf hat immer die Gestalt:
+```
+mastrtogpx -h
+```
+Ergebnis ist eine gpx-Datei. Diese kann dann z.B. auf einer Handy-App genutzt werden.
 
 ~~~
 usage: mastrtogpx [-h] [-q QUERY] [-o OUTPUT] [-c COLOR] [-m MIN_WEIGHT] [-r RADIUS]
@@ -164,5 +174,6 @@ PC:
 
 ![Viking](img/Viking_10_90_1000_bei_Leibzig-SILUX-Solarpark.png)
 
+# Lizenz
 
-
+Dieses Projekt steht unter der [BSD-Lizenz](LICENSE).
