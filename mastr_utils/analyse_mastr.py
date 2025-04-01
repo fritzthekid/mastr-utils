@@ -228,7 +228,7 @@ class Analyse:
     def gen_gpx(self, conditions=None, output_file="gpx.gpx", symbol_part=[False, "Amber"], min_weight=0, radius=1000):
         logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, symbol_part={symbol_part}")
         try:
-            if conditions is None:
+            if conditions is None or conditions == "":
                 gpx_data = self.data
             else:
                 valc = self.validate(conditions)

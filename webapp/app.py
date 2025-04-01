@@ -5,19 +5,32 @@ import subprocess
 from mastr_utils.analyse_mastr import tmpdir
 import logging  # Import logging to use the configuration from analyse_mastr.py
 
-
+global password
+password = ""
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST]'])
 def index():
-    print('Index page')
-    return render_template('index.html')
+    if request.method == 'GET':
+        print('Index page')
+        return render_template('index.html')
+    elif request.method=='POST':
+        print('Index page')
+        return render_template('index.html')
 
 @app.route('/convert', methods=['POST'])
 def convert():
+    global password
     try:
         # Retrieve POST arguments
+        password = request.form.get('pwd') # password
+        checkpassword=open(f"{tmpdir}/password.txt").read()
+        try:
+            assert password == checkpassword
+        except Exception as e:
+            print(f'Password failed: {password}, {checkpassword}')
+            return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
         mastr_file = request.files.get('mastr_file')  # File upload
         query = request.form.get('query', '')  # Query parameter
         color = 'x'  # request.form.get('color', 'Amber')  # Waypoint color
@@ -78,6 +91,14 @@ def convert():
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
+    global password
+    checkpassword=open(f"{tmpdir}/password.txt").read()
+    try:
+        assert password == checkpassword
+    except Exception as e:
+        print(f'Password failed: {password}, {checkpassword}')
+        return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
+
     file_path = f"{tmpdir}/{filename}"
     try:
         return send_file(file_path, as_attachment=True)
@@ -86,6 +107,15 @@ def download_file(filename):
 
 @app.route('/download-log', methods=['GET'])
 def download_log():
+    global password
+    checkpassword=open(f"{tmpdir}/password.txt").read()
+    try:
+        assert password == checkpassword
+    except Exception as e:
+        print(f'Password failed: {password}, {checkpassword}')
+        return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
+    if not app.debug:
+        return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
     log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
     try:
         return send_file(log_file, as_attachment=True)
@@ -98,6 +128,13 @@ def favicon():
 
 @app.route('/tmp/<path:filename>', methods=['GET'])
 def serve_tmp_file(filename):
+    global password
+    checkpassword=open(f"{tmpdir}/password.txt").read()
+    try:
+        assert password == checkpassword
+    except Exception as e:
+        print(f'Password failed: {password}, {checkpassword}')
+        return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     try:
         # Serve files from the tmpdir directory
         return send_from_directory(tmpdir, filename, mimetype='application/gpx+xml')
