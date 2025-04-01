@@ -3,9 +3,64 @@
 Die Tools in diesem Repository sollen bei der Auswertung der Daten des
 Marktstammdatenregisters helfen.
 
-Zurzeit gibt es nur ein Tool zum Lokalisieren der Anlagen.
+Zurzeit gibt es nur ein Kommandozeilen-Tool (mastrtogpx)und eine wepapp zum Lokalisieren der Anlagen
+und von Anlagen-Parks, dabei werden benachbarte Anlagen zusammengefasst.
 
-## Tool zum Lokalisieren von Energieanlagen
+## Ablaufe der Anlagensuche
+
+### Abruf der Daten
+
+Aufruf des [marktStammdatenregisters](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht)
+
+Dann muss ein Filter zusammengesetzt werden. Das Ergebnis sollte 10000 Anlagen nicht übersteigen.
+Typische Filter wären ein Bundesland, ein Anlagetyp und eine mindest Bruttoleistung;
+
+![MaStR Query](img/mastr_query.png)
+
+Die Query liefert am 31.03.2025 844 Anlagen (in Betrieb und in Planung).
+
+Die Tabelle muss jetzt export werden, z.B. in Downloads/Stromerzeuger.csv
+
+### Nutzung des Tools
+
+Aufruf am Web-Broser [MaStR zu GPX Konverter](http://<server>:<port>/)
+
+server und port sind bisher nicht verfügbar.
+
+![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
+
+In der Form muss eingegeben werden:
+- File von Marktstammdatenregister
+- Query [kann auch leer sein]
+- Min. Bruttoleistung der Fläche in kW:
+  - für 0 werden alle Anlagen die die Query erfüllen angezeigt
+  - für Werte größer 0 wird innerhalb des Radius um jede Anlage nach weiteren Anlagen gesucht und ein Zentrum
+    identifiziert.
+- Radius nur wesentlich bei flächiger Suche siehe Min Bruttoleistung der Fläche > 0
+- Output File Name (optional)
+
+Jetzt starten der App mit **Convert**
+
+Auf der rechten Seite sollte jetzt auf der Karte die Energieanlagen erscheinen. Mit der linken Maustaste kann die
+Beschreibung der jeweils getroffenen Anlage ausgegeben werden:
+
+![popup](img/popup_one_item.png)
+
+Bei flächiger Suche werden die Anlagen zusammengefasst und die Eigenschaften einer dieser Anlagen ausgegeben 
+(allerdings mit der Gesamtbruttoleistung aller Anlagen.)
+
+![flaechige Suche](img/flaechige_suche.png)
+
+### Download gpx
+
+Anschließend kann das gewünschte gpx file runtergeladen und in z.b. eienr Handy-App verwendet werden. 
+
+Hier endet die Beschreibung der Web Applikation
+
+----
+
+
+## Kommandozeilen Tool zum Lokalisieren von Energieanlagen
 
 Um die Anlagen zu lokalisieren, wird mit dem Tool eine GPX-Datei erzeugt, in der
 die Anlagen als GPX-Waypoints (Wegpunkte) markiert sind. Informationen zur Energieanlage sind zusammen mit dem Punkt 
