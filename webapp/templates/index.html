@@ -66,9 +66,14 @@
         <div id="result" style="margin-top: 20px;"></div>
 
         <!-- Buttons Section -->
+        {% if debug %}
+
         <div class="buttons-container">
             <a href="/download-log" class="button">Download Logs</a>
         </div>
+
+        {% endif %}
+
     </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>

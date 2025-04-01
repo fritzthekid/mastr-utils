@@ -14,7 +14,7 @@ CORS(app)  # Enable CORS for all routes
 def index():
     if request.method == 'GET':
         print('Index page')
-        return render_template('index.html')
+        return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
         print('Index page')
         return render_template('index.html')
