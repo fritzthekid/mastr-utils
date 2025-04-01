@@ -27,7 +27,7 @@ Dieses Repository enthält Tools zur Auswertung der Daten des Marktstammdatenreg
 ### Nutzung des Tools
 
 1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `http://<server>:<port>`. *(Hinweis: Aktuell sind die spezifischen Server- und Portinformationen nicht verfügbar.)*
-  - Bei lokaler Installation (siehe unten) würde der Zugriff über `http:localhost:5000` erfolgen.
+  - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
 
 ![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
 
