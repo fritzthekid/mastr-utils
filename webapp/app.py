@@ -91,7 +91,7 @@ def convert():
     #    return jsonify({'status': 'error', 'message': e.stderr})
     except Exception as e:
         print('Unexpected error:', e)
-        return jsonify({'status': 'error', 'message': e.stderror})
+        return jsonify({'status': 'error', 'message': str(e)})
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
