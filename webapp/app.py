@@ -1,9 +1,11 @@
 # from mastr_utils import Analyse
+import os
 from flask import Flask, request, jsonify, render_template, send_file, send_from_directory
 from flask_cors import CORS
 import subprocess
 from mastr_utils.analyse_mastr import tmpdir
-import logging  # Import logging to use the configuration from analyse_mastr.py
+from mastr_utils.mastrtogpx import main as mtogpx
+from mastr_utils.analyse_mastr import logging  # Import logging to use the configuration from analyse_mastr.py
 
 global password
 password = ""
@@ -43,6 +45,7 @@ def convert():
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
 
         file_path = f"{tmpdir}/{mastr_file.filename}"
+        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
         mastr_file.save(file_path)
 
         # Generate output file path
@@ -74,7 +77,8 @@ def convert():
 
         print('Command:', ' '.join(command))
         # Capture stdout and stderr
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        # result = subprocess.run(command, capture_output=True, text=True, check=True)
+        mtogpx(command[1:])
         print('Conversion completed successfully.')
 
         return jsonify({
@@ -82,12 +86,12 @@ def convert():
             'message': 'Conversion completed successfully.',
             'download_url': f"/tmp/{output_file.rsplit('/', 1)[-1]}"
         })
-    except subprocess.CalledProcessError as e:
-        print('Error during conversion:', e.stderr)
-        return jsonify({'status': 'error', 'message': e.stderr})
+    # except subprocess.CalledProcessError as e:
+    #     print('Error during conversion:', e.stderr)
+    #    return jsonify({'status': 'error', 'message': e.stderr})
     except Exception as e:
         print('Unexpected error:', e)
-        return jsonify({'status': 'error', 'message': 'An unexpected error occurred.'})
+        return jsonify({'status': 'error', 'message': e.stderror})
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):

@@ -42,6 +42,8 @@ setup(
         "flask",
         "flask-cors",
         "numpy",
+	"gunicorn",
+	"uwsgi",
     ],
     tests_require=["pytest"],
     cmdclass={"test": PyTest},
