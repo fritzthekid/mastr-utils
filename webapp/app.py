@@ -3,14 +3,30 @@ import os
 import hashlib
 from flask import Flask, request, jsonify, render_template, send_file, send_from_directory
 from flask_cors import CORS
+from werkzeug.exceptions import RequestEntityTooLarge
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
+
+UPLOAD_FOLDER = f'{tmpdir}'
+ALLOWED_EXTENSIONS = {'csv'}
 
 checkpassword_crypt = '150b9efdf6e1c5b614b1e90cf7a17ca59b494b802e35f6ae467a540236d3ecaec7a27478fe1e9393'
 global password_crypt
 password_crypt = b""
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+
+
+@app.errorhandler(RequestEntityTooLarge)
+def handle_large_file(e):
+    return jsonify({'status': 'error', 'message': f'The uploaded file exceeds max upload size: {int(MAX_CONTENT_LENGTH/1e6)} MB'}), 413
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=['GET', 'POST]'])
 def index():
@@ -45,6 +61,8 @@ def convert():
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
 
         file_path = f"{tmpdir}/{mastr_file.filename}"
+        if not allowed_file(file_path):
+            return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
         print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
         mastr_file.save(file_path)
 

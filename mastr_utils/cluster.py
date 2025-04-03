@@ -3,15 +3,25 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from math import radians
 
+def replace_nan(value):
+    if 'nan' == str(value):
+        return 0.001
+    else:
+        return float(value)
+
 def cluster_punkte_wolke(punkte, cluster_radius_m = 1000, min_weight = 0):
     # Umwandeln in Radian für DBSCAN (Haversine-Metrik erwartet das)
-    coords = np.array([[radians(p[0]), radians(p[1])] for p in punkte.values])
-    gewichte = np.array([p[2] for p in punkte])
+
+    # coords = np.array([[replace_nan(radians(p[0])), replace_nan(radians(p[1]))] for p in punkte.values])
+    coords = np.array([[replace_nan(radians(p[0])), replace_nan(radians(p[1]))] for p in punkte.values])
+    # gewichte = np.array([replace_nan(p[2]) for p in punkte])
 
     # Erdkugel-Radius
     earth_radius = 6371000
 
     # DBSCAN-Clustering (eps muss in Radiant, daher Meter / Erdradius)
+    if (coords[0][0] is not float and type(coords[0][0]) is not np.float64) or coords[0][0] is None:
+        pass 
     db = DBSCAN(eps=cluster_radius_m / earth_radius, min_samples=1, metric='haversine')
     labels = db.fit_predict(coords)
 

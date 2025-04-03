@@ -11,6 +11,7 @@ calling convention:
 import sys
 import argparse
 import logging
+import signal
 from .analyse_mastr import Analyse, tmpdir   # Import the Analyse class from analyse_mastr.py
 
 # Configure logging
@@ -34,6 +35,7 @@ def main(testargs=None):
         parser.add_argument("-a", "--analyse_datastruct", help="Value Ranges in Bundesland, Bruttoleistung", action="store_true")
         parser.add_argument("-e", "--energietraeger", help="Symbol = Energieträger", action="store_true")
         parser.add_argument("-s", "--show-columns", help="Show the columns of the MaStR file [default=False]", action="store_true")
+        parser.add_argument("-l", "--limits", help="limits", default='[5,2e6,1e4]')
         parser.add_argument("-h_query", "--help_query", help="Show Examples for Query [default=False]", action="store_true")
 
         # args = parser.parse_args([f"{tmpdir}/../tests/data/stromerzeuger_ludwigsburg.csv", "-o", "/tmp/x.gpx", "-s", "-e"])
@@ -51,7 +53,10 @@ def main(testargs=None):
             print("Example: -q 'EnergieTräger == \"Erdgas\"'")
             return
 
-        analyse = Analyse(file_path=args.mastr_file)
+        timeout, filesize, datasize = eval(args.limits)
+        signal.alarm (timeout)
+        analyse = Analyse(file_path=args.mastr_file,
+                          timeout = timeout, filesize = filesize, datasize = datasize)
         # if option -s Show the columns of the MaStR file
         if args.show_columns:
             print("Columns in the MaStR file:")
@@ -72,7 +77,7 @@ def main(testargs=None):
         if args.energietraeger:
             symbol_part = [True, None]
         else:
-            symbol_part = [False, args.color]        
+            symbol_part = [False, args.color] 
         analyse.gen_gpx(conditions=args.query, output_file=args.output,
                         min_weight = int(args.min_weight), symbol_part = symbol_part)
         logging.info("Conversion completed successfully")

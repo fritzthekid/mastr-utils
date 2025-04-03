@@ -4,10 +4,12 @@ import os
 import re
 import math
 import shutil
+import time
 import matplotlib.pyplot as plt
 import seaborn as sns
 from .cluster import filter_large_weights
 import logging
+import signal
 from .symbols import energie_symbols
 
 from gpxpy.gpx import GPX, GPXWaypoint
@@ -30,6 +32,19 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
+
+global timeout_value
+timeout_value = 6
+
+class TimeoutException(Exception):
+    pass
+
+def timeout_handler(signum, frame):
+    print(f"Execption exception timeout ({timeout_value} sec)")
+    logging.info(f"Execption exception timeout ({timeout_value} sec)")
+    raise TimeoutError("time limit exceeded")
+
+signal.signal(signal.SIGALRM, timeout_handler)
 
 # List of all the Bundesland in Germany
 bundeslaender = [
@@ -98,6 +113,11 @@ def haversine(lon1, lat1, lon2, lat2):
     distance = R * c
     return distance  # in Metern
 
+def loop_timeout_test(timeout):
+    import time
+    if timeout==0:
+        time.sleep(10)
+
 # Beispiel:
 # lon1, lat1 = 13.4050, 52.5200  # Berlin
 # lon2, lat2 = 11.5810, 48.1351  # München
@@ -116,11 +136,24 @@ class Analyse:
     }
 
     # Initialize the class with data from an Excel file
-    def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0):
+    def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0, 
+                 timeout = 5, filesize = 4e6, datasize=1e4):
         logging.info(f"Initializing Analyse with file_path={file_path}")
+        self.timeout, self.filesize, self.datasize = timeout, filesize, datasize
+        global timeout_value
+        timeout_value = timeout
+        if timeout<0:
+            self.test_timeout = True
+            self.timeout = 1
+        else:
+            self.test_timeout = False
+        
+        signal.alarm(self.timeout)
+
         try:
             self.fig_num = fig_num
             self.figname = figname
+            assert os.path.getsize(file_path) <= self.filesize, f"File size exceeds limits {self.filesize}"
             if file_path.endswith('.csv'):
                 self.data = pd.read_csv(file_path, sep=';', encoding='utf-8', decimal=',')
             elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
@@ -129,9 +162,11 @@ class Analyse:
                 self.data = pd.read_excel(file_path, engine='odf')
             else:
                 raise ValueError("Invalid file format. Please provide a CSV, XLS, or ODS file.")
+            assert len(self.data) < self.datasize, f"Number of recordnummers exceeds {self.datasize}"  
             logging.info(f"Data loaded successfully from {file_path}")
         except Exception as e:
             logging.error(f"Error initializing Analyse: {e}")
+            signal.alarm(0)
             raise
         for i in self.data.index:
             self.data['Inbetriebnahmedatum der Einheit'].at[i] = str_to_datetime(self.data['Inbetriebnahmedatum der Einheit'][i])
@@ -153,6 +188,10 @@ class Analyse:
         self.data['is_BaWue'] = self.data['Bundesland'] == 'Baden-Württemberg'
         self.data['is_gewaesser'] = self.data['LageDerEinheit'] == 'Gewässer'
         self.data['is_freiflaeche'] = self.data['LageDerEinheit'] == 'Freifläche'
+        if self.test_timeout:
+            time.sleep(2)
+            raise ValueError("Test timeout failed")
+        signal.alarm(0)
 
     def show_columns(self, trailer=""):
         s = ""
@@ -227,6 +266,7 @@ class Analyse:
     # Method to generate GPX file
     def gen_gpx(self, conditions=None, output_file="gpx.gpx", symbol_part=[False, "Amber"], min_weight=0, radius=1000):
         logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, symbol_part={symbol_part}")
+        signal.alarm(self.timeout)
         try:
             if conditions is None or conditions == "":
                 gpx_data = self.data
@@ -277,33 +317,14 @@ class Analyse:
             with open(output_file, 'w') as f:
                 f.write(gpx.to_xml())
             logging.info(f"GPX file generated successfully: {output_file}")
+            if self.test_timeout:
+                time.sleep(2)
+                raise ValueError("Test timeout failed")
         except Exception as e:
             logging.error(f"Error generating GPX file: {e}")
+            signal.alarm(0)
             raise
+        finally:
+            signal.alarm(0)
 
-# Main program execution
-if __name__ == "__main__":
-    analyse = Analyse()
-    analyse.plot('is_active & is_speicher & ge_1mw & lt_10mw', 'bundesland', artefact="Speicher 1-10 MW")
-    # analyse.plot('is_active & is_speicher & ge_10mw & lt_100mw', 'bundesland', artefact="Speicher 10-100 MW")
-    # analyse.plot_stacked(['is_speicher & ge_1mw & lt_10mw & is_active','is_speicher & ge_10mw & lt_100mw & is_active', 'is_speicher & ge_100mw & is_active'], 'bundesland', artefact="Speicher (in Betrieb)")
-    # analyse.plot_stacked(['is_speicher & ge_1mw & lt_10mw','is_speicher & ge_10mw & lt_100mw', 'is_speicher & ge_100mw'], 'bundesland', artefact="Speicher (Betrieb + Planung)")
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
-    # analyse.plot('is_active & is_pv & ge_10mw & lt_100mw', 'bundesland', artefact="PV 10-100 MW")
-    # analyse.plot('is_active & is_pv & ge_100mw', 'bundesland', artefact="PV >100 MW")
-    # analyse.plot_stacked(['is_pv & ge_100mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_1mw & lt_10mw'], 'bundesland', artefact="PV (Betrieb + Planung)", has_legend=True)
 
-    # analyse = Analyse(file_path=f"{rootpath}/../db/MarktStammregister/pvgt1mw.ods", figname="fig2", fig_num=10)
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
-    # analyse.gen_gpx('is_BaWue & ge_10mw & ( is_freiflaeche or is_gewaesser )',filename="freiflaechen_pv_10mw.gpx")
-    # analyse.gen_gpx('is_BaWue & ge_1mw & lt_10mw & ( is_freiflaeche or is_gewaesser )',filename="freiflaechen_pv_1mw.gpx")
-    #f"{rootpath}/../tmp/landkreis-ludwigsburg_pv_10kw.gpx", color="Amber")
-    
-
-    analyse = Analyse(file_path='/home/eduard/Downloads/Stromerzeuger(13).csv', figname="fig2", fig_num=10)
-    analyse.gen_gpx(conditions='is_pv',output_file=f"{rootpath}/../tmp/x.gpx", color="Amber")
-    analyse = Analyse(file_path=f"{rootpath}/../db/MarktStammregister/landkreis-ludwigsburg-10.ods", figname="fig2", fig_num=10)
-    analyse.gen_gpx(conditions='is_pv & ge_100kw',output_file=f"{rootpath}/../tmp/landkreis-ludwigsburg_pv_100kw.gpx", color="Green")
-    analyse.gen_gpx(conditions='is_pv & ge_1mw',output_file=f"{rootpath}/../tmp/landkreis-ludwigsburg_pv_1mw.gpx", color="Red")

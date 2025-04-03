@@ -56,7 +56,7 @@ def do_test0():
 def do_gen_gpx(**argv):
     pass
 
-def test_0():
+def test_stromerzeuger_ludwigsburg():
     analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv")
     analyse.gen_gpx(
         conditions="ge_1mw",
@@ -78,7 +78,7 @@ def test_0():
                                     'Steinkohle', 'Wasser', 'Wind'
                                     ]
 
-def test_4():
+def test_pv_brd_area_search():
     teststr_5 = f"{testdir}/data/stromerzeuger_pv_brd.csv,-q,BruttoleistungDerEinheit > 10000,-o,{testdir}/tmp/x.gpx,-c,x,-m,90000,-r,2000,-e"
 
     args = teststr_5.split(',')
@@ -94,7 +94,7 @@ def test_4():
     assert len(symbols) == 21
     assert set(symbols) == {'Solare Strahlungsenergie'}
     
-def test_5():
+def test_wind_bawue_area_search():
     teststr = f"{testdir}/data/stromerzeuger_wind_bawue.csv,-q,BruttoleistungDerEinheit > 6000,-o,{testdir}/tmp/x20.gpx,-c,x,-m,20000,-r,20000,-e"
 
     args = teststr.split(',')
@@ -111,3 +111,35 @@ def test_5():
     assert len(symbols) == 8
     pass
     assert set(symbols) == {'Wind'}
+
+def test_file_size():
+    try:
+        teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv;-o;{testdir}/tmp/x20.gpx;-l;[5, 1e5, 1e2]"
+        args = teststr.split(';')
+        dogpx(args)
+    except AssertionError:
+        assert True
+    
+def test_data_size():
+    try:
+        teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv;-o;{testdir}/tmp/x20.gpx;-l;[5, 2e6, 1e3]"
+        args = teststr.split(';')
+        dogpx(args)
+        assert False, "test data size limit not detected" 
+    except AssertionError:
+        assert True
+
+def test_time_limit():
+    try:
+        teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv;-o;{testdir}/tmp/x20.gpx;-l;[-1, 2e6, 1e4]"
+        args = teststr.split(';')
+        dogpx(args)
+        assert False, "time limit test failed"
+    except TimeoutError: 
+        assert True
+
+def test_nan_float():
+    teststr = f"{testdir}/data/stromerzeuger_1_4MB_2T.csv;-o;{testdir}/tmp/x.gpx;-c;x;-m;2000;-r;900000;-e;-l;[1000000,5e6,1e4]"
+    args = teststr.split(';')
+    dogpx(args)
+    assert True

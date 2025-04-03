@@ -179,6 +179,7 @@ PC:
 
 Dieses Projekt steht unter der [BSD-Lizenz](LICENSE).
 
-[[File:Eyes-blitz.svg|thumb|lightning eyes, take care]]
-
-To image is licensed https://commons.wikimedia.org/wiki/File:Eyes-blitz.svg
+To logo is licensed 
+```
+https://commons.wikimedia.org/wiki/File:Eyes-blitz.svg
+```
