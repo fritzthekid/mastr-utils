@@ -16,7 +16,7 @@ password_crypt = b""
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
+MAX_CONTENT_LENGTH = 15 * 1024 * 1024  # 5 MB
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
 
