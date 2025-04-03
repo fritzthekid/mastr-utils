@@ -153,3 +153,10 @@ button[type="submit"]:hover {
 .buttons-container .button:hover {
     background-color: #45a049;
 }
+
+input[type="password"],
+input[type="text"] {
+  font-family: monospace; /* verhindert Layoutsprünge durch Schriftart */
+  width: 80%;
+  box-sizing: border-box;
+}

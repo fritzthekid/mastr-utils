@@ -1,14 +1,14 @@
 # from mastr_utils import Analyse
 import os
+import hashlib
 from flask import Flask, request, jsonify, render_template, send_file, send_from_directory
 from flask_cors import CORS
-import subprocess
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
-from mastr_utils.analyse_mastr import logging  # Import logging to use the configuration from analyse_mastr.py
 
-global password
-password = ""
+checkpassword_crypt = '150b9efdf6e1c5b614b1e90cf7a17ca59b494b802e35f6ae467a540236d3ecaec7a27478fe1e9393'
+global password_crypt
+password_crypt = b""
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -23,15 +23,15 @@ def index():
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    global password
+    global password_crypt
     try:
         # Retrieve POST arguments
         password = request.form.get('pwd') # password
-        checkpassword=open(f"{tmpdir}/password.txt").read()
+        password_crypt = hashlib.shake_256(password.encode()).hexdigest(40)
         try:
-            assert password == checkpassword
+            assert password_crypt == checkpassword_crypt
         except Exception as e:
-            print(f'Password failed: {password}, {checkpassword}')
+            print(f'Password failed: {hashlib.shake_256(password.encode()).hexdigest(40)}, {checkpassword}')
             return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
         mastr_file = request.files.get('mastr_file')  # File upload
         query = request.form.get('query', '')  # Query parameter
@@ -95,12 +95,11 @@ def convert():
 
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
-    global password
-    checkpassword=open(f"{tmpdir}/password.txt").read()
+    global password_crypt
     try:
-        assert password == checkpassword
+        assert password_crypt == checkpassword_crypt
     except Exception as e:
-        print(f'Password failed: {password}, {checkpassword}')
+        print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
 
     file_path = f"{tmpdir}/{filename}"
@@ -111,12 +110,11 @@ def download_file(filename):
 
 @app.route('/download-log', methods=['GET'])
 def download_log():
-    global password
-    checkpassword=open(f"{tmpdir}/password.txt").read()
+    global password_crypt
     try:
-        assert password == checkpassword
+        assert password_crypt == checkpassword_crypt
     except Exception as e:
-        print(f'Password failed: {password}, {checkpassword}')
+        print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     if not app.debug:
         return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
@@ -132,12 +130,11 @@ def favicon():
 
 @app.route('/tmp/<path:filename>', methods=['GET'])
 def serve_tmp_file(filename):
-    global password
-    checkpassword=open(f"{tmpdir}/password.txt").read()
+    global password_crypt
     try:
-        assert password == checkpassword
+        assert password_crypt == checkpassword_crypt
     except Exception as e:
-        print(f'Password failed: {password}, {checkpassword}')
+        print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     try:
         # Serve files from the tmpdir directory
