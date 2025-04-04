@@ -137,7 +137,7 @@ class Analyse:
 
     # Initialize the class with data from an Excel file
     def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0, 
-                 timeout = 5, filesize = 10e6, datasize=1e4):
+                 timeout = 5, filesize = 10e6, datasize=2e4):
         logging.info(f"Initializing Analyse with file_path={file_path}")
         self.timeout, self.filesize, self.datasize = timeout, filesize, datasize
         global timeout_value
