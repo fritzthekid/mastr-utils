@@ -109,7 +109,7 @@ Die Karte wird jetzt deutlich übersichtlicher:
 
 ![PV > 150MW in Deutschland](img/pv_150mw_deutschland.png)
 
-Werte über 200kW reduzieren die Anlagen auf die deutschlandweit größte Anlage bei Leibzig.
+Werte über 200kW reduzieren sich die Anlagen auf die deutschlandweit größte Anlage bei Leibzig.
 
 ----
 
