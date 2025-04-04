@@ -199,14 +199,14 @@ class Analyse:
             self.data['ge_100mw'] = self.data['BruttoleistungDerEinheit'] >= 100000
             self.data['lt_10mw'] = self.data['BruttoleistungDerEinheit'] < 10000
             self.data['lt_100mw'] = self.data['BruttoleistungDerEinheit'] < 100000
+            self.data['is_gewaesser'] = self.data['LageDerEinheit'] == 'Gewässer'
+            self.data['is_freiflaeche'] = self.data['LageDerEinheit'] == 'Freifläche'
         except Exception as e:
             logging.info("cleaning Bruttoleistung der Einheit failed")
         finally:
             signal.alarm(0)
         try:
             self.data['is_BaWue'] = self.data['Bundesland'] == 'Baden-Württemberg'
-            self.data['is_gewaesser'] = self.data['LageDerEinheit'] == 'Gewässer'
-            self.data['is_freiflaeche'] = self.data['LageDerEinheit'] == 'Freifläche'
         except Exception as e:
             raise e
         finally:
