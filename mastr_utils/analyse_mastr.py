@@ -137,7 +137,7 @@ class Analyse:
 
     # Initialize the class with data from an Excel file
     def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0, 
-                 timeout = 5, filesize = 4e6, datasize=1e4):
+                 timeout = 5, filesize = 10e6, datasize=1e4):
         logging.info(f"Initializing Analyse with file_path={file_path}")
         self.timeout, self.filesize, self.datasize = timeout, filesize, datasize
         global timeout_value
@@ -174,23 +174,38 @@ class Analyse:
         columns_rename_dict = {c:to_camel_case(c) for c in self.data.columns}
         self.data.rename(columns=columns_rename_dict, inplace=True)
         # Add new columns based on conditions
-        self.data['is_new'] = self.data['InbetriebnahmedatumDerEinheit'] > str_to_datetime('01.01.2021')
-        self.data['is_active'] = self.data['BetriebsStatus'] == 'In Betrieb'
-        self.data['is_speicher'] = self.data['Energieträger'] == 'Speicher'
-        self.data['is_pv'] = self.data['Energieträger'] == 'Solare Strahlungsenergie'
-        self.data['ge_10kw'] = self.data['BruttoleistungDerEinheit'] >= 10
-        self.data['ge_100kw'] = self.data['BruttoleistungDerEinheit'] >= 100
-        self.data['ge_1mw'] = self.data['BruttoleistungDerEinheit'] >= 1000
-        self.data['ge_10mw'] = self.data['BruttoleistungDerEinheit'] >= 10000
-        self.data['ge_100mw'] = self.data['BruttoleistungDerEinheit'] >= 100000
-        self.data['lt_10mw'] = self.data['BruttoleistungDerEinheit'] < 10000
-        self.data['lt_100mw'] = self.data['BruttoleistungDerEinheit'] < 100000
-        self.data['is_BaWue'] = self.data['Bundesland'] == 'Baden-Württemberg'
-        self.data['is_gewaesser'] = self.data['LageDerEinheit'] == 'Gewässer'
-        self.data['is_freiflaeche'] = self.data['LageDerEinheit'] == 'Freifläche'
+        try:
+            self.data['is_new'] = self.data['InbetriebnahmedatumDerEinheit'] > str_to_datetime('01.01.2021')
+            self.data['is_active'] = self.data['BetriebsStatus'] == 'In Betrieb'
+            self.data['is_speicher'] = self.data['Energieträger'] == 'Speicher'
+            self.data['is_pv'] = self.data['Energieträger'] == 'Solare Strahlungsenergie'
+        except Exception as e:
+            raise e
+        finally:
+            signal.alarm(0)
+        try:
+            self.data['ge_10kw'] = self.data['BruttoleistungDerEinheit'] >= 10
+            self.data['ge_100kw'] = self.data['BruttoleistungDerEinheit'] >= 100
+            self.data['ge_1mw'] = self.data['BruttoleistungDerEinheit'] >= 1000
+            self.data['ge_10mw'] = self.data['BruttoleistungDerEinheit'] >= 10000
+            self.data['ge_100mw'] = self.data['BruttoleistungDerEinheit'] >= 100000
+            self.data['lt_10mw'] = self.data['BruttoleistungDerEinheit'] < 10000
+            self.data['lt_100mw'] = self.data['BruttoleistungDerEinheit'] < 100000
+        except Exception as e:
+            pass
+        finally:
+            signal.alarm(0)
+        try:
+            self.data['is_BaWue'] = self.data['Bundesland'] == 'Baden-Württemberg'
+            self.data['is_gewaesser'] = self.data['LageDerEinheit'] == 'Gewässer'
+            self.data['is_freiflaeche'] = self.data['LageDerEinheit'] == 'Freifläche'
+        except Exception as e:
+            raise e
+        finally:
+            signal.alarm(0)
         if self.test_timeout:
             time.sleep(2)
-            raise ValueError("Test timeout failed")
+            raise TimeoutError("Test timeout failed")
         signal.alarm(0)
 
     def show_columns(self, trailer=""):
