@@ -1,11 +1,15 @@
 # Dokumentation
 
-**Das wichtigste**: Diese Tools und die Webanwendung werdeen angeboten wie in der LICENCE angegeben. Es gibt keine Gewährm, keinen Support oder ähnliches.
+**Das wichtigste**: Diese Tools und die Webanwendung werden angeboten wie in der LICENCE angegeben. Es gibt keine Gewähr, keinen Support oder ähnliches.
 
 Dieses Repository enthält Tools zur Auswertung der Daten des Marktstammdatenregisters (MaStR). Derzeit sind folgende Anwendungen verfügbar:
 
 1. **mastrtogpx**: Ein Kommandozeilen-Tool zur Konvertierung von MaStR-Daten in das GPX-Format.
 2. **Webanwendung**: Eine Anwendung zur Lokalisierung von Anlagen und Anlagen-Parks, wobei benachbarte Anlagen zusammengefasst werden.
+
+## Ziel der Anwendung
+
+Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gefunden werden. Für diese Anlagen gilt in der Regel, dass diese Stromerzeugungseinheiten in der Regel aus vielen einzelen in einem Park zusammenstehen. Das heißt das reine Filtern auf Einheiten mit deutlich größeren Werten als 10 MW für Solaranlagen oder deutlich größer als 7MW nicht hilfreicht ist. Deshalb wird mit der Anwendung auch eine sogenannte flächige Clusterung angeboten. Dabei können auch große Eiheiten mit deutlich größer als 100 MW gesucht werden. So eine Suche ist weiter unten als Beispiel beschrieben.
 
 ## Ablaufe der Anlagensuche
 
@@ -26,14 +30,15 @@ Dieses Repository enthält Tools zur Auswertung der Daten des Marktstammdatenreg
 
 ### Nutzung des Tools
 
-1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `http://<server>:<port>`. *(Hinweis: Aktuell sind die spezifischen Server- und Portinformationen nicht verfügbar.)*
+1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `http://eduard.uber.space/`. 
   - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
 
 ![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
 
 2. **Eingabe der Daten**:
 
-In der Form muss eingegeben werden:
+In der Abfrage muss eingegeben werden:
+- ein Passwort, ist beim Entwickler mit Begründung abzufragen.
 - File von Marktstammdatenregister
 - Query [kann auch leer sein]
 - Min. Bruttoleistung der Fläche in kW:
@@ -57,13 +62,54 @@ Bei flächiger Suche werden die Anlagen zusammengefasst und die Eigenschaften ei
 **Hinweise**
 
 - Stellen Sie sicher, dass die exportierte CSV-Datei die erwartete Struktur und Datenfelder enthält, um eine korrekte Verarbeitung in der Webanwendung zu gewährleisten.
-- Bei Fragen oder Problemen konsultieren Sie bitte die bereitgestellten Hilfedokumentationen.
+- Bei Fragen oder Problemen konsultieren Sie bitte die bereitgestellten Dokumentationen.
 
 ### Download gpx
 
 Anschließend kann das gewünschte gpx file runtergeladen und in z.b. eienr Handy-App verwendet werden. 
 
 Hier endet die Beschreibung der Web Applikation
+
+## Beispiel Suche nach Solarparks mit Leistungen größer als 100MW
+
+Zunächst wird ein [**Marktstammdatenregister Auszug**](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht) erstellt, dabei wird folgender Filer angewendet:
+- "Energieträger" entspricht "Solare Strahlungsenergie"
+- "Bruttoleistung der Einheit" größer als 10000
+- "Betriebsstatus" entspricht nicht "Endgültig stillgelegt"
+
+(Stand 04.04.2025: 698 Stromerzeugungseinheiten.)
+
+Tabelle Exportieren (als .csv) 
+- Datei "Stromerzeuger...csv" befindet sich jetzt in Downloads
+
+Wechsel zu [**MaStR to GPX Konverter**](https://eduard.user.space/)
+
+### Einfache Suche
+
+Eingabe folgender Daten:
+- Passwort: bekannt
+- Filename: wie eben vom Marktstammdatenregister geholt
+- Querey: leer
+- Min. Bruttoleistung der Fläche in kW: 0
+- Radius [m]: 2000
+- Output File Name: leer
+
+Drücke Convert
+
+Es sollten jetzt auf der rechten Seite sämtlichen c.a. 700 Einheiten dargestellt sein.
+
+![PV > 10MW in Deutschland](img/pv_10mw_deutschland.png)
+
+### Flächige Suche nach Solarparks mit Gesamtleistung größer 150 MW
+
+Einzige Unterschied zur obigen Eingabe ist die Eingabe einer Min. Bruttoleistung.
+
+Dort kann dann 150000 [kW] stehen, erst jetzt wird der Radius relevant.
+Die Karte wird jetzt deutlich übersichtlicher:
+
+![PV > 150MW in Deutschland](img/pv_150mw_deutschland.png)
+
+Werte über 200kW reduzieren die Anlagen auf die deutschlandweit größte Anlage bei Leibzig.
 
 ----
 
