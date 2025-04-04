@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import datetime
 import os
 import re
@@ -118,6 +119,12 @@ def loop_timeout_test(timeout):
     if timeout==0:
         time.sleep(10)
 
+def clean_bruttoleistung(data):
+    for i,val in enumerate(data["BruttoleistungDerEinheit"]):
+        if type(val) == str:
+            val = round(float(re.sub(',','.',val))) 
+        data.at[data.iloc[i].name,"BruttoleistungDerEinheit"] = np.float64(val)
+
 # Beispiel:
 # lon1, lat1 = 13.4050, 52.5200  # Berlin
 # lon2, lat2 = 11.5810, 48.1351  # München
@@ -184,6 +191,7 @@ class Analyse:
         finally:
             signal.alarm(0)
         try:
+            clean_bruttoleistung(self.data)
             self.data['ge_10kw'] = self.data['BruttoleistungDerEinheit'] >= 10
             self.data['ge_100kw'] = self.data['BruttoleistungDerEinheit'] >= 100
             self.data['ge_1mw'] = self.data['BruttoleistungDerEinheit'] >= 1000
@@ -192,7 +200,7 @@ class Analyse:
             self.data['lt_10mw'] = self.data['BruttoleistungDerEinheit'] < 10000
             self.data['lt_100mw'] = self.data['BruttoleistungDerEinheit'] < 100000
         except Exception as e:
-            pass
+            logging.info("cleaning Bruttoleistung der Einheit failed")
         finally:
             signal.alarm(0)
         try:

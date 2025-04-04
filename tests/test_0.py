@@ -13,6 +13,7 @@ from mastr_utils.mastrtogpx import main as dogpx
 
 testdir = os.path.dirname(os.path.abspath(__file__))
 
+DEBUGTIMEOUT = 1000
 
 # import mastr_utils
 # from mastr_utils.analyse_mastr import rootdir
@@ -57,12 +58,12 @@ def do_gen_gpx(**argv):
     pass
 
 def test_stromerzeuger_ludwigsburg():
-    analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv")
+    analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv",timeout = DEBUGTIMEOUT)
     analyse.gen_gpx(
         conditions="ge_1mw",
         output_file=f"{testdir}/tmp/x.gpx",
         min_weight=0,
-        symbol_part=[True, None]
+        symbol_part=[True, None],    
     )
     file = open(f"{testdir}/tmp/x.gpx", "r").read()
     assert len(re.findall("\n", file)) == 582
@@ -148,3 +149,5 @@ def test_large_file():
     teststr = f"{testdir}/data//stromerzeuger_8MB_13T.csv;-o;{testdir}/tmp/x.gpx"
     args = teststr.split(';')
     dogpx(args)
+
+test_stromerzeuger_ludwigsburg()
