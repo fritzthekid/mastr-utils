@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostenvergleich: Atomkraft vs. Erneuerbare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      line-height: 1.4;
+      margin: 2rem;
+      max-width: 800px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 0.5rem;
+      text-align: left;
+    }
+    h1, h2, h3 {
+      color: #003366;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+    }
+    canvas {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+    {% include 'topbanner.html' %}
+  <h1>💡 Kostenvergleich: Atomkraft vs. Erneuerbare Energien (Stand 2024)</h1>
+
+  <p>
+    Belgien erwägt den Bau neuer Atomkraftwerke. Die Energieversorger zögern jedoch, da
+    die langfristigen Kosten im Vergleich zu Wind- und Solarenergie mit Speicher deutlich höher liegen. In Kalifornien ist der
+    wirtschaftlich motivierte Ausbau erneuerbarer Energien ein Vorbild.
+  </p>
+
+  <h2>📊 Vollkostenvergleich über 20 Jahre</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Technologie</th>
+        <th>LCOE 2023 (USD/MWh)</th>
+        <th>Bemerkung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Photovoltaik Utility-Scale</td>
+        <td>24–56</td>
+        <td>historisches Tief (USA)</td>
+      </tr>
+      <tr>
+        <td>Onshore-Wind</td>
+        <td>26–50</td>
+        <td>stabil günstig</td>
+      </tr>
+      <tr>
+        <td>Offshore-Wind (neu)</td>
+        <td>72–140</td>
+        <td>sinkend in Europa</td>
+      </tr>
+      <tr>
+        <td>Atomkraft (neu)</td>
+        <td>120–250</td>
+        <td>hohe Investitionskosten</td>
+      </tr>
+      <tr>
+        <td>Speicher (Batterie) bei heutigen Kosten (weiteres siehe Anmerkung)</td>
+        <td>100–140**</td>
+        <td>kombinierbar mit PV/Wind (siehe Anmerkung)</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><strong>Quellen:</strong><br>
+    <a href="https://www.lazard.com/research-insights/2023-levelized-cost-of-energyplus/" target="_blank">➜ Lazard LCOE Report 2023</a><br>
+    <a href="https://www.iea.org/reports/world-energy-outlook-2023" target="_blank">➜ IEA: World Energy Outlook 2023</a>
+  </p>
+
+  <h2>📦 **Speicher im Wandel – Perspektive auf 20 Jahre</h2>
+  <p>
+    Aktuelle Speicherpreise (100–140 $/MWh) basieren auf Lithium-Ionen-Technologie und heutigem Ausbau. 
+    Doch mit neuen Technologien wie <strong>Natrium-Ionen- und Salzbatterien</strong> sowie der massiven Skalierung 
+    in China und Kalifornien ist davon auszugehen, dass sich diese Kosten in den kommenden Jahren halbieren.
+  </p>
+  <p>
+    <strong>Deutsche Energieversorger</strong> berichten bereits von einem wirtschaftlichen Break-even – der Einbau lohnt sich
+    zunehmend auch ohne Förderung. Für ein realistisches 20-Jahres-Szenario sollten daher perspektivische Kosten von 
+    <strong>50–80 $/MWh</strong> angesetzt werden – insbesondere im Zusammenspiel mit Photovoltaik.
+  </p>
+  <p>
+    <a href="https://www.energy-storage.news" target="_blank">➜ energy-storage.news – Branchenanalysen & Preistrends</a>
+  </p>
+  <!-- Prognose: Speicherkosten bis 2044 (SVG) -->
+<div>
+    <h3>📉 Prognose: Speicherkosten bis 2044 (SVG)</h3>
+    <img src="{{ url_for('static', filename='images/speicherprognose.svg') }}" alt="Prognose: Speicherkosten bis 2044">
+    <!-- object type="image/svg+xml" data="data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8' standalone='no'?>
+  <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN'
+    'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+  <svg xmlns:xlink='http://www.w3.org/1999/xlink' width='576pt' height='288pt' viewBox='0 0 576 288' xmlns='http://www.w3.org/2000/svg' version='1.1'>
+  < !-- ... zu lang zum Einfügen hier > </svg>"-->
+ 
+</object>
+  </div>
+
+
+  
+  <h2>🇧🇪 Belgien: Kernkraftverlängerung oder Erneuerbare?</h2>
+  <ul>
+    <li>Verlängerung von Doel 4 und Tihange 3: ca. 65–70 €/MWh</li>
+    <li>Neubau: >120 €/MWh (unsicher, teuer)</li>
+  </ul>
+  <p>
+    <a href="https://vito.be/en/news/climate-neutral-belgium-2050-what-role-can-nuclear-extension-play" target="_blank">➜ Studie von VITO (2023)</a>
+  </p>
+
+  <h2>🌞 Kalifornien: Warum Solar + Speicher?</h2>
+  <ul>
+    <li>>40 GW installierte PV-Leistung</li>
+    <li>PV + Speicher oft günstiger als neue Gaskraftwerke</li>
+    <li>Staatlich geförderter Ausbau aus wirtschaftlichen Gründen</li>
+  </ul>
+  <p>
+    <a href="https://www.energy.ca.gov/data-reports" target="_blank">➜ California Energy Commission: Data and Reports</a><br>
+    <a href="https://www.energy.ca.gov/data-reports/energy-almanac" target="_blank">➜ California Energy Commission: Renewable Energy</a>
+  </p>
+
+  <h2>🧠 Fazit</h2>
+  <p>
+    Die Daten sprechen klar für Erneuerbare: deutlich geringere Gesamtkosten, schneller skalierbar,
+    geringere externe Risiken (Entsorgung, Bauzeit, Kapitalbindung). Belgien könnte vom kalifornischen
+    Beispiel lernen und auf Wind, Sonne und Speicher setzen.
+  </p>
+
+</body>
+</html>

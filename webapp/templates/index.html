@@ -12,12 +12,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script> <!-- For GPX support -->
 </head>
 <body>
+    {% include 'topbanner.html' %}
     <div class="container">
+        <!-- a href="/">Home</a> <a href="/energie_kostenvergleich">Energiekostenvergleich</a></p>
         <div style="text-align: center;">
             <br>
             <img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz">
             <br>
-        </div>
+        </div-->
         <div style="text-align: center;">
             <h1>MaStR zu GPX Konverter</h1>
             <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu GPX-Dateien für eine GPS App (Handy, PC, Online). 

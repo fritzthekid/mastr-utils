@@ -160,5 +160,13 @@ def serve_tmp_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
+@app.route('/energie_kostenvergleich', methods=['GET'])
+def show_energiekostenvergleichsanalyse():
+    return render_template('energie_kostenvergleich.html')
+
+@app.route('/impressum', methods=['GET'])
+def impressum():
+    return render_template('impressum.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
