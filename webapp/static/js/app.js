@@ -84,7 +84,7 @@ function addGpxToMap(gpxUrl) {
             shadowUrl: '',
             wptIconUrls: {
                 '': '/static/images/mypin.png',
-                'Navaid, Amber': '/static/images/mypin.svg',
+                'Navaid, Amber': '/static/images/fire_unknown.svg',
                 'Solare Strahlungsenergie': '/static/images/solar.svg',
                 'Biomasse': '/static/images/greenpin.svg',
                 'Speicher': '/static/images/batterie.svg',
