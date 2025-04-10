@@ -27,9 +27,9 @@ teststr_3 = None
 teststr_4 = None # "mastrtogpx ~/Downloads/Stromerzeuger(20).csv -q 'BruttoleistungDerEinheit > 1000000000000' -o tmp/x.gpx -e".split()
 
 def print_properties_testfile(file):
-    print(f"len: {len(re.findall("\n", file))}")
-    print(f"<wpt: {len(re.findall("<wpt", file))}")
-    print(f"</wpt {len(re.findall("</wpt>", file))}")
+    print(f"len: {len(re.findall('\\n', file))}")
+    print(f"<wpt: {len(re.findall('<wpt', file))}")
+    print(f"</wpt {len(re.findall('</wpt>', file))}")
     symbols = []
     for symbol in re.findall("<sym>(.*?)</sym>", file):
         symbols.append(symbol)
@@ -149,3 +149,25 @@ def test_large_file():
     teststr = f"{testdir}/data//stromerzeuger_8MB_13T.csv;-o;{testdir}/tmp/x.gpx"
     args = teststr.split(';')
     dogpx(args)
+
+def test_cleebronn():
+    import pandas as pd
+    teststr = f"{testdir}/data/stromerzeuger_cleebronn.csv;-o;{testdir}/tmp/x.gpx;-e;-l;[1000000,5e6,1e4]"
+    args = teststr.split(';')
+    dogpx(args)
+    file = open(f"{testdir}/tmp/x.gpx").read()
+    print_properties_testfile(file)
+    assert len(re.findall("\n", file)) == 212
+    assert len(re.findall("<wpt", file)) == 21
+    symbols = []
+    for symbol in re.findall("<sym>(.*?)</sym>", file):
+        symbols.append(symbol)
+    data = pd.read_csv(f"{testdir}/data/stromerzeuger_cleebronn.csv", sep=';', encoding='utf-8', decimal=',')
+    assert len(data) == 394
+    streets = list(str(val) for val in data["Straße"])
+    astreets = {val:len([v for v in streets if v == val]) for val in set(streets)}
+    assert astreets["Daimlerstraße"] == 6
+    assert sum([astreets[val] for val in set(streets)]) == 394
+    assert astreets['nan'] == 373
+    assert set(symbols) == set([data['Energieträger'][i] for i in data.index if str(data["Straße"][i]) != "nan"])
+
