@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 from setuptools.command.test import test as TestCommand
 import sys
-setup(name='mastr_utils', packages=find_packages())
+# setup(name='mastr_utils', packages=find_packages())
 
 # Read the version from __init__.py
 def get_version():
