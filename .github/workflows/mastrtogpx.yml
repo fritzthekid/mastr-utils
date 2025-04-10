@@ -5,9 +5,7 @@ name: Python application
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -28,6 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install .
+        pip install pytest pytest-cov
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |

@@ -45,7 +45,7 @@ setup(
 	"gunicorn",
 	"uwsgi",
     ],
-    tests_require=["pytest"],
+    tests_require=["pytest","pytest-cov"],
     cmdclass={"test": PyTest},
     entry_points={
         "console_scripts": [
