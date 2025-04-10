@@ -27,7 +27,7 @@ teststr_3 = None
 teststr_4 = None # "mastrtogpx ~/Downloads/Stromerzeuger(20).csv -q 'BruttoleistungDerEinheit > 1000000000000' -o tmp/x.gpx -e".split()
 
 def print_properties_testfile(file):
-    print(f"len: {len(re.findall('\\n', file))}")
+    print(f"len: {len(re.findall('\n', file))}")
     print(f"<wpt: {len(re.findall('<wpt', file))}")
     print(f"</wpt {len(re.findall('</wpt>', file))}")
     symbols = []
