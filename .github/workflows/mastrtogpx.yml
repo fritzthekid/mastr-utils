@@ -41,4 +41,9 @@ jobs:
         # pytest --cov-report term --cov=mastr_utils
         pytest --cov=mastr_utils --cov-report=term-missing --cov-report=html
 
+    - name: Upload coverage HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: htmlcov
+        path: htmlcov/
 
