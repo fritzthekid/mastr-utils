@@ -1,7 +1,8 @@
 # from mastr_utils import Analyse
 import os
 import hashlib
-from flask import Flask, request, jsonify, render_template, send_file, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_file 
+from flask import redirect, url_for, send_from_directory
 from flask_cors import CORS
 from werkzeug.exceptions import RequestEntityTooLarge
 from mastr_utils.analyse_mastr import tmpdir
@@ -34,6 +35,13 @@ def index():
         print('Index page')
         return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
+        if 'convert' in request.form:
+            # Verarbeitung für 'convert'
+            return redirect(url_for('convert_function'))
+        # elif 'download' in request.form:
+        #     filename = request.form.get('filename')
+        #     # Verarbeitung für 'download/filename'
+        #     return redirect(url_for('download_function', filename=filename))
         print('Index page')
         return render_template('index.html')
 

@@ -78,7 +78,12 @@
                     <label for="output_file">Output File Name (optional):</label>
                     <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
                 </div>
-                <button type="submit" form="convert-form">Convert</button>
+
+                <!-- button type="submit" form="convert-form">Convert</button-->
+                <button type="submit" name="convert">Convert</button>
+                <!--input type="text" name="filename" placeholder="Dateiname">
+                <button type="submit" name="download">Herunterladen</button>
+                < !-- Weitere Felder und Schaltflächen -->            
             </form>
 
             <!-- Map Section -->
@@ -90,6 +95,7 @@
 
         <!-- Buttons Section -->
         {% if debug %}
+
 
         <div class="buttons-container">
             <a href="/download-log" class="button">Download Logs</a>

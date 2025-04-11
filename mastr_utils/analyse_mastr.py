@@ -96,28 +96,23 @@ def isnum(s):
 import math
 
 # Haversine-Formel
-def haversine(lon1, lat1, lon2, lat2):
-    # Radius der Erde in Metern
-    R = 6371000
+# def haversine(lon1, lat1, lon2, lat2):
+#     # Radius der Erde in Metern
+#     R = 6371000
 
-    # Umrechnung in Bogenmaß
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lon2 - lon1)
+#     # Umrechnung in Bogenmaß
+#     phi1 = math.radians(lat1)
+#     phi2 = math.radians(lat2)
+#     delta_phi = math.radians(lat2 - lat1)
+#     delta_lambda = math.radians(lon2 - lon1)
 
-    # Haversine-Formel
-    a = math.sin(delta_phi / 2)**2 + \
-        math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2)**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+#     # Haversine-Formel
+#     a = math.sin(delta_phi / 2)**2 + \
+#         math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2)**2
+#     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-    distance = R * c
-    return distance  # in Metern
-
-def loop_timeout_test(timeout):
-    import time
-    if timeout==0:
-        time.sleep(10)
+#     distance = R * c
+#     return distance  # in Metern
 
 def clean_bruttoleistung(data):
     for i,val in enumerate(data["BruttoleistungDerEinheit"]):
