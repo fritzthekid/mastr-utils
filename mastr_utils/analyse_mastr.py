@@ -223,13 +223,34 @@ class Analyse:
         return s
 
     def analyse_datastruct(self):
-        print(f"Anzahl Einträge: {len(self.data)}")
-        print(f"Bundesländer: {set(self.data['Bundesland'])}")
-        print(f"Anzahl Gemeinden: {len(set(self.data['Ort']))}")
-        print(f"Bruttoleistung min: {min(self.data['BruttoleistungDerEinheit'])}, max: {max(self.data['BruttoleistungDerEinheit'])}")
-        print("Energieträger: ", set(self.data['Energieträger']))
-        print("Betriebsstatus: ", set(self.data['BetriebsStatus']))
-        print("Lage der Einheit: ", set(self.data['LageDerEinheit']))
+        try:
+            print(f"Anzahl Einträge: {len(self.data)}")
+        except:
+            pass
+        try:
+            print(f"Bundesländer: {set(self.data['Bundesland'])}")
+        except:
+            pass
+        try:
+            print(f"Anzahl Gemeinden: {len(set(self.data['Ort']))}")
+        except:
+            pass
+        try:
+            print(f"Bruttoleistung min: {min(self.data['BruttoleistungDerEinheit'])}, max: {max(self.data['BruttoleistungDerEinheit'])}")
+        except:
+            pass
+        try:
+            print("Energieträger: ", set(self.data['Energieträger']))
+        except:
+            pass
+        try:
+            print("Betriebsstatus: ", set(self.data['BetriebsStatus']))
+        except:
+            pass
+        try:
+            print("Lage der Einheit: ", set(self.data['LageDerEinheit']))
+        except:
+            pass
 
     # Method to query the data based on a condition and dependency
     def query(self, condition, depends=None):
