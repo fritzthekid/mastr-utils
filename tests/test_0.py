@@ -148,3 +148,9 @@ def test_plot():
     analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv",timeout = DEBUGTIMEOUT)
     analyse.plot("is_pv","Postleitzahl")
     assert True
+
+from webapp.app import app
+def x():
+    app.run(debug=True)
+
+x()

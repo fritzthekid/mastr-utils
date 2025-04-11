@@ -5,17 +5,17 @@
 <img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz"><br>
 </div>
 <div class="topbanner table">
- <table style="width:100%">
-  <tr>
-    <th><a href="/">Home</a></th>
-    <th><a href="/">MaStR zu GPX Konverter</a></th>
-    <th><a href="/energie_kostenvergleich">Energiekostenvergleich</a></th>
-    <th><a href="/">nn</th>
-    <th><a href="/impressum">Kontakt</th>
-  </tr>
-</table>
-</div>
- </center>
+  <table style="width:100%">
+   <tr>
+     <th><a href="/" {% if active_page == 'start' %}style="font-weight:bold"{% endif %}>Home</a></th>
+     <th><a href="/" {% if active_page == 'convert' %}style="font-weight:bold"{% endif %}>MaStR zu GPX</a></th>
+     <th><a href="/" {% if active_page == 'kosten' %}style="font-weight:bold"{% endif %}>Energiekosten</a></th>
+     <th><a href="/">nn</a></th>
+     <th><a href="/" {% if active_page == 'kontakt' %}style="font-weight:bold"{% endif %}>Kontakt</a></th>
+   </tr>
+  </table>
+ </div>
+</center>
 <p><p>
 </div>
   
