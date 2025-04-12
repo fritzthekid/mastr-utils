@@ -14,6 +14,9 @@ ALLOWED_EXTENSIONS = {'csv'}
 checkpassword_crypt = '150b9efdf6e1c5b614b1e90cf7a17ca59b494b802e35f6ae467a540236d3ecaec7a27478fe1e9393'
 global password_crypt
 password_crypt = b""
+global output_file
+output_file = ""
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -31,6 +34,7 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global output_file
     if request.method == 'GET':
         print('Index page')
         return render_template('index.html', debug=app.debug)
@@ -50,6 +54,8 @@ def index():
             return convert() # redirect(url_for('convert_function'))
         elif "downloadlog" in request.form:
             return download_log()
+        elif "downloadfile" in request.form:
+            return serve_tmp_file(output_file)
         # elif 'download' in request.form:
         #     filename = request.form.get('filename')
         #     # Verarbeitung für 'download/filename'
@@ -60,6 +66,7 @@ def index():
 #@app.route('/convert', methods=['POST'])
 def convert():
     global password_crypt
+    global output_file
     try:
         # Retrieve POST arguments
         password = request.form.get('pwd') # password
@@ -175,8 +182,9 @@ def serve_tmp_file(filename):
         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     try:
+        basefile = os.path.basename(filename)
         # Serve files from the tmpdir directory
-        return send_from_directory(tmpdir, filename, mimetype='application/gpx+xml')
+        return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
