@@ -48,6 +48,8 @@ def index():
         elif 'query' in request.form:
             # Verarbeitung für 'convert'
             return convert() # redirect(url_for('convert_function'))
+        elif "downloadlog" in request.form:
+            return download_log()
         # elif 'download' in request.form:
         #     filename = request.form.get('filename')
         #     # Verarbeitung für 'download/filename'
@@ -55,7 +57,7 @@ def index():
         print('Index page')
         return render_template('index.html')
 
-@app.route('/convert', methods=['POST'])
+#@app.route('/convert', methods=['POST'])
 def convert():
     global password_crypt
     try:
@@ -144,7 +146,7 @@ def download_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-@app.route('/download-log', methods=['GET'])
+#@app.route('/download-log', methods=['GET'])
 def download_log():
     global password_crypt
     try:

@@ -79,9 +79,8 @@
                     <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
                 </div>
 
-                <submit name="form1" value="Submit!"/>
                 <!-- button type="submit" form="convert-form">Convert</button-->
-                <button type="submit" name="convert" onclick="formaction()">Convert</button>
+                <button type="submit" name="convert">Convert</button>
                 <!--input type="text" name="filename" placeholder="Dateiname">
                 <button type="submit" name="download">Herunterladen</button>
                 < !-- Weitere Felder und Schaltflächen -->            
@@ -99,17 +98,13 @@
 
 
         <div class="buttons-container">
-            <a href="/download-log" class="button">Download Logs</a>
+            <form method="POST">
+                <button name="downloadlog" id="butdl" onclick="formaction()">Download Logs</button>
+            </form>
         </div>
 
         {% endif %}
 
-        <script>
-            formaction(){
-              form.submit();
-            }
-        </script>
-          
     </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
