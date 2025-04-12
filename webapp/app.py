@@ -63,7 +63,6 @@ def index():
         print('Index page')
         return render_template('index.html')
 
-#@app.route('/convert', methods=['POST'])
 def convert():
     global password_crypt
     global output_file
@@ -138,7 +137,6 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
-@app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
     global password_crypt
     try:
@@ -153,7 +151,6 @@ def download_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-#@app.route('/download-log', methods=['GET'])
 def download_log():
     global password_crypt
     try:
@@ -173,7 +170,6 @@ def download_log():
 def favicon():
     return '', 204  # Return an empty response with a 204 No Content status
 
-@app.route('/tmp/<path:filename>', methods=['GET'])
 def serve_tmp_file(filename):
     global password_crypt
     try:
@@ -188,11 +184,9 @@ def serve_tmp_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-#@app.route('/energie_kostenvergleich', methods=['GET'])
 def show_energiekostenvergleichsanalyse():
     return render_template('energie_kostenvergleich.html')
 
-#@app.route('/impressum', methods=['GET',"POST"])
 def impressum():
     return render_template('impressum.html')
 
