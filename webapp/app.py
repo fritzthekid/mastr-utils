@@ -29,15 +29,22 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/', methods=['GET', 'POST]'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
         print('Index page')
         return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
-        if 'convert' in request.form:
+        if 'home' in request.form:
+            print('Index page')
+            return render_template('index.html', debug=app.debug)
+        elif 'impressum' in request.form:
+            return impressum()
+        elif 'costs':
+            return show_energiekostenvergleichsanalyse()
+        elif 'convert' in request.form:
             # Verarbeitung für 'convert'
-            return redirect(url_for('convert_function'))
+            return convert()
         # elif 'download' in request.form:
         #     filename = request.form.get('filename')
         #     # Verarbeitung für 'download/filename'
@@ -168,11 +175,11 @@ def serve_tmp_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-@app.route('/energie_kostenvergleich', methods=['GET'])
+#@app.route('/energie_kostenvergleich', methods=['GET'])
 def show_energiekostenvergleichsanalyse():
     return render_template('energie_kostenvergleich.html')
 
-@app.route('/impressum', methods=['GET'])
+#@app.route('/impressum', methods=['GET',"POST"])
 def impressum():
     return render_template('impressum.html')
 

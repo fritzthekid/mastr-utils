@@ -4,7 +4,7 @@
 <!-- img src="/images/logo.png" alt="logo" class="stypIconWidth"> <br><br -->
 <img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz"><br>
 </div>
-<div class="topbanner table">
+<!--div class="topbanner table">
  <table style="width:100%">
   <tr>
     <th><a href="/">Home</a></th>
@@ -13,9 +13,45 @@
     <th><a href="/">nn</th>
     <th><a href="/impressum">Kontakt</th>
   </tr>
-</table>
+</table -->
+<div class="topbanner">
+  <table style="width:100%">
+   <tr>
+    <th>
+      <form method="POST">
+          <button name="home" id="buth" onclick="formaction()">Home</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="mastrutils" id="butm" onclick="formaction()">MaStR-2-GPX</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="costs" id="butB" onclick="formaction()">Kosten</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="nn" id="butn" onclick="formaction()">NN</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="impressum" id="buti" onclick="formaction()">Impressum</button>
+      </form>
+   </th>
+  </tr>
+ </table>
 </div>
- </center>
+
+</div>
+<script>
+formaction(){
+    form.submit();
+}
+</script>
 <p><p>
 </div>
   

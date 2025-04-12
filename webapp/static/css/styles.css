@@ -18,6 +18,76 @@ table {
     text-align: left;
   }
 
+  .topbanner {
+    font-family: Arial, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 3px;
+    margin-left: 0%;
+    margin-right: 0%;     
+    padding-top: 20px;
+    padding-bottom: 3px;
+    border: none;
+    background-color: #505050;
+  }
+  
+  .topbanner table {
+    border: none;
+    margin: 0 auto;
+  }
+  .topbanner tr {
+    background-color: #505050;
+    border: 1px;
+    border-color: green;
+    margin: 0 px;
+  }
+  .topbanner th {
+    color: #1cda4f;
+    border: 2px;
+    border-color: green;
+    margin: 0 px;
+  }
+
+  .topbanner button {
+    align-self: center;
+    padding: 10px 20px;
+    background-color: #505050;
+    color: rgb(237, 237, 240);
+    border: 2px;
+    border-radius: 2px;
+    border-width: thin;
+    font-size: 16px;
+    cursor: pointer;
+    height: 30px;
+    /*width: 20%; */
+  }
+
+  .topbanner button:hover {
+    align-self: center;
+    padding: 10px 20px;
+    background-color: #dad6d6;
+    color: rgb(92, 92, 93);
+    border: none;
+    border-radius: 0px;
+    font-size: 16px;
+    cursor: pointer;
+    /*height: 30px;*/
+    /*width: 20%; */
+  }
+
+  .inner-body {
+    font-family: Arial, sans-serif;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 10px;
+    background-color: #d10a96;
+  }
+  .topbanner form {
+    background: #505050;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+/*
 .topbanner {
     font-family: Arial, sans-serif;
     margin-top: 10px;
