@@ -27,7 +27,7 @@ table {
     padding-top: 20px;
     padding-bottom: 3px;
     border: none;
-    background-color: #505050;
+    background-color: #a0a0a0;
   }
   
   .topbanner table {
@@ -35,7 +35,7 @@ table {
     margin: 0 auto;
   }
   .topbanner tr {
-    background-color: #505050;
+    background-color: #a0a0a0;
     border: 1px;
     border-color: green;
     margin: 0 px;
@@ -50,12 +50,13 @@ table {
   .topbanner button {
     align-self: center;
     padding: 10px 20px;
-    background-color: #505050;
-    color: rgb(237, 237, 240);
+    background-color: #a0a0a0;
+    color: #f0f0f5;
     border: 2px;
     border-radius: 2px;
     border-width: thin;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     height: 30px;
     /*width: 20%; */
@@ -82,10 +83,10 @@ table {
     /*background-color: #d10a96;*/
   }
   .topbanner form {
-    background: #505050;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: #a0a0a0;
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: none; /*0px 0px rgba(0, 0, 0, 0.1);*/
   }
 /*
 .topbanner {
@@ -147,6 +148,13 @@ form {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.myform {
+    /* background: #ffffff; */
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
 }
 
 input[type="file"],
