@@ -45,7 +45,7 @@ def index():
         elif "nn" in request.form:
             print('Index page')
             return render_template('index.html', debug=app.debug)
-        elif 'convert' in request.form:
+        elif 'query' in request.form:
             # Verarbeitung für 'convert'
             return convert() # redirect(url_for('convert_function'))
         # elif 'download' in request.form:
