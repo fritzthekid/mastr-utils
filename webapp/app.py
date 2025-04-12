@@ -44,7 +44,7 @@ def index():
             return show_energiekostenvergleichsanalyse()
         elif 'convert' in request.form:
             # Verarbeitung für 'convert'
-            return convert()
+            return redirect(url_for('convert_function'))
         # elif 'download' in request.form:
         #     filename = request.form.get('filename')
         #     # Verarbeitung für 'download/filename'
