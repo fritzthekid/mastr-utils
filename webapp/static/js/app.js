@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Send the form data to the server
-            const response = await fetch('/convert', {
+            const response = await fetch('/', {
                 method: 'POST',
                 body: formData
             });
@@ -29,12 +29,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
 
                 // Add the download button
-                const downloadLink = document.createElement('a');
+                /*const downloadLink = document.createElement('a');
                 downloadLink.href = result.download_url;
                 downloadLink.textContent = 'Download GPX File';
                 downloadLink.classList.add('button'); // Use the same button style
                 downloadLink.download = ''; // Ensure it triggers a download
-                resultDiv.appendChild(downloadLink);
+                resultDiv.appendChild(downloadLink); */
+
+                // Add the download button
+                const downloadForm = document.createElement('form');
+                downloadForm.className = "myform";
+                downloadForm.method = "POST";
+                const downloadbutton = document.createElement('button');
+                downloadbutton.textContent = 'Download GPX File';
+                downloadbutton.name = "downloadfile";
+                downloadbutton.className = "buttons-container";
+                downloadbutton.style = 
+                "padding: 10px 20px;background-color: #4CAF50;color: white;border: none;border-radius: 5px;font-size: 16px;cursor: pointer;text-decoration: none;text-align: center;";
+                downloadForm.appendChild(downloadbutton);
+                resultDiv.appendChild(downloadForm);
 
                 // Visualize the GPX file on the map
                 addGpxToMap(result.download_url);

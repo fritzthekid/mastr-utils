@@ -1,21 +1,41 @@
-<!--div style="background-color: #a29e9e;"-->
 <div class="topbanner"> 
-<center><div class="stypIsMonitor">
-<!-- img src="/images/logo.png" alt="logo" class="stypIconWidth"> <br><br -->
-<img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz"><br>
-</div>
-<div class="topbanner table">
- <table style="width:100%">
-  <tr>
-    <th><a href="/">Home</a></th>
-    <th><a href="/">MaStR zu GPX Konverter</a></th>
-    <th><a href="/energie_kostenvergleich">Energiekostenvergleich</a></th>
-    <th><a href="/">nn</th>
-    <th><a href="/impressum">Kontakt</th>
+<center>
+<img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz" width="5%"><br>
+<div class="topbanner">
+  <table style="width:100%">
+   <tr>
+    <th>
+      <form method="POST">
+          <button name="home" id="buth" onclick="formaction()">Home</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="mastrutils" id="butm" onclick="formaction()">MaStR-2-GPX</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="costs" id="butB" onclick="formaction()">Kosten</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="nn" id="butn" onclick="formaction()">NN</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="impressum" id="buti" onclick="formaction()">Impressum</button>
+      </form>
+   </th>
   </tr>
-</table>
+ </table>
+ <script>
+  formaction(){
+    form.submit();
+  }
+ </script>
 </div>
- </center>
-<p><p>
-</div>
-  
+</center>
+</div> 

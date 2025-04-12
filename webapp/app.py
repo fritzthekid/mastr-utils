@@ -14,6 +14,9 @@ ALLOWED_EXTENSIONS = {'csv'}
 checkpassword_crypt = '150b9efdf6e1c5b614b1e90cf7a17ca59b494b802e35f6ae467a540236d3ecaec7a27478fe1e9393'
 global password_crypt
 password_crypt = b""
+global output_file
+output_file = ""
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -29,15 +32,30 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/', methods=['GET', 'POST]'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    global output_file
     if request.method == 'GET':
         print('Index page')
         return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
-        if 'convert' in request.form:
+        if 'home' in request.form or "mastrutils" in request.form:
+            print('Index page')
+            return render_template('index.html', debug=app.debug)
+        elif 'impressum' in request.form:
+            return impressum()
+        elif 'costs' in request.form:
+            return show_energiekostenvergleichsanalyse()
+        elif "nn" in request.form:
+            print('Index page')
+            return render_template('index.html', debug=app.debug)
+        elif 'query' in request.form:
             # Verarbeitung für 'convert'
-            return redirect(url_for('convert_function'))
+            return convert() # redirect(url_for('convert_function'))
+        elif "downloadlog" in request.form:
+            return download_log()
+        elif "downloadfile" in request.form:
+            return serve_tmp_file(output_file)
         # elif 'download' in request.form:
         #     filename = request.form.get('filename')
         #     # Verarbeitung für 'download/filename'
@@ -45,9 +63,9 @@ def index():
         print('Index page')
         return render_template('index.html')
 
-@app.route('/convert', methods=['POST'])
 def convert():
     global password_crypt
+    global output_file
     try:
         # Retrieve POST arguments
         password = request.form.get('pwd') # password
@@ -119,7 +137,6 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
-@app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
     global password_crypt
     try:
@@ -134,7 +151,6 @@ def download_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-@app.route('/download-log', methods=['GET'])
 def download_log():
     global password_crypt
     try:
@@ -154,7 +170,6 @@ def download_log():
 def favicon():
     return '', 204  # Return an empty response with a 204 No Content status
 
-@app.route('/tmp/<path:filename>', methods=['GET'])
 def serve_tmp_file(filename):
     global password_crypt
     try:
@@ -163,16 +178,15 @@ def serve_tmp_file(filename):
         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     try:
+        basefile = os.path.basename(filename)
         # Serve files from the tmpdir directory
-        return send_from_directory(tmpdir, filename, mimetype='application/gpx+xml')
+        return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-@app.route('/energie_kostenvergleich', methods=['GET'])
 def show_energiekostenvergleichsanalyse():
     return render_template('energie_kostenvergleich.html')
 
-@app.route('/impressum', methods=['GET'])
 def impressum():
     return render_template('impressum.html')
 

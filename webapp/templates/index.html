@@ -28,7 +28,7 @@
         <!-- Flex container for form and map -->
         <div class="form-map-container">
             <!-- Form Section -->
-            <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
+            <form id="convert-form" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="pwd">Password:</label>
                     <div style="position: relative;">
@@ -98,7 +98,9 @@
 
 
         <div class="buttons-container">
-            <a href="/download-log" class="button">Download Logs</a>
+            <form class="myform" method="POST">
+                <button name="downloadlog" id="butdl" onclick="formaction()">Download Logs</button>
+            </form>
         </div>
 
         {% endif %}
