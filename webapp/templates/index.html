@@ -28,7 +28,7 @@
         <!-- Flex container for form and map -->
         <div class="form-map-container">
             <!-- Form Section -->
-            <form id="convert-form" action="/convert" method="post" enctype="multipart/form-data">
+            <form id="convert-form" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="pwd">Password:</label>
                     <div style="position: relative;">
@@ -79,8 +79,9 @@
                     <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
                 </div>
 
+                <submit name="form1" value="Submit!"/>
                 <!-- button type="submit" form="convert-form">Convert</button-->
-                <button type="submit" name="convert">Convert</button>
+                <button type="submit" name="convert" onclick="formaction()">Convert</button>
                 <!--input type="text" name="filename" placeholder="Dateiname">
                 <button type="submit" name="download">Herunterladen</button>
                 < !-- Weitere Felder und Schaltflächen -->            
@@ -103,6 +104,12 @@
 
         {% endif %}
 
+        <script>
+            formaction(){
+              form.submit();
+            }
+        </script>
+          
     </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 

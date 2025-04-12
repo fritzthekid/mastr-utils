@@ -2,10 +2,6 @@
 // It handles user interactions, makes AJAX requests to the Flask backend, 
 // and updates the UI based on the responses.
 
-formaction(){
-    form.submit();
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('#convert-form');
     const resultDiv = document.querySelector('#result');
@@ -21,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Send the form data to the server
-            const response = await fetch('/convert', {
+            const response = await fetch('/', {
                 method: 'POST',
                 body: formData
             });
@@ -129,5 +125,3 @@ function addGpxToMap(gpxUrl) {
     // Update the current GPX layer
     currentGpxLayer = gpxLayer;
 }
-
-
