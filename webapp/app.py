@@ -63,6 +63,7 @@ def index():
         print('Index page')
         return render_template('index.html')
 
+#@app.route('/convert', methods=['POST'])
 def convert():
     global password_crypt
     global output_file
@@ -137,27 +138,29 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
-def download_file(filename):
-    global password_crypt
-    try:
-        assert password_crypt == checkpassword_crypt
-    except Exception as e:
-        print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
-        return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
+# @app.route('/download/<filename>', methods=['GET'])
+# def download_file(filename):
+#     global password_crypt
+#     try:
+#         assert password_crypt == checkpassword_crypt
+#     except Exception as e:
+#         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
+#         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
 
-    file_path = f"{tmpdir}/{filename}"
-    try:
-        return send_file(file_path, as_attachment=True)
-    except FileNotFoundError:
-        return jsonify({'status': 'error', 'message': 'File not found.'}), 404
+#     file_path = f"{tmpdir}/{filename}"
+#     try:
+#         return send_file(file_path, as_attachment=True)
+#     except FileNotFoundError:
+#         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
+#@app.route('/download-log', methods=['GET'])
 def download_log():
-    global password_crypt
-    try:
-        assert password_crypt == checkpassword_crypt
-    except Exception as e:
-        print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
-        return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
+    # global password_crypt
+    # try:
+    #     assert password_crypt == checkpassword_crypt
+    # except Exception as e:
+    #     print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
+    #     return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     if not app.debug:
         return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
     log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
@@ -170,6 +173,7 @@ def download_log():
 def favicon():
     return '', 204  # Return an empty response with a 204 No Content status
 
+@app.route('/tmp/<path:filename>', methods=['GET'])
 def serve_tmp_file(filename):
     global password_crypt
     try:
@@ -184,9 +188,11 @@ def serve_tmp_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
+#@app.route('/energie_kostenvergleich', methods=['GET'])
 def show_energiekostenvergleichsanalyse():
     return render_template('energie_kostenvergleich.html')
 
+#@app.route('/impressum', methods=['GET'])
 def impressum():
     return render_template('impressum.html')
 
