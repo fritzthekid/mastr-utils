@@ -63,7 +63,6 @@ def index():
         print('Index page')
         return render_template('index.html')
 
-#@app.route('/convert', methods=['POST'])
 def convert():
     global password_crypt
     global output_file
@@ -131,29 +130,10 @@ def convert():
             'message': 'Conversion completed successfully.',
             'download_url': f"/tmp/{output_file.rsplit('/', 1)[-1]}"
         })
-    # except subprocess.CalledProcessError as e:
-    #     print('Error during conversion:', e.stderr)
-    #    return jsonify({'status': 'error', 'message': e.stderr})
     except Exception as e:
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
-# @app.route('/download/<filename>', methods=['GET'])
-# def download_file(filename):
-#     global password_crypt
-#     try:
-#         assert password_crypt == checkpassword_crypt
-#     except Exception as e:
-#         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
-#         return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
-
-#     file_path = f"{tmpdir}/{filename}"
-#     try:
-#         return send_file(file_path, as_attachment=True)
-#     except FileNotFoundError:
-#         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
-
-#@app.route('/download-log', methods=['GET'])
 def download_log():
     # global password_crypt
     # try:
@@ -188,11 +168,9 @@ def serve_tmp_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-#@app.route('/energie_kostenvergleich', methods=['GET'])
 def show_energiekostenvergleichsanalyse():
     return render_template('energie_kostenvergleich.html')
 
-#@app.route('/impressum', methods=['GET'])
 def impressum():
     return render_template('impressum.html')
 
