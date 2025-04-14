@@ -157,6 +157,25 @@ form {
     box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
 }
 
+.mylink {
+    background: #f4f4f4;
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
+}
+
+.mylink button {
+        background: #f4f4f4; /*background: none!important;*/
+        border: none;
+        padding: 0!important;
+        /*optional*/
+        font-family: arial, sans-serif;
+        /*input has OS specific font-family*/
+        color: #069;
+        text-decoration: underline;
+        cursor: pointer;
+}
+
 input[type="file"],
 input[type="text"],
 input[type="number"],

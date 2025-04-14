@@ -31,6 +31,13 @@ def handle_large_file(e):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+links = {
+    "home":"index.html",
+    "costs1":"kosten_atomkraft.html",
+    "costs2":"kosten_energiewende.html",
+    "battery":"batterien.html",
+    "impressum":'impressum.html'
+}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -39,16 +46,12 @@ def index():
         print('Index page')
         return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
-        if 'home' in request.form or "mastrutils" in request.form:
-            print('Index page')
-            return render_template('index.html', debug=app.debug)
-        elif 'impressum' in request.form:
-            return impressum()
-        elif 'costs' in request.form:
-            return show_energiekostenvergleichsanalyse()
-        elif "nn" in request.form:
-            print('Index page')
-            return render_template('index.html', debug=app.debug)
+        firstarg = [l for l in request.form][0]
+        if firstarg in links:
+            print(f"{links[firstarg]}")
+            return show_page(links[firstarg])
+        elif "mastrutils" in request.form:
+            return render_template("mastrutils.html", debug=app.debug)
         elif 'query' in request.form:
             # Verarbeitung für 'convert'
             return convert() # redirect(url_for('convert_function'))
@@ -56,10 +59,6 @@ def index():
             return download_log()
         elif "downloadfile" in request.form:
             return serve_tmp_file(output_file)
-        # elif 'download' in request.form:
-        #     filename = request.form.get('filename')
-        #     # Verarbeitung für 'download/filename'
-        #     return redirect(url_for('download_function', filename=filename))
         print('Index page')
         return render_template('index.html')
 
@@ -168,8 +167,8 @@ def serve_tmp_file(filename):
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
-def show_energiekostenvergleichsanalyse():
-    return render_template('energie_kostenvergleich.html')
+def show_page(page):
+    return render_template(page)
 
 def impressum():
     return render_template('impressum.html')

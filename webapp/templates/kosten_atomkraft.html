@@ -94,11 +94,11 @@
         <td>120–250</td>
         <td>hohe Investitionskosten</td>
       </tr>
-      <tr>
+      <!--tr>
         <td>Speicher (Batterie) bei heutigen Kosten (weiteres siehe Anmerkung)</td>
         <td>100–140**</td>
         <td>kombinierbar mit PV/Wind (siehe Anmerkung)</td>
-      </tr>
+      </tr-->
     </tbody>
   </table>
   <p><strong>Quellen:</strong><br>
@@ -106,32 +106,17 @@
     <a href="https://www.iea.org/reports/world-energy-outlook-2023" target="_blank">➜ IEA: World Energy Outlook 2023</a>
   </p>
 
-  <h2>📦 **Speicher im Wandel – Perspektive auf 20 Jahre</h2>
-  <p>
-    Aktuelle Speicherpreise (100–140 $/MWh) basieren auf Lithium-Ionen-Technologie und heutigem Ausbau. 
-    Doch mit neuen Technologien wie <strong>Natrium-Ionen- und Salzbatterien</strong> sowie der massiven Skalierung 
-    in China und Kalifornien ist davon auszugehen, dass sich diese Kosten in den kommenden Jahren halbieren.
-  </p>
-  <p>
-    <strong>Deutsche Energieversorger</strong> berichten bereits von einem wirtschaftlichen Break-even – der Einbau lohnt sich
-    zunehmend auch ohne Förderung. Für ein realistisches 20-Jahres-Szenario sollten daher perspektivische Kosten von 
-    <strong>50–80 $/MWh</strong> angesetzt werden – insbesondere im Zusammenspiel mit Photovoltaik.
-  </p>
-  <p>
-    <a href="https://www.energy-storage.news" target="_blank">➜ energy-storage.news – Branchenanalysen & Preistrends</a>
-  </p>
-  <!-- Prognose: Speicherkosten bis 2044 (SVG) -->
-<div>
-    <h3>📉 Prognose: Speicherkosten bis 2044 (SVG)</h3>
-    <img src="{{ url_for('static', filename='images/speicherprognose.svg') }}" alt="Prognose: Speicherkosten bis 2044">
-    <!-- object type="image/svg+xml" data="data:image/svg+xml;utf8,<?xml version='1.0' encoding='utf-8' standalone='no'?>
-  <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN'
-    'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
-  <svg xmlns:xlink='http://www.w3.org/1999/xlink' width='576pt' height='288pt' viewBox='0 0 576 288' xmlns='http://www.w3.org/2000/svg' version='1.1'>
-  < !-- ... zu lang zum Einfügen hier > </svg>"-->
- 
-</object>
-  </div>
+<div class="myform">
+    <form class="mylink" method="POST">
+        <button name="battery" id="bat" onclick="formaction()"><h2>Batteriespeicher im Wandel</h2></button>
+    </form>    
+</div>
+
+<ul>
+    <li><strong>Zweck:</strong> Netzstabilität, Kurzzeitspeicher</li>
+    <li><strong>Trend:</strong> Preise sinken rasant</li>
+</ul>
+
 
 
   
@@ -162,7 +147,7 @@
     Beispiel lernen und auf Wind, Sonne und Speicher setzen.
   </p>
   <hr>
-  <h2>📄 Staatliche Förderung in Kalifornien – wirtschaftliche Gründe</h2>
+  <h2>📄 Staatliche Förderung in Kalifornien: <b>Wirtschaftliche Gründe</b></h2>
 
 <p>
 Kalifornien fördert den Ausbau erneuerbarer Energien nicht nur aus Umweltgründen, sondern auch klar aus wirtschaftlichen Überlegungen. Die wichtigsten Motive:
@@ -186,6 +171,33 @@ Kalifornien fördert den Ausbau erneuerbarer Energien nicht nur aus Umweltgründ
 <p>
 Diese Berichte und Programme machen deutlich, dass Kaliforniens Strategie sowohl ökologisch als auch wirtschaftlich motiviert ist – und als Modell für viele andere Regionen dient.
 </p>
+</div>
+<div>
+Weitere Links:
+
+<ul>
+<li>
+  <a href="https://www.worldnuclearreport.org/">World Nuclear Industry Status Report</a>
+</li>
+<li>
+  <a href="https://www.boell.de/de/2025/02/17/atomstrom-ist-teuer-und-keine-loesung">Heinrich Böll Stiftung</a>
+</li>
+<li>
+  <a href="https://www.iea.org/reports/global-energy-review-2025/key-findings">Internationale Energieagentur: Key-Findings</a>:
+  In 2024, 80% of the growth in global electricity generation was provided by 
+  renewable sources and nuclear power. ... [Internationaler Zubau von Energieanlagen] 
+  <ul>
+    <li><b>700 GW</b> of total renewable capacity added in 2024</li>
+    <li><b>7 GW</b> of nuclear power added in 2024</li>
+  </ul>
+</li>
+<li>
+  <a href="https://">IRENA - International Renewable Energy Agency</a>: Report:
+  <a href="https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2025/Mar/IRENA_DAT_RE_Capacity_Highlights_2025.pdf">
+    Renewable Capacity Highlights 
+  </a>
+</li>
+</ul>
 
 </div>
 </body>

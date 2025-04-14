@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostenvergleich: Atomkraft vs. Erneuerbare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+  <!--style>
+    body {
+      font-family: system-ui, sans-serif;
+      line-height: 1.4;
+      margin: 2rem;
+      /* max-width: 800px; */
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 0.5rem;
+      text-align: left;
+    }
+    h1, h2, h3 {
+      color: #003366;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    code {
+      background: #f4f4f4;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+    }
+    canvas {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      border: 1px solid #ddd;
+    }
+  </style-->
+</head>
+<body>
+  {% include 'topbanner.html' %}
+
+<div class="inner-body">
+<h1>Kosten der Energiewende</h1>
+
+<h2>☢️ Atomkraftwerke</h2>
+
+<ul>
+    <li><strong>LCOE (inkl. Bau, Rückbau, Endlagerung):</strong> 120–250 €/MWh (stark projektspezifisch)</li>
+    <li><strong>Baukosten:</strong> oft >10 Mrd. € pro Reaktor, Bauzeiten 10–15 Jahre</li>
+    <li><strong>Endlagerung:</strong> bis zu 100.000 Jahre Lagerdauer, Kosten langfristig unklar</li>
+    <li><strong>CO₂-Ausstoß:</strong> 10–20 g CO₂/kWh (Lebenszyklus)</li>
+    <li><strong>Risiken:</strong> hohe Sicherheitsanforderungen, Kostenexplosionen, gesellschaftliche Ablehnung</li>
+    <li><strong>Beispiel:</strong> Hinkley Point C (UK): garantierter Abnahmepreis ~120 €/MWh (inflationsindexiert, 35 Jahre)</li>
+</ul>
+
+<h2>🔥 Fossile Kraftwerke</h2>
+
+<h3>Kohlekraftwerke (Steinkohle / Braunkohle)</h3>
+<ul>
+    <li><strong>LCOE:</strong> 90–150 €/MWh</li>
+    <li><strong>Externe Kosten:</strong> +50–100 €/MWh (Umwelt, Gesundheit)</li>
+    <li><strong>CO₂-Ausstoß:</strong> ca. 800–1.200 g CO₂/kWh</li>
+    <li><strong>Besonderheiten:</strong> hohe Emissionen, teuer bei CO₂-Zertifikaten, langsame Reaktion</li>
+</ul>
+
+<h3>Gaskraftwerke (GuD, Spitzenlast)</h3>
+<ul>
+    <li><strong>LCOE:</strong> 70–130 €/MWh</li>
+    <li><strong>CO₂-Ausstoß:</strong> ca. 400–600 g CO₂/kWh</li>
+    <li><strong>Vorteile:</strong> flexibel, regelbar</li>
+    <li><strong>Nachteile:</strong> volatile Preise, Importabhängigkeit</li>
+</ul>
+
+<h2>🌞🌬️ Erneuerbare Energien</h2>
+
+<h3>Photovoltaik (Freifläche)</h3>
+<ul>
+    <li><strong>LCOE:</strong> 30–60 €/MWh</li>
+    <li><strong>CO₂-Ausstoß:</strong> &lt;50 g CO₂/kWh</li>
+    <li><strong>Vorteile:</strong> schnell skalierbar, keine Brennstoffkosten</li>
+    <li><strong>Nachteile:</strong> wetterabhängig</li>
+</ul>
+
+<h3>Onshore-Windkraft</h3>
+<ul>
+    <li><strong>LCOE:</strong> 40–70 €/MWh</li>
+    <li><strong>CO₂-Ausstoß:</strong> &lt;20 g CO₂/kWh</li>
+    <li><strong>Vorteile:</strong> konstant günstiger Strom</li>
+    <li><strong>Nachteile:</strong> Akzeptanzprobleme</li>
+</ul>
+
+<h3>Offshore-Windkraft</h3>
+<ul>
+    <li><strong>LCOE:</strong> 60–90 €/MWh</li>
+    <li><strong>Vorteile:</strong> höhere Volllaststunden, kaum Flächenkonflikte</li>
+    <li><strong>Nachteile:</strong> teuer in Installation und Netzanschluss</li>
+</ul>
+
+<h3>Batteriespeicher</h3>
+<ul>
+    <li><strong>LCOE (nur Speicher):</strong> 100–200 €/MWh (zusätzlich zum EE-Strom)</li>
+    <li><strong>Zweck:</strong> Netzstabilität, Kurzzeitspeicher</li>
+    <li><strong>Trend:</strong> Preise sinken rasant</li>
+</ul>
+
+<h2>📊 Kostenvergleich im Überblick</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Technologie</th>
+        <th>LCOE (€/MWh)</th>
+        <th>Flexibilität</th>
+        <th>Emissionen</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Atomkraft</td>
+        <td>120–250</td>
+        <td>Grundlast</td>
+        <td>Sehr gering</td>
+    </tr>
+    <tr>
+        <td>Kohle</td>
+        <td>90–150</td>
+        <td>Gering</td>
+        <td>Sehr hoch</td>
+    </tr>
+    <tr>
+        <td>Gas (GuD)</td>
+        <td>70–130</td>
+        <td>Hoch</td>
+        <td>Mittel</td>
+    </tr>
+    <tr>
+        <td>Solar (PV)</td>
+        <td>30–60</td>
+        <td>Gering</td>
+        <td>Sehr gering</td>
+    </tr>
+    <tr>
+        <td>Wind (Onshore)</td>
+        <td>40–70</td>
+        <td>Mittel</td>
+        <td>Sehr gering</td>
+    </tr>
+    <tr>
+        <td>Wind (Offshore)</td>
+        <td>60–90</td>
+        <td>Mittel</td>
+        <td>Sehr gering</td>
+    </tr>
+    <!--tr>
+        <td>Batteriespeicher</td>
+        <td>+100–200</td>
+        <td>Hoch</td>
+        <td>Keine direkten</td>
+    </tr-->
+    </tbody>
+</table>
+
+<div class="myform">
+    <form class="mylink" method="POST">
+        <button name="battery" id="bat" onclick="formaction()"><h2>Batteriespeicher</h2></button>
+    </form>    
+</div>
+
+<ul>
+    <li><strong>Zweck:</strong> Netzstabilität, Kurzzeitspeicher</li>
+    <li><strong>Trend:</strong> Preise sinken rasant</li>
+</ul>
+
+
+</div>
+</body>
+</html>
+  

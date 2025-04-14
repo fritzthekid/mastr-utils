@@ -13,100 +13,37 @@
 </head>
 <body>
     {% include 'topbanner.html' %}
-    <div class="container">
-        <!-- a href="/">Home</a> <a href="/energie_kostenvergleich">Energiekostenvergleich</a></p>
-        <div style="text-align: center;">
-            <br>
-            <img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz">
-            <br>
-        </div-->
-        <div style="text-align: center;">
-            <h1>MaStR zu GPX Konverter</h1>
-            <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu GPX-Dateien für eine GPS App (Handy, PC, Online). 
-                (<a href="https://github.com/fritzthekid/mastr-utils/blob/main/doc/dokumentation.md" target="_blank" rel="noopener noreferrer">Dokumentation)</a></p>
+    <div class="inner-body">
+        <h1>Das Marktstammdatenregister und die Energiewende</h1>
+
+        Auf diesen Seiten sind verschiedene Aspekte der Energiewende dargestellt.
+        
+        Zunächst liefert das Marktstammdatenregister der Bundesnetzagentur eine 
+        Liste aller Energieanlagen in Deutschland. Dort finden sich Kohle- und Gaskraftwerke,
+        Atomkraftwerke, Wasserkraftwerke, Biogassanlagen, PV Anlagen, Windräder und so weiter.
+
+        <div class="myform">
+            <form class="mylink" method="POST">
+                <button name="mastrutils" id="bat" onclick="formaction()"><h2>Zur Visualisierung des Marktstammdatenregister</h2></button>
+            </form>    
         </div>
-        <!-- Flex container for form and map -->
-        <div class="form-map-container">
-            <!-- Form Section -->
-            <form id="convert-form" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="pwd">Password:</label>
-                    <div style="position: relative;">
-                      <input type="password" id="pwd" name="pwd" style="padding-right: 30px;">
-                      <span onclick="togglePassword()" style="
-                        position: absolute;
-                        right: 8px;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        cursor: pointer;
-                        user-select: none;
-                      ">👁️</span>
-                    </div>
-                  </div>
-                  
-                  <script>
-                    function togglePassword() {
-                      const pwd = document.getElementById("pwd");
-                      pwd.type = pwd.type === "password" ? "text" : "password";
-                    }
-                  </script>
-                  
-
-                <div class="form-group">
-                    <label for="mastr_file">Upload MaStR Data File:</label>
-                    <input type="file" name="mastr_file" id="mastr_file" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="query">Query:</label>
-                    <input type="text" name="query" id="query" 
-                            placeholder="e.g., is_pv & BruttoleistungDerEinheit > 10000"
-                            style="font-family: sans-serif;">
-                </div>
-
-                <div class="form-group">
-                    <label for="min_weight">Min. Bruttoleistung der Fläche [kW]:</label>
-                    <input type="number" name="min_weight" id="min_weight" value="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="radius">Radius:</label>
-                    <input type="number" name="radius" id="radius" value="2000">
-                </div>
-
-                <div class="form-group">
-                    <label for="output_file">Output File Name (optional):</label>
-                    <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
-                </div>
-
-                <!-- button type="submit" form="convert-form">Convert</button-->
-                <button type="submit" name="convert">Convert</button>
-                <!--input type="text" name="filename" placeholder="Dateiname">
-                <button type="submit" name="download">Herunterladen</button>
-                < !-- Weitere Felder und Schaltflächen -->            
-            </form>
-
-            <!-- Map Section -->
-            <div id="map" style="height: 500px; margin-top: 20px;"></div>
+        <div class="myform">
+            <form class="mylink" method="POST">
+                <button name="costs1" id="bat" onclick="formaction()"><h2>Zur Atomkraft</h2></button>
+            </form>    
         </div>
-
-        <!-- Result Section -->
-        <div id="result" style="margin-top: 20px;"></div>
-
-        <!-- Buttons Section -->
-        {% if debug %}
-
-
-        <div class="buttons-container">
-            <form class="myform" method="POST">
-                <button name="downloadlog" id="butdl" onclick="formaction()">Download Logs</button>
-            </form>
+        <div class="myform">
+            <form class="mylink" method="POST">
+                <button name="costs2" id="bat" onclick="formaction()"><h2>Kosten der verschiedenen Energieanlagen im Vergleich</h2></button>
+            </form>    
         </div>
-
-        {% endif %}
-
+        <div class="myform">
+            <form class="mylink" method="POST">
+                <button name="battery" id="bat" onclick="formaction()"><h2>Batteriespeicher im Wandel</h2></button>
+            </form>    
+        </div>
+                                    
     </div>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 </body>
 </html>
