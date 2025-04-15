@@ -16,132 +16,134 @@
   {% include 'topbanner.html' %}
 
 <div class="inner-body">
-<h1>Kosten der Energiewende</h1>
-
-<h2>☢️ Atomkraftwerke</h2>
-
-<ul>
-    <li><strong>LCOE (inkl. Bau, Rückbau, Endlagerung):</strong> 120–250 €/MWh (stark projektspezifisch)</li>
-    <li><strong>Baukosten:</strong> oft >10 Mrd. € pro Reaktor, Bauzeiten 10–15 Jahre</li>
-    <li><strong>Endlagerung:</strong> bis zu 100.000 Jahre Lagerdauer, Kosten langfristig unklar</li>
-    <li><strong>CO₂-Ausstoß:</strong> 10–20 g CO₂/kWh (Lebenszyklus)</li>
-    <li><strong>Risiken:</strong> hohe Sicherheitsanforderungen, Kostenexplosionen, gesellschaftliche Ablehnung</li>
-    <li><strong>Beispiel:</strong> Hinkley Point C (UK): garantierter Abnahmepreis ~120 €/MWh (inflationsindexiert, 35 Jahre)</li>
-</ul>
-
-<h2>🔥 Fossile Kraftwerke</h2>
-
-<h3>Kohlekraftwerke (Steinkohle / Braunkohle)</h3>
-<ul>
-    <li><strong>LCOE:</strong> 90–150 €/MWh</li>
-    <li><strong>Externe Kosten:</strong> +50–100 €/MWh (Umwelt, Gesundheit)</li>
-    <li><strong>CO₂-Ausstoß:</strong> ca. 800–1.200 g CO₂/kWh</li>
-    <li><strong>Besonderheiten:</strong> hohe Emissionen, teuer bei CO₂-Zertifikaten, langsame Reaktion</li>
-</ul>
-
-<h3>Gaskraftwerke (GuD, Spitzenlast)</h3>
-<ul>
-    <li><strong>LCOE:</strong> 70–130 €/MWh</li>
-    <li><strong>CO₂-Ausstoß:</strong> ca. 400–600 g CO₂/kWh</li>
-    <li><strong>Vorteile:</strong> flexibel, regelbar</li>
-    <li><strong>Nachteile:</strong> volatile Preise, Importabhängigkeit</li>
-</ul>
-
-<h2>🌞🌬️ Erneuerbare Energien</h2>
-
-<h3>Photovoltaik (Freifläche)</h3>
-<ul>
-    <li><strong>LCOE:</strong> 30–60 €/MWh</li>
-    <li><strong>CO₂-Ausstoß:</strong> &lt;50 g CO₂/kWh</li>
-    <li><strong>Vorteile:</strong> schnell skalierbar, keine Brennstoffkosten</li>
-    <li><strong>Nachteile:</strong> wetterabhängig</li>
-</ul>
-
-<h3>Onshore-Windkraft</h3>
-<ul>
-    <li><strong>LCOE:</strong> 40–70 €/MWh</li>
-    <li><strong>CO₂-Ausstoß:</strong> &lt;20 g CO₂/kWh</li>
-    <li><strong>Vorteile:</strong> konstant günstiger Strom</li>
-    <li><strong>Nachteile:</strong> Akzeptanzprobleme</li>
-</ul>
-
-<h3>Offshore-Windkraft</h3>
-<ul>
-    <li><strong>LCOE:</strong> 60–90 €/MWh</li>
-    <li><strong>Vorteile:</strong> höhere Volllaststunden, kaum Flächenkonflikte</li>
-    <li><strong>Nachteile:</strong> teuer in Installation und Netzanschluss</li>
-</ul>
-
-<h3>Batteriespeicher</h3>
-<ul>
-    <li><strong>LCOE (nur Speicher):</strong> 100–200 €/MWh (zusätzlich zum EE-Strom)</li>
-    <li><strong>Zweck:</strong> Netzstabilität, Kurzzeitspeicher</li>
-    <li><strong>Trend:</strong> Preise sinken rasant</li>
-</ul>
-
-<h2>📊 Kostenvergleich im Überblick</h2>
-
-<table>
-    <thead>
-        <tr>
+    
+      <h1>Kosten der Energiewende</h1>
+    
+      <h2>☢️ Atomkraftwerke</h2>
+    
+      <ul>
+        <li><strong>LCOE:</strong> 120–250 €/MWh inkl. Bau, Rückbau und Endlagerung</li>
+        <li><strong>Beispiel:</strong> <a href="https://www.nao.org.uk/reports/hinkley-point-c/" target="_blank">Hinkley Point C</a> (UK): garantierter Abnahmepreis ~120 €/MWh (35 Jahre, indexiert)</li>
+        <li><strong>CO₂-Ausstoß:</strong> 10–20 g CO₂/kWh (Lebenszyklus)</li>
+      </ul>
+      <p class="source">
+        Quelle: IEA, Agora Energiewende, UK National Audit Office
+      </p>
+    
+      <h2>🔥 Fossile Kraftwerke</h2>
+    
+      <h3>Kohlekraftwerke</h3>
+      <ul>
+        <li><strong>LCOE:</strong> 90–150 €/MWh</li>
+        <li><strong>Externe Kosten:</strong> +50–100 €/MWh (<a href="https://www.umweltbundesamt.de/themen/verkehr-laerm/emissionsdaten/energietraeger/stromerzeugung" target="_blank">UBA</a>)</li>
+        <li><strong>CO₂-Ausstoß:</strong> ca. 800–1.200 g CO₂/kWh</li>
+      </ul>
+      <p class="source">Quelle: Umweltbundesamt, Agora 2021</p>
+    
+      <h3>Gaskraftwerke (GuD)</h3>
+      <ul>
+        <li><strong>LCOE:</strong> 70–130 €/MWh</li>
+        <li><strong>Quelle:</strong> <a href="https://www.lazard.com/perspective/levelized-cost-of-energy-levelized-cost-of-storage-and-levelized-cost-of-hydrogen/" target="_blank">Lazard LCOE v15.0</a></li>
+        <li><strong>CO₂-Ausstoß:</strong> ca. 400–600 g CO₂/kWh</li>
+      </ul>
+    
+      <h2>🌞🌬️ Erneuerbare Energien</h2>
+    
+      <h3>Photovoltaik (Freifläche)</h3>
+      <ul>
+        <li><strong>LCOE:</strong> 30–60 €/MWh</li>
+        <li><strong>Quelle:</strong> <a href="https://www.ise.fraunhofer.de/de/veroeffentlichungen/studien/studie-stromgestehungskosten-erneuerbare-energien.html" target="_blank">Fraunhofer ISE 2023</a>, <a href="https://www.lazard.com/perspective/levelized-cost-of-energy-levelized-cost-of-storage-and-levelized-cost-of-hydrogen/" target="_blank">Lazard</a></li>
+        <li><strong>CO₂-Ausstoß:</strong> &lt;50 g CO₂/kWh</li>
+      </ul>
+    
+      <h3>Onshore-Windkraft</h3>
+      <ul>
+        <li><strong>LCOE:</strong> 40–70 €/MWh</li>
+        <li><strong>Quellen:</strong> <a href="https://www.ise.fraunhofer.de" target="_blank">Fraunhofer ISE</a>, <a href="https://www.irena.org/publications" target="_blank">IRENA 2022</a></li>
+        <li><strong>CO₂-Ausstoß:</strong> &lt;20 g CO₂/kWh</li>
+      </ul>
+    
+      <h3>Offshore-Windkraft</h3>
+      <ul>
+        <li><strong>LCOE:</strong> 60–90 €/MWh</li>
+        <li><strong>Quellen:</strong> <a href="https://www.agora-energiewende.de/" target="_blank">Agora Energiewende</a>, <a href="https://www.bundesnetzagentur.de/" target="_blank">BNetzA</a></li>
+      </ul>
+    
+      <h3>Batteriespeicher</h3>
+      <ul>
+        <li><strong>LCOE:</strong> 100–200 €/MWh (nur Speicher)</li>
+        <li><strong>Quelle:</strong> <a href="https://www.lazard.com/perspective/levelized-cost-of-energy-levelized-cost-of-storage-and-levelized-cost-of-hydrogen/" target="_blank">Lazard LCOS 2023</a>, <a href="https://about.bnef.com/" target="_blank">BloombergNEF</a></li>
+      </ul>
+    
+      <h2>📊 Kostenvergleich im Überblick</h2>
+    
+      <table>
+        <thead>
+          <tr>
             <th>Technologie</th>
             <th>LCOE (€/MWh)</th>
             <th>Flexibilität</th>
             <th>Emissionen</th>
           </tr>
-    </thead>
-    <tbody>
-        <tr>
-        <td>Kohle</td>
-        <td>90–150</td>
-        <td>Gering</td>
-        <td>Sehr hoch</td>
-    </tr>
-    <tr>
-        <td>Gas (GuD)</td>
-        <td>70–130</td>
-        <td>Hoch</td>
-        <td>Mittel</td>
-    </tr>
-    <tr>
-        <td>Solar (PV)</td>
-        <td>30–60</td>
-        <td>Gering</td>
-        <td>Sehr gering</td>
-    </tr>
-    <tr>
-        <td>Wind (Onshore)</td>
-        <td>40–70</td>
-        <td>Mittel</td>
-        <td>Sehr gering</td>
-    </tr>
-    <tr>
-        <td>Wind (Offshore)</td>
-        <td>60–90</td>
-        <td>Mittel</td>
-        <td>Sehr gering</td>
-    </tr>
-    <!--tr>
-        <td>Batteriespeicher</td>
-        <td>+100–200</td>
-        <td>Hoch</td>
-        <td>Keine direkten</td>
-    </tr-->
-    </tbody>
-</table>
-
-<div class="myform">
-    <form class="mylink" method="POST">
-        <button name="battery" id="bat" onclick="formaction()"><h2>Batteriespeicher im Wandel</h2></button>
-    </form>    
-</div>
-
-<ul>
-    <li><strong>Zweck:</strong> Netzstabilität, Kurzzeitspeicher</li>
-    <li><strong>Trend:</strong> Preise sinken rasant</li>
-</ul>
-
-
+        </thead>
+        <tbody>
+          <tr>
+            <td>Atomkraft</td>
+            <td>120–250</td>
+            <td>Grundlast</td>
+            <td>Sehr gering</td>
+          </tr>
+          <tr>
+            <td>Kohle</td>
+            <td>90–150</td>
+            <td>Gering</td>
+            <td>Sehr hoch</td>
+          </tr>
+          <tr>
+            <td>Gas (GuD)</td>
+            <td>70–130</td>
+            <td>Hoch</td>
+            <td>Mittel</td>
+          </tr>
+          <tr>
+            <td>Solar (PV)</td>
+            <td>30–60</td>
+            <td>Gering</td>
+            <td>Sehr gering</td>
+          </tr>
+          <tr>
+            <td>Wind (Onshore)</td>
+            <td>40–70</td>
+            <td>Mittel</td>
+            <td>Sehr gering</td>
+          </tr>
+          <tr>
+            <td>Wind (Offshore)</td>
+            <td>60–90</td>
+            <td>Mittel</td>
+            <td>Sehr gering</td>
+          </tr>
+          <tr>
+            <td>Batteriespeicher</td>
+            <td>+100–200</td>
+            <td>Hoch</td>
+            <td>Keine direkten</td>
+          </tr>
+        </tbody>
+      </table>
+    
+      <h2>🔗 Quellen und Literatur</h2>
+      <ul>
+        <li><a href="https://www.ise.fraunhofer.de/de/veroeffentlichungen/studien/stromgestehungskosten-erneuerbare-energien.html" target="_blank">Fraunhofer ISE – Stromgestehungskosten 2023</a></li>
+        <li><a href="https://www.lazard.com/perspective/levelized-cost-of-energy-levelized-cost-of-storage-and-levelized-cost-of-hydrogen/" target="_blank">Lazard – LCOE & LCOS 2023</a></li>
+        <li><a href="https://www.irena.org/publications" target="_blank">IRENA – Renewable Energy Generation Costs 2022</a></li>
+        <li><a href="https://www.agora-energiewende.de/" target="_blank">Agora Energiewende – Studienarchiv</a></li>
+        <li><a href="https://www.umweltbundesamt.de/" target="_blank">Umweltbundesamt – Strommix & externe Kosten</a></li>
+        <li><a href="https://about.bnef.com/blog/2h-2023-energy-storage-market-outlook/" target="_blank">BloombergNEF – Energy Storage Market Outlook</a></li>
+        <li><a href="https://www.nao.org.uk/reports/hinkley-point-c/" target="_blank">UK National Audit Office – Hinkley Point C</a></li>
+        <li><a href="https://www.iea.org/reports/world-energy-outlook-2022" target="_blank">IEA – World Energy Outlook 2022</a></li>
+      </ul>
+        
 </div>
 {% include 'footer.html' %}
 </body>
