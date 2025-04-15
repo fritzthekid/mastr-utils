@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostenvergleich: Atomkraft vs. Erneuerbare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+</head>
+<body>
+    <div id="root" />
+  {% include 'topbanner.html' %}
+
+<div class="inner-body">
+
+  <h1>Datenschutzerklärung</h1>
+
+  <p>Der Schutz Ihrer persönlichen Daten ist mir ein besonderes Anliegen. Ich verarbeite Ihre Daten daher ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TMG).</p>
+
+  <h2>Server-Logfiles</h2>
+  <p>Beim Besuch dieser Website werden automatisch Informationen durch den Webserver erfasst und in sogenannten Server-Logfiles gespeichert. Diese Daten beinhalten z. B.:</p>
+  <ul>
+    <li>IP-Adresse (gekürzt/anonymisiert)</li>
+    <li>Datum und Uhrzeit der Anfrage</li>
+    <li>aufgerufene Seite</li>
+    <li>Browsertyp und -version</li>
+    <li>verwendetes Betriebssystem</li>
+  </ul>
+  <p>Diese Daten dienen ausschließlich der technischen Überwachung und Fehleranalyse und werden nach kurzer Zeit gelöscht. Eine Zusammenführung mit personenbezogenen Daten oder eine Weitergabe an Dritte erfolgt nicht.</p>
+
+  <h2>Cookies</h2>
+  <p>Diese Website verwendet keine Cookies.</p>
+
+  <h2>Externe Dienste</h2>
+  <p>Es werden keine externen Analyse- oder Trackingdienste (z. B. Google Analytics) verwendet.</p>
+
+  <h2>Kontaktaufnahme</h2>
+  <p>Wenn Sie per E-Mail Kontakt aufnehmen, werden die angegebenen Daten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen gespeichert. Diese Daten gebe ich nicht ohne Ihre Einwilligung weiter.</p>
+
+  <h2>Ihre Rechte</h2>
+  <p>Ihnen stehen grundsätzlich die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch zu. Wenn Sie glauben, dass die Verarbeitung Ihrer Daten gegen das Datenschutzrecht verstößt, können Sie sich bei der Aufsichtsbehörde beschweren.</p>
+
+  <h2>Kontakt</h2>
+  <p>Verantwortlich für die Datenverarbeitung:</p>
+  <p>
+    siehe Impressum
+  </p>
+
+
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

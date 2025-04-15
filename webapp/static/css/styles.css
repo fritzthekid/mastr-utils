@@ -1,9 +1,25 @@
+html, body {
+  height: 100%
+}
 body {
+  display: flex;
+  align-items: stretch;
+  font-family: Arial, sans-serif;
+  margin-left: 0%;
+  margin-right: 0%;     
+  background-color: #f4f4f4;
+}
+
+#root {
+  width: 100%;
+}
+
+/*body {
     font-family: Arial, sans-serif;
     margin-left: 0%;
     margin-right: 0%;     
     background-color: #f4f4f4;
-}
+}*/
 
 table {
     border-collapse: collapse;
@@ -20,8 +36,8 @@ table {
 
   .topbanner {
     font-family: Arial, sans-serif;
-    margin-top: 10px;
-    margin-bottom: 3px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     margin-left: 0%;
     margin-right: 0%;     
     padding-top: 20px;
@@ -157,6 +173,13 @@ form {
     box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
 }
 
+.myform-white {
+    background: #ffffff;
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
+}
+
 .mylink {
     background: #f4f4f4;
     padding: 0px;
@@ -247,6 +270,26 @@ footer {
     flex: 2;
     padding: 5px;
     font-size: 14px;
+}
+
+.form-group-light {
+  display: flex;
+  justify-content: space-between;
+  /*align-items: center;*/
+}
+
+.form-group-light label {
+  flex: 2;
+  text-align: left;
+  margin-right: 10px;
+  font-weight: light;
+  font-size: small;
+}
+
+.form-group-light input {
+  flex: 0 0 100px;
+  padding: 5px;
+  font-size: 14px;
 }
 
 button[type="submit"] {

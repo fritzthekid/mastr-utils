@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Add the download button
                 const downloadForm = document.createElement('form');
-                downloadForm.className = "myform";
+                downloadForm.className = "myform-white";
                 downloadForm.method = "POST";
                 const downloadbutton = document.createElement('button');
                 downloadbutton.textContent = 'Download GPX File';

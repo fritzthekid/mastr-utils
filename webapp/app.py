@@ -36,7 +36,8 @@ links = {
     "costs1":"kosten_atomkraft.html",
     "costs2":"kosten_energiewende.html",
     "battery":"batterien.html",
-    "impressum":'impressum.html'
+    "impressum":'impressum.html',
+    "dataprotection":"datenschutzerklaerung.html"
 }
 
 @app.route('/', methods=['GET', 'POST'])
@@ -72,8 +73,13 @@ def convert():
         try:
             assert password_crypt == checkpassword_crypt
         except Exception as e:
-            print(f'Password failed: {hashlib.shake_256(password.encode()).hexdigest(40)}, {checkpassword}')
-            return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
+            print(f'Password failed')
+            return jsonify({'status': 'error', 'message': f"<Large><b>Password failed</b></Large>"})
+        try:
+            assert request.form.get("privacy") == "on"
+        except:
+            print(f'Password failed')
+            return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
         mastr_file = request.files.get('mastr_file')  # File upload
         query = request.form.get('query', '')  # Query parameter
         color = 'x'  # request.form.get('color', 'Amber')  # Waypoint color
@@ -133,13 +139,8 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
+
 def download_log():
-    # global password_crypt
-    # try:
-    #     assert password_crypt == checkpassword_crypt
-    # except Exception as e:
-    #     print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
-    #     return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
     if not app.debug:
         return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
     log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
@@ -159,7 +160,7 @@ def serve_tmp_file(filename):
         assert password_crypt == checkpassword_crypt
     except Exception as e:
         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
-        return jsonify({'status': 'error', 'message': f"Password failed:{e}"})
+        return jsonify({'status': 'error', 'message': f"Password failed"})
     try:
         basefile = os.path.basename(filename)
         # Serve files from the tmpdir directory

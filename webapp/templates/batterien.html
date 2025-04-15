@@ -10,50 +10,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
-  <!--style>
-    body {
-      font-family: system-ui, sans-serif;
-      line-height: 1.4;
-      margin: 2rem;
-      /* max-width: 800px; */
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 1rem 0;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 0.5rem;
-      text-align: left;
-    }
-    h1, h2, h3 {
-      color: #003366;
-    }
-    a {
-      color: #007acc;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    code {
-      background: #f4f4f4;
-      padding: 0.2em 0.4em;
-      border-radius: 3px;
-    }
-    canvas {
-      margin-top: 1rem;
-      width: 100%;
-      max-width: 600px;
-      height: 300px;
-      border: 1px solid #ddd;
-    }
-  </style-->
 </head>
 <body>
+    <div id="root" />
   {% include 'topbanner.html' %}
 
 <div class="inner-body">
@@ -85,5 +44,6 @@
 </div>
 
 </div>
+{% include 'footer.html' %}
 </body>
 </html>
