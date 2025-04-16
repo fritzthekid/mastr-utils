@@ -288,7 +288,38 @@ class Analyse:
         plt.ylabel('Bruttoleistung der Einheit (kW)')
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels by 45 degrees
         plt.tight_layout()  # Adjust layout to make room for labels
-        plt.figtext(0.95, 0.01, 'MaStR Stand 12.03.2025', ha='right', va='center')
+        plt.figtext(0.95, 0.01, 'MaStR Stand t.b.d', ha='right', va='center')
+        splitfile = os.path.splitext(os.path.abspath(output_filename))
+        if splitfile[1] not in ["svg", "png"]:
+            output_filename = f"{splitfile[0]}.svg"
+        plt.savefig(f'{output_filename}')
+        plt.close()
+
+    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename=f"{tmpdir}/x.svg"):
+        import matplotlib.pyplot as plt
+        import pandas as pd
+
+        # Daten vorbereiten
+        data = self.data  # Angenommen, self.data ist ein DataFrame
+        grouped_data = pd.DataFrame()
+
+        for expr in filter_exprs:
+            filtered = data.query(expr)
+            grouped = filtered.groupby(depends).size()
+            grouped_data[expr] = grouped
+
+        assert ( len(grouped_data.values.shape) == 2 and 
+                grouped_data.values.shape[0]>0 and grouped_data.values.shape[1]>0), f"No data found for condition: {filter_exprs}"
+
+        grouped_data.fillna(0, inplace=True)
+
+        # Gestapeltes Balkendiagramm erstellen
+        grouped_data.plot(kind='bar', stacked=True)
+        plt.title(artefact if artefact else 'Gestapeltes Balkendiagramm')
+        plt.xlabel(depends)
+        plt.ylabel('Anzahl')
+        plt.legend(title='Filter')
+        plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))
         if splitfile[1] not in ["svg", "png"]:
             output_filename = f"{splitfile[0]}.svg"
