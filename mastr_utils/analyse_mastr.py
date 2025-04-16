@@ -303,9 +303,14 @@ class Analyse:
         data = self.data  # Angenommen, self.data ist ein DataFrame
         grouped_data = pd.DataFrame()
 
-        for expr in filter_exprs:
+        for expr in filter_exprs.split("#"):
+            valc = self.validate(expr)
+            if len(valc) > 0:
+                error_message = f"Invalid condition, with unknown arguments: {valc}"
+                logging.error(error_message)
+                raise ValueError(error_message)
             filtered = data.query(expr)
-            grouped = filtered.groupby(depends).size()
+            grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
             grouped_data[expr] = grouped
 
         assert ( len(grouped_data.values.shape) == 2 and 
@@ -317,7 +322,7 @@ class Analyse:
         grouped_data.plot(kind='bar', stacked=True)
         plt.title(artefact if artefact else 'Gestapeltes Balkendiagramm')
         plt.xlabel(depends)
-        plt.ylabel('Anzahl')
+        plt.ylabel('Bruttoleistung')
         plt.legend(title='Filter')
         plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))
