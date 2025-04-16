@@ -38,7 +38,7 @@ jobs:
         pip install -e .
         pytest -v
     - name: Clean coverage
-      run: rm -rf .coverage htmlcov
+      run: rm -rf .coverage coverage_html
     - name: coverage
       run: |
         pip install -e .
@@ -46,12 +46,12 @@ jobs:
         pytest -v \
           --cov=mastr_utils \
           --cov-report=term-missing \
-          --cov-report=html:htmlcov \
+          --cov-report=html:coverage_html \
           --cov-config=.coveragerc
 
     - name: Upload coverage HTML report
       uses: actions/upload-artifact@v4
       with:
-        name: htmlcov
-        path: htmlcov/
+        name: coverage_html
+        path: coverage_html/
 
