@@ -50,6 +50,7 @@ setup(
     entry_points={
         "console_scripts": [
             "mastrtogpx=mastr_utils.mastrtogpx:main",
+            "mastrtoplot=mastr_utils.mastrtoplot:main",
         ],
     },
     author="Eduard Moser",

@@ -194,8 +194,8 @@ class Analyse:
             self.data['ge_100mw'] = self.data['BruttoleistungDerEinheit'] >= 100000
             self.data['lt_10mw'] = self.data['BruttoleistungDerEinheit'] < 10000
             self.data['lt_100mw'] = self.data['BruttoleistungDerEinheit'] < 100000
-            self.data['is_gewaesser'] = self.data['LageDerEinheit'] == 'Gewässer'
-            self.data['is_freiflaeche'] = self.data['LageDerEinheit'] == 'Freifläche'
+            self.data['is_gewaesser'] = self.data['ArtDerSolaranlage'] == 'Gewässer'
+            self.data['is_freiflaeche'] = self.data['ArtDerSolaranlage'] == 'Freifläche'
         except Exception as e:
             logging.info("cleaning Bruttoleistung der Einheit failed")
         finally:
@@ -242,10 +242,6 @@ class Analyse:
             print("Betriebsstatus: ", set(self.data['BetriebsStatus']))
         except:
             pass
-        try:
-            print("Lage der Einheit: ", set(self.data['LageDerEinheit']))
-        except:
-            pass
 
     # Method to query the data based on a condition and dependency
     def query(self, condition, depends=None):
@@ -282,7 +278,7 @@ class Analyse:
         return filtered_data.groupby(depends_column)['BruttoleistungDerEinheit'].sum().reset_index()
 
     # Method to plot the data based on a condition and dependency
-    def plot(self, condition, depends, artefact="X"):
+    def plot(self, condition, depends, artefact="X", output_filename="x"):
         grouped_data = self.query(condition, depends)
         depends_column = self.depends_dict.get(depends, depends)
         plt.figure(figsize=(10, 6))  # Adjust the figure size as needed
@@ -293,8 +289,10 @@ class Analyse:
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels by 45 degrees
         plt.tight_layout()  # Adjust layout to make room for labels
         plt.figtext(0.95, 0.01, 'MaStR Stand 12.03.2025', ha='right', va='center')
-        plt.savefig(f'{tmpdir}/{self.figname}{self.fig_num}.svg')
-        self.fig_num += 1
+        splitfile = os.path.splitext(os.path.abspath(output_filename))
+        if splitfile[1] not in ["svg", "png"]:
+            output_filename = f"{splitfile[0]}.svg"
+        plt.savefig(f'{output_filename}')
         plt.close()
 
     def validate(self, condition):
