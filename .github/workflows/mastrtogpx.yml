@@ -35,9 +35,11 @@ jobs:
         # flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
+        pip install -e .
         pytest -v
     - name: coverage
       run: |
+        pip install -e .
         # pytest --cov-report term --cov=mastr_utils
         pytest -v --cov=mastr_utils --cov-report=term-missing --cov-report=html
     - name: Upload coverage HTML report
