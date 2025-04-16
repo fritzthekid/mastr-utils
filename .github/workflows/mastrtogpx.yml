@@ -38,7 +38,7 @@ jobs:
         pip install -e .
         pytest -v
     - name: Clean coverage
-      run: rm -rf .coverage coverage_html
+      run: rm -rf .coverage htmlcov
     - name: coverage
       run: |
         pip install -e .
@@ -46,7 +46,7 @@ jobs:
         pytest -v \
           --cov=mastr_utils \
           --cov-report=term-missing \
-          --cov-report=html:coverage_html \
+          --cov-report=html:htmlcov \
           --cov-config=.coveragerc
 
     - name: Upload coverage HTML report
