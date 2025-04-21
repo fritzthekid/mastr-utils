@@ -67,7 +67,19 @@ def test_plot_stacked_pv():
     doplot(args)
     pass
 
+def test_a_s():
+    teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv,-s"
+    args = teststr.split(',')
+    doplot(args)
+    teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv,-a"
+    args = teststr.split(',')
+    doplot(args)
+    # teststr = f"-h"
+    # args = teststr.split(',')
+    # doplot(args)
+    assert True
 
+    
 def x():
     analyse = Analyse(file_path=f"{testdir}/data/rng_bawue_bay.csv",timeout = DEBUGTIMEOUT)
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
