@@ -300,6 +300,10 @@ class Analyse:
         import pandas as pd
 
         # Daten vorbereiten
+
+        # plt.figure(figsize=(12, 12))
+        sns.set_theme(style="whitegrid")
+
         data = self.data  # Angenommen, self.data ist ein DataFrame
         grouped_data = pd.DataFrame()
 

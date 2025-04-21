@@ -7,6 +7,7 @@ from flask_cors import CORS
 from werkzeug.exceptions import RequestEntityTooLarge
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
+from mastr_utils.mastrtoplot import main as mtoplot
 
 UPLOAD_FOLDER = f'{tmpdir}'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -53,9 +54,13 @@ def index():
             return show_page(links[firstarg])
         elif "mastrutils" in request.form:
             return render_template("mastrutils.html", debug=app.debug)
+        elif "mastrplot" in request.form:
+            return render_template("mastrplot.html", debug=app.debug)
         elif 'query' in request.form:
             # Verarbeitung für 'convert'
             return convert() # redirect(url_for('convert_function'))
+        elif 'quera' in request.form:
+            return plot()
         elif "downloadlog" in request.form:
             return download_log()
         elif "downloadfile" in request.form:
@@ -139,6 +144,97 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
+def plot():
+    global password_crypt
+    global output_file
+    try:
+        # Retrieve POST arguments
+        password = request.form.get('pwd') # password
+        password_crypt = hashlib.shake_256(password.encode()).hexdigest(40)
+        try:
+            assert password_crypt == checkpassword_crypt
+        except Exception as e:
+            print(f'Password failed')
+            return jsonify({'status': 'error', 'message': f"<Large><b>Password failed</b></Large>"})
+        try:
+            assert request.form.get("privacy") == "on"
+        except:
+            print(f'Password failed')
+            return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
+        mastr_file = request.files.get('mastr_file')  # File upload
+        quera = request.form.get('quera', '')  # Query parameter
+        querb = request.form.get('querb', '')  # Query parameter
+        querc = request.form.get('querc', '')  # Query parameter
+        querd = request.form.get('querd', '')  # Query parameter
+        quere = request.form.get('quere', '')  # Query parameter
+        querf = request.form.get('querf', '')  # Query parameter
+        min_weight = 0 # request.form.get('min_weight', "0")  # Minimum weight
+        radius = 2000 # request.form.get('radius', 2000)  # Radius
+        output_file_basename = request.form.get('output_file', '').strip()  # Output file name
+
+        # Save the uploaded file to the tmpdir location
+        if not mastr_file:
+            return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
+
+        file_path = f"{tmpdir}/{mastr_file.filename}"
+        if not allowed_file(file_path):
+            return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
+        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
+        mastr_file.save(file_path)
+
+        # Generate output file path
+        if output_file_basename:
+            output_file = f"{tmpdir}/{output_file_basename}"
+        else:
+            output_file = f"{tmpdir}/{mastr_file.filename.rsplit('.', 1)[0]}.svg"
+
+        if min_weight == "":
+            min_weight = 0
+        # Debugging logs
+        print(f'Mastr file: {file_path}')
+        print(f'Query A: {quera}')
+        print(f'Query B: {querb}')
+        print(f'Query C: {querc}')
+        print(f'Query D: {querd}')
+        print(f'Query E: {quere}')
+        print(f'Query F: {querf}')
+        print(f'Output: {output_file}')
+        print('Converting...')
+
+        # Run the conversion command
+
+        query = quera
+        if len(querb) > 0:
+            query += f"#{querb}" 
+        if len(querc) > 0:
+            query += f"#{querc}" 
+        if len(querd) > 0:
+            query += f"#{querd}" 
+        if len(quere) > 0:
+            query += f"#{quere}" 
+        if len(querf) > 0:
+            query += f"#{querf}" 
+        command = [
+            'mastrtoplot', file_path,
+            '-q', query,
+            '-o', output_file,
+        ]
+
+        print('Command:', ' '.join(command))
+        # Capture stdout and stderr
+        # result = subprocess.run(command, capture_output=True, text=True, check=True)
+        mtoplot(command[1:])
+        print('Conversion completed successfully.')
+
+        return jsonify({
+            'status': 'success',
+            'message': 'Conversion completed successfully.',
+            'download_url': f"/tmp/{output_file.rsplit('/', 1)[-1]}"
+        })
+    except Exception as e:
+        print('Unexpected error:', e)
+        return jsonify({'status': 'error', 'message': str(e)})
+
 
 def download_log():
     if not app.debug:
@@ -162,9 +258,14 @@ def serve_tmp_file(filename):
         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed"})
     try:
-        basefile = os.path.basename(filename)
-        # Serve files from the tmpdir directory
-        return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
+        if filename.endswith(".gpx"):
+            basefile = os.path.basename(filename)
+            # Serve files from the tmpdir directory
+            return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
+        elif filename.endswith(".svg") or filename.endswith(".png"):
+            basefile = os.path.basename(filename)
+            # Serve files from the tmpdir directory
+            return send_from_directory(tmpdir, basefile, mimetype='image/svg+xml')
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
