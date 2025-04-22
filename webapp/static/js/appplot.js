@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 addPlotToDiv(result.download_url);
             } else {
                 // Display error message with proper formatting
-                resultDiv.innerHTML = `<pre style="color: red;">Error: ${resultplot.message}</pre>`;
+                resultDiv.innerHTML = `<pre style="color: red;">Error: ${result.message}</pre>`;
             }
         } catch (error) {
             console.error('Error:', error);
@@ -63,19 +63,32 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 let currentImgPath = ''; // to keep the image
-
-function addPlotToDiv(imgUrl) {
+ 
+  function addPlotToDiv(imgUrl) {
     const container = document.getElementById("map");
     container.innerHTML = ""; // Vorherige Inhalte entfernen
   
+    // Cache-Busting durch Zufallswert (oder Date.now())
+    const cacheBustedUrl = imgUrl + "?t=" + new Date().getTime();
+  
     const img = document.createElement("img");
-    img.src = imgUrl;
+    img.src = cacheBustedUrl;
     img.alt = "Gestapelte Bruttoleistung";
     img.style.maxWidth = "100%";
     img.style.maxHeight = "100%";
     container.appendChild(img);
-    currentImgPath = imgUrl;
-    //currentImg.img = img;
+  
+    currentImgPath = cacheBustedUrl;
+  }
+  
+  function updatePlot___(plotData, plotLayout) {
+    const container = document.getElementById("map");
+  
+    // Bestehenden Plot entfernen
+    container.innerHTML = "";
+  
+    // Neuen Plot einfügen
+    Plotly.newPlot(container, plotData, plotLayout, { responsive: true });
   }
   
   function popoutimg () {

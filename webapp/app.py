@@ -126,7 +126,8 @@ def convert():
             '-c', color,
             '-m', str(min_weight),
             '-r', str(radius),
-            '-e'  # Energieträger
+            '-e',  # Energieträger
+            '-l','[10000,5e7,3e5]',
         ]
 
         print('Command:', ' '.join(command))
@@ -168,6 +169,7 @@ def plot():
         querd = request.form.get('querd', '')  # Query parameter
         min_weight = request.form.get('min_weight', "0")  # Minimum weight
         radius = request.form.get('radius', 2000)  # Radius
+        depends = request.form.get('depends', "Bundesland")  # Radius
         output_file_basename = request.form.get('output_file', '').strip()  # Output file name
 
         # Save the uploaded file to the tmpdir location
@@ -188,6 +190,9 @@ def plot():
 
         if min_weight == "":
             min_weight = 0
+        if len(depends) == 0:
+            depends="Bundesland"
+
         # Debugging logs
         print(f'Mastr file: {file_path}')
         print(f'Query A: {quera}')
@@ -209,10 +214,12 @@ def plot():
         command = [
             'mastrtoplot', file_path,
             '-q', query,
+            '-d', depends,
             '-o', output_file,
             '-m', str(min_weight),
             '-r', str(radius),
             '-s',
+            '-l','[10000,5e7,3e5]',
         ]
 
         print('Command:', ' '.join(command))
@@ -226,6 +233,9 @@ def plot():
             'message': 'Conversion completed successfully.',
             'download_url': f"/tmp/{output_file.rsplit('/', 1)[-1]}"
         })
+    except AssertionError as e:
+        print('assertion error:', e)
+        return jsonify({'status': 'error', 'message': str(e)})
     except Exception as e:
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})

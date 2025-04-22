@@ -74,7 +74,8 @@ def main(testargs=None):
             parser.print_help()
             return
 
-        analyse.plot_stacked(filter_exprs=args.query, depends=args.depends, output_filename=args.output, sort=args.sort)
+        analyse.plot_stacked(filter_exprs=args.query, depends=args.depends, output_filename=args.output, 
+                             sort=args.sort, min_weight = args.min_weight, radius=args.radius)
         logging.info("Conversion completed successfully")
     except Exception as e:
         logging.error(f"Error during mastrtogpx conversion: {e}")
