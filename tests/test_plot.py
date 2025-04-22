@@ -36,7 +36,7 @@ def test_plot():
 def test_pv_brd_simple():
     outfile = f"{testdir}/tmp/x.svg"
     os.remove(outfile) if os.path.exists(outfile) else None
-    teststr = f"{testdir}/data/stromerzeuger_pv_brd.csv,-q, BruttoleistungDerEinheit > 10000,-o,{outfile}x"
+    teststr = f"{testdir}/data/stromerzeuger_pv_brd.csv,-q, BruttoleistungDerEinheit > 10000,-o,{outfile}x,-s"
     args = teststr.split(',')
     doplot(args)
     file = open(f"{outfile}").read()
@@ -62,7 +62,7 @@ def test_plot_stacked_speicher():
 def test_plot_stacked_pv():
     # analyse.plot('is_active & is_pv & ge_10mw & lt_100mw', 'bundesland', artefact="PV 10-100 MW")
     teststr = f"{testdir}/data/stromerzeuger_pv_brd.csv,-q,is_pv & ge_1mw & lt_10mw#is_pv & ge_10mw & lt_100mw#is_pv & ge_100mw,"
-    teststr += f"-d,Bundesland,-o,{testdir}/tmp/x.svg"
+    teststr += f"-d,Bundesland,-o,{testdir}/tmp/x.svg,-s"
     args = teststr.split(',')
     doplot(args)
     pass
@@ -92,7 +92,7 @@ def x():
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
 
-# test_plot_stacked_pv()
+test_plot_stacked_pv()
 # test_plot_stacked_rng_bawue_bay()
 # test_pv_brd_simple()
 # test_plot_stacked_rng_bawue_bay()

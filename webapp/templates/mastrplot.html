@@ -88,32 +88,28 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="quere">Query E:</label>
-                    <input type="text" name="quere" id="quere" 
-                            placeholder=""
-                            style="font-family: sans-serif;">
+                    <label for="min_weight">Min. Bruttoleistung der Fläche [kW]:</label>
+                    <input type="number" name="min_weight" id="min_weight" value="0">
                 </div>
 
                 <div class="form-group">
-                    <label for="querf">Query F:</label>
-                    <input type="text" name="querf" id="querf" 
-                            placeholder=""
-                            style="font-family: sans-serif;">
+                    <label for="radius">Radius:</label>
+                    <input type="number" name="radius" id="radius" value="2000">
                 </div>
 
                 <div class="form-group">
-                    <label for="output_file">Output File Name (optional):</label>
-                    <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
-                </div>
-                <!-- Datenschutz Checkbox -->
-                <div class="form-group-light">
-                    <label for="privacy">Ich stimme zu, dass meine hochgeladenen Daten zur Verarbeitung genutzt werden dürfen.</label>
-                    <input type="checkbox" id="privacy" name="privacy" required>
-                </div>
-                <!-- button type="submit" form="convert-form">Convert</button-->
-                <button type="submit" name="plot">Generate Plot</button>
-            <!-- Result Section -->
-            <div id="resultplot" style="margin-top: 20px;"></div>
+                        <label for="output_file">Output File Name (optional):</label>
+                        <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.gpx">
+                    </div>
+                    <!-- Datenschutz Checkbox -->
+                    <div class="form-group-light">
+                        <label for="privacy">Ich stimme zu, dass meine hochgeladenen Daten zur Verarbeitung genutzt werden dürfen.</label>
+                        <input type="checkbox" id="privacy" name="privacy" required>
+                    </div>
+                    <!-- button type="submit" form="convert-form">Convert</button-->
+                    <button type="submit" name="plot">Generate Plot</button>
+                <!-- Result Section -->
+                <div id="resultplot" style="margin-top: 20px;"></div>
             </form>
 
 

@@ -8,6 +8,8 @@ import shutil
 import time
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+
 from .cluster import filter_large_weights
 import logging
 import signal
@@ -295,7 +297,50 @@ class Analyse:
         plt.savefig(f'{output_filename}')
         plt.close()
 
-    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename=f"{tmpdir}/x.svg"):
+    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False):
+        import matplotlib.pyplot as plt
+        import pandas as pd
+
+        # Daten vorbereiten
+        data = self.data  # Angenommen, self.data ist ein DataFrame
+        grouped_data = pd.DataFrame()
+
+        for expr in filter_exprs.split("#"):
+            valc = self.validate(expr)
+            if len(valc) > 0:
+                error_message = f"Invalid condition, with unknown arguments: {valc}"
+                logging.error(error_message)
+                raise ValueError(error_message)
+            filtered = data.query(expr)
+            grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            grouped_data[expr] = grouped
+
+        assert ( len(grouped_data.values.shape) == 2 and 
+                grouped_data.values.shape[0]>0 and grouped_data.values.shape[1]>0), f"No data found for condition: {filter_exprs}"
+
+        if sort:
+            gdv = grouped_data.values
+            gdd = {grouped_data.index[i]:sum([v for v in gdv[i] if str(v) != "nan"]) for i in range(gdv.shape[0])}
+            res = {key: val for key, val in sorted(gdd.items(), key = lambda ele: ele[1])[::-1]}
+            grouped_data = grouped_data.reindex(index=[n for n in res])
+        grouped_data.fillna(0, inplace=True)
+
+        # Gestapeltes Balkendiagramm erstellen
+        sns.set_theme(style="whitegrid")
+        grouped_data.plot(kind="bar", stacked=True, figsize=(14, 7))
+        plt.title(artefact if artefact else 'Gestapeltes Balkendiagramm')
+        plt.xlabel(depends)
+        plt.ylabel('Bruttoleistung')
+        plt.legend(title='Filter')
+        plt.tight_layout()
+        splitfile = os.path.splitext(os.path.abspath(output_filename))
+        if splitfile[1] not in ["svg", "png"]:
+            output_filename = f"{splitfile[0]}.svg"
+        plt.savefig(f'{output_filename}')
+        plt.close()
+
+    # def plot_stacked_seaborn(self, filter_exprs, depends, artefact=None, output_filename=f"{tmpdir}/x.svg"):
+    def plot_stacked_seaborn(self, filter_exprs, depends, artefact=None, output_filename=f"{tmpdir}/x.svg"):
         import matplotlib.pyplot as plt
         import pandas as pd
 
@@ -313,7 +358,7 @@ class Analyse:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
                 logging.error(error_message)
                 raise ValueError(error_message)
-            filtered = data.query(expr)
+            filtered = self.query(expr)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
             grouped_data[expr] = grouped
 

@@ -82,9 +82,10 @@ function addPlotToDiv(imgUrl) {
     try {
         //console.log('do popoutimg');
         //console.log('Image Path:', currentImgPath);
-        window.open(currentImgPath, '_black',focus())
+        window.open(currentImgPath); //, '_black',focus())
     }
     catch (error) {
         console.error('Error:', error);
     }
   }
+

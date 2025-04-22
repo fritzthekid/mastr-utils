@@ -166,10 +166,8 @@ def plot():
         querb = request.form.get('querb', '')  # Query parameter
         querc = request.form.get('querc', '')  # Query parameter
         querd = request.form.get('querd', '')  # Query parameter
-        quere = request.form.get('quere', '')  # Query parameter
-        querf = request.form.get('querf', '')  # Query parameter
-        min_weight = 0 # request.form.get('min_weight', "0")  # Minimum weight
-        radius = 2000 # request.form.get('radius', 2000)  # Radius
+        min_weight = request.form.get('min_weight', "0")  # Minimum weight
+        radius = request.form.get('radius', 2000)  # Radius
         output_file_basename = request.form.get('output_file', '').strip()  # Output file name
 
         # Save the uploaded file to the tmpdir location
@@ -196,8 +194,6 @@ def plot():
         print(f'Query B: {querb}')
         print(f'Query C: {querc}')
         print(f'Query D: {querd}')
-        print(f'Query E: {quere}')
-        print(f'Query F: {querf}')
         print(f'Output: {output_file}')
         print('Converting...')
 
@@ -210,14 +206,13 @@ def plot():
             query += f"#{querc}" 
         if len(querd) > 0:
             query += f"#{querd}" 
-        if len(quere) > 0:
-            query += f"#{quere}" 
-        if len(querf) > 0:
-            query += f"#{querf}" 
         command = [
             'mastrtoplot', file_path,
             '-q', query,
             '-o', output_file,
+            '-m', str(min_weight),
+            '-r', str(radius),
+            '-s',
         ]
 
         print('Command:', ' '.join(command))
