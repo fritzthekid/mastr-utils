@@ -6,8 +6,12 @@ import re
 import math
 import shutil
 import time
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
+# import plotly.express as px
+
 from .cluster import filter_large_weights
 import logging
 import signal
@@ -270,11 +274,11 @@ class Analyse:
             condition += f" & before_cond"
         condition = re.sub('&[ \t]*&', '&', condition)
         condition = re.sub('&[ \t]*&', '&', condition)
-        print(f"amastr condition: {condition}")
-        print(f"amastr depends: {depends}")
+        # print(f"amastr condition: {condition}")
+        # print(f"amastr depends: {depends}")
 
         filtered_data = self.data.query(condition)
-        print(filtered_data)
+        # print(filtered_data)
         return filtered_data.groupby(depends_column)['BruttoleistungDerEinheit'].sum().reset_index()
 
     # Method to plot the data based on a condition and dependency
@@ -295,12 +299,17 @@ class Analyse:
         plt.savefig(f'{output_filename}')
         plt.close()
 
-    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename=f"{tmpdir}/x.svg"):
+    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False, min_weight=0, radius=2000):
         import matplotlib.pyplot as plt
         import pandas as pd
 
         # Daten vorbereiten
-        data = self.data  # Angenommen, self.data ist ein DataFrame
+        # data = self.data  # Angenommen, self.data ist ein DataFrame
+        min_weight = float(min_weight)
+        radius = float(radius)
+        if min_weight > 0:
+            self.data = filter_large_weights(self.data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
+
         grouped_data = pd.DataFrame()
 
         for expr in filter_exprs.split("#"):
@@ -309,21 +318,28 @@ class Analyse:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
                 logging.error(error_message)
                 raise ValueError(error_message)
-            filtered = data.query(expr)
+            filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
             grouped_data[expr] = grouped
 
         assert ( len(grouped_data.values.shape) == 2 and 
                 grouped_data.values.shape[0]>0 and grouped_data.values.shape[1]>0), f"No data found for condition: {filter_exprs}"
 
+        if sort:
+            gdv = grouped_data.values
+            gdd = {grouped_data.index[i]:sum([v for v in gdv[i] if str(v) != "nan"]) for i in range(gdv.shape[0])}
+            res = {key: val for key, val in sorted(gdd.items(), key = lambda ele: ele[1])[::-1]}
+            grouped_data = grouped_data.reindex(index=[n for n in res])
         grouped_data.fillna(0, inplace=True)
 
         # Gestapeltes Balkendiagramm erstellen
-        grouped_data.plot(kind='bar', stacked=True)
-        plt.title(artefact if artefact else 'Gestapeltes Balkendiagramm')
+        sns.set_theme(style="whitegrid")
+        grouped_data.plot(kind="bar", stacked=True, figsize=(14, 9))
+        plt.title(artefact if artefact else ' ')
         plt.xlabel(depends)
         plt.ylabel('Bruttoleistung')
-        plt.legend(title='Filter')
+        plt.xticks(rotation=45, ha='right', fontsize=14)
+        # plt.legend(title='_')
         plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))
         if splitfile[1] not in ["svg", "png"]:
