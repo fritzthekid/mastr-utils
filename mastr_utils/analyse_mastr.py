@@ -318,7 +318,7 @@ class Analyse:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
                 logging.error(error_message)
                 raise ValueError(error_message)
-            filtered = self.query(expr, depends) # data.query(expr)
+            filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
             grouped_data[expr] = grouped
 
@@ -334,10 +334,11 @@ class Analyse:
 
         # Gestapeltes Balkendiagramm erstellen
         sns.set_theme(style="whitegrid")
-        grouped_data.plot(kind="bar", stacked=True, figsize=(14, 7))
+        grouped_data.plot(kind="bar", stacked=True, figsize=(14, 9))
         plt.title(artefact if artefact else ' ')
         plt.xlabel(depends)
         plt.ylabel('Bruttoleistung')
+        plt.xticks(rotation=45, ha='right', fontsize=14)
         # plt.legend(title='_')
         plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))

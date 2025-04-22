@@ -7,23 +7,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
-    <!--link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /-->
-    <!--script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script--> <!-- For GPX support -->
 </head>
 <body>
     <div id="root" />
     {% include 'topbanner.html' %}
     <div class="container">
-        <!-- a href="/">Home</a> <a href="/energie_kostenvergleich">Energiekostenvergleich</a></p>
-        <div style="text-align: center;">
-            <br>
-            <img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz">
-            <br>
-        </div-->
+
         <div style="text-align: center;">
             <h1>MaStR zu Plot Konverter</h1>
-            <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu Ploz-Dateien (die Plots werden angezeigt
+            <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu Plot-Dateien (die Plots werden angezeigt
                 und können runtergeladen werden). 
                 (<a href="https://github.com/fritzthekid/mastr-utils/blob/main/doc/dokumentation.md" target="_blank" rel="noopener noreferrer">Dokumentation)</a></p>
         </div>
@@ -126,9 +118,7 @@
         </div>
 
         <!-- Result Section -->
-        <!--div id="resultplot" style="margin-top: 20px;"></div-->
 
-        <!-- Buttons Section -->
         {% if debug %}
 
 

@@ -267,10 +267,14 @@ def serve_tmp_file(filename):
             basefile = os.path.basename(filename)
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
-        elif filename.endswith(".svg") or filename.endswith(".png"):
+        elif ( filename.endswith(".svg") or filename.endswith(".png") ) and len(request.args)>0:
             basefile = os.path.basename(filename)
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='image/svg+xml')
+        else:
+            basefile = os.path.basename(filename)
+            return send_from_directory(tmpdir, basefile, as_attachment=True, mimetype='application/xml')
+        
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
