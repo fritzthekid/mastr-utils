@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+let currentImgPath = ''; // to keep the image
 
 function addPlotToDiv(imgUrl) {
     const container = document.getElementById("map");
@@ -73,5 +74,17 @@ function addPlotToDiv(imgUrl) {
     img.style.maxWidth = "100%";
     img.style.maxHeight = "100%";
     container.appendChild(img);
+    currentImgPath = imgUrl;
+    //currentImg.img = img;
   }
   
+  function popoutimg () {
+    try {
+        //console.log('do popoutimg');
+        //console.log('Image Path:', currentImgPath);
+        window.open(currentImgPath, '_black',focus())
+    }
+    catch (error) {
+        console.error('Error:', error);
+    }
+  }

@@ -323,12 +323,14 @@ class Analyse:
         grouped_data.fillna(0, inplace=True)
 
         # Gestapeltes Balkendiagramm erstellen
-        grouped_data.plot(kind='bar', stacked=True)
+        grouped_data.plot(kind='bar', stacked=True, figsize=(14, 7))
         plt.title(artefact if artefact else 'Gestapeltes Balkendiagramm')
         plt.xlabel(depends)
         plt.ylabel('Bruttoleistung')
         plt.legend(title='Filter')
+        plt.xticks(rotation=90)
         plt.tight_layout()
+
         splitfile = os.path.splitext(os.path.abspath(output_filename))
         if splitfile[1] not in ["svg", "png"]:
             output_filename = f"{splitfile[0]}.svg"
