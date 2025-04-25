@@ -353,7 +353,8 @@ class Analyse:
     def validate(self, condition):
         valid_columns = self.data.columns
         arguments = re.findall(r'\b\w+\b', re.sub("\".*\"","",condition))
-        return [arg for arg in [a for a in arguments if not isnum(a)] if arg not in valid_columns]
+        failed_args =  [arg for arg in [a for a in arguments if not isnum(a)] if arg not in valid_columns]
+        return [arg for arg in failed_args if not arg.startswith("after_") and not arg.startswith("before_")] 
 
     # Method to generate GPX file
     def gen_gpx(self, conditions=None, output_file="gpx.gpx", symbol_part=[False, "Amber"], min_weight=0, radius=1000):

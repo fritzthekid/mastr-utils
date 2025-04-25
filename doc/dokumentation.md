@@ -142,6 +142,20 @@ Für die 10er Potenzen bei den Bruttoleistungen gibt es Abkürzungen:
 
 ![pv Leistungsaufteilung nach Bundesland](img/plot_pv_leistungs_segmente.png)
 
+**Beispiel 3**
+
+Es soll die pv Leistung vor und nach einem bestimmten Datum ermittelt werden, dafür 
+gibt es die Operatoren:
+
+~~~
+before_DD.MM.YYYY und
+after_DD.MM.YYYY
+~~~
+
+Eine solche Abfrage könne dann aussehen:
+
+![PV vor und nach](img/pv_nach_2023.png)
+
 ## Hinweis zu Querys
 
 Aus software technischen Gründen wird z.B. der Begriff
@@ -154,6 +168,11 @@ Das heißt die Abfrage:
 
 `BruttoleistungDerEinheit > 1000` ist identisch zu `ge_1mw`.
 
+Weiter gibt es noch Abkürzungen für:
+
+~~~
+is_active: Betriebsstatus == "in Betrieb"
+~~~
 
 
 
