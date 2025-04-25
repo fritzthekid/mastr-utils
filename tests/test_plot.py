@@ -86,7 +86,7 @@ def test_a_s():
 #     pass
 
 def test_before_after():
-    teststr = f'/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.csv;-q;is_pv & after_01.01.2021#is_pv & before_31.12.2024;-d;Ort;-o;/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]'
+    teststr = f'{testdir}/data/landkreis-ludwigsburg.csv;-q;is_pv & after_01.01.2021#is_pv & before_31.12.2024;-d;Ort;-o;/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]'
     args = teststr.split(';')
     doplot(args)
     pass
