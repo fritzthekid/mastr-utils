@@ -5,9 +5,11 @@
 Dieses Repository enthält Tools zur Auswertung der Daten des Marktstammdatenregisters (MaStR). Derzeit sind folgende Anwendungen verfügbar:
 
 1. **mastrtogpx**: Ein Kommandozeilen-Tool zur Konvertierung von MaStR-Daten in das GPX-Format.
-2. **Webanwendung**: Eine Anwendung zur Lokalisierung von Anlagen und Anlagen-Parks, wobei benachbarte Anlagen zusammengefasst werden.
+2. **mastrtoplot**: Ein Kommandozeilen-Tool zur Erstellung von Plots aus MaStR-Dateien in als Vektorgraphik (SVG-Format).
+3. **Webanwendung**: Eine Anwendung zur der obigen Tools also Lokalisierung von Anlagen und Anlagen-Parks, wobei benachbarte Anlagen zusammengefasst werden können, sowie das Erstellen von Plots.
 
-## Ziel der Anwendung
+
+## Ziel der Anwendung mastrtogpx
 
 Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gefunden werden. Für diese Anlagen gilt in der Regel, dass diese Stromerzeugungseinheiten in der Regel aus vielen einzelen in einem Park zusammenstehen. Das heißt das reine Filtern auf Einheiten mit deutlich größeren Werten als 10 MW für Solaranlagen oder deutlich größer als 7MW nicht hilfreicht ist. Deshalb wird mit der Anwendung auch eine sogenannte flächige Clusterung angeboten. Dabei können auch große Eiheiten mit deutlich größer als 100 MW gesucht werden. So eine Suche ist weiter unten als Beispiel beschrieben.
 
@@ -19,7 +21,7 @@ Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gef
 
 2. **Filterung der Daten**: Erstellen Sie einen Filter, um die gewünschten Anlagen einzugrenzen. Achten Sie darauf, dass das Ergebnis **10.000 Anlagen nicht übersteigt**. Typische Filterkriterien könnten sein:
    - **Bundesland**: Auswahl des spezifischen Bundeslandes.
-   - **Anlagentyp**: Auswahl des gewünschten Anlagentyps.
+   - **Anlagentyp**: Auswahl des gewünschten Anlagentypen (auch mehrere).
    - **Mindestbruttoleistung**: Festlegung einer minimalen Bruttoleistung.
 
 ![MaStR Query](img/mastr_query.png)
@@ -28,9 +30,9 @@ Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gef
 
 3. **Export der Daten**: Exportieren Sie die gefilterte Tabelle, beispielsweise als `Downloads/Stromerzeuger.csv`.
 
-### Nutzung des Tools
+### Nutzung des Tools mastrtogpx
 
-1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `http://eduard.uber.space/`. 
+1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `https://eduard.uber.space/`. 
   - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
 
 ![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
@@ -111,6 +113,50 @@ Die Karte wird jetzt deutlich übersichtlicher:
 
 Werte über 200kW reduzieren sich die Anlagen auf die deutschlandweit größte Anlage bei Leibzig.
 
+### Nutzung des Tools mastrtoplot
+
+1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `https://eduard.uber.space/`. 
+  - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
+
+Zunächst unterscheidet sich mastrtoplot von mastrtogpx gering, allerdings wird mit diesem
+Tool eine Vektorgraphik mit akkumulierter Bruttoleistung abhänging von einer Zielgröße 
+(z.B. Bundesland, Landkreis oder Postleitzahl) ausgegeben.
+
+**Beispiel 1**
+
+Als erstes Beispiel die Abfrage der Anteile von Leistungen durch Energieträger pro Landkreis.
+(kurze Anmerkung: is_pv steht für Energieträger="Solare Strahlungsenergie", is_batterie ist eine Abkürzung für Batterien) 
+
+![Akumulierte Leistung aufgeteilt in Energieträger](img/plot_energietraeger_typen.png)
+
+Der Plot kann runtergeladen oder durch anklicken in eigenem Tab
+geöffnet werden.
+
+**Beispiel 2**
+
+Es soll die pv Leistungen in Segmenten summiert werden. Also
+im Interval zwischen 1MW und 10MV, 10MW und 100MW, sowie größer 100MW.
+Für die 10er Potenzen bei den Bruttoleistungen gibt es Abkürzungen:
+- Dabei steht ge_1mw für BruttoleistungDerEinheit >= 1000
+- lt_100mw analog für BruttoleistungDerEinheit < 100000
+
+![pv Leistungsaufteilung nach Bundesland](img/plot_pv_leistungs_segmente.png)
+
+## Hinweis zu Querys
+
+Aus software technischen Gründen wird z.B. der Begriff
+`Bruttoleistung der Einheit` zu `BruttoleistungDerEinheit`. Es können alle Begriffe in dieser Art, die im csv Header stehen verwendet werden.
+Die Querys können Operatoren wie in den meisten Programmiersprächen
+enthalten also (`&` für und `|` für oder u.s.w.)
+Ein Ausdruck muss dabei aber immer die Form haben `Spaltenkopf == "Typ"`, anstelle von `"Typ"` kann im Fall von `>` oder `<` auch eine Zahl stehen.
+
+Das heißt die Abfrage:
+
+`BruttoleistungDerEinheit > 1000` ist identisch zu `ge_1mw`.
+
+
+
+
 ----
 
 # Mastr-Utils (lokale Version)
@@ -183,7 +229,7 @@ Dieses Beispiel hilft, den Stromspeicher in Marbach genauer zu lokalisieren. Gee
 die nächste Fahrradtour. Das Ergebnis wird unten mit Hilfe der Handy-App OSMAnd dargestellt.
 
 ~~~
-mastrtogpx '~/Downloads/Stromerzeuger(15).csv' -q 'is_speicher & BruttoleistungDerEinheit > 10000 & (BetriebsStatus != "Endgültig stillgelegt")' -o tmp/speicher.gpx -c Red
+mastrtogpx '~/Downloads/Stromerzeuger(15).csv' -q 'is_battery & BruttoleistungDerEinheit > 10000 & (BetriebsStatus != "Endgültig stillgelegt")' -o tmp/speicher.gpx -c Red
 ~~~
 
 **Suche großer Solarparks in Deutschland**:

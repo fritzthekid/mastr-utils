@@ -183,7 +183,7 @@ class Analyse:
         try:
             self.data['is_new'] = self.data['InbetriebnahmedatumDerEinheit'] > str_to_datetime('01.01.2021')
             self.data['is_active'] = self.data['BetriebsStatus'] == 'In Betrieb'
-            self.data['is_speicher'] = self.data['Energieträger'] == 'Speicher'
+            self.data['is_battery'] = self.data['Energieträger'] == 'Speicher'
             self.data['is_pv'] = self.data['Energieträger'] == 'Solare Strahlungsenergie'
         except Exception as e:
             raise e
@@ -277,7 +277,10 @@ class Analyse:
         # print(f"amastr condition: {condition}")
         # print(f"amastr depends: {depends}")
 
-        filtered_data = self.data.query(condition)
+        try:
+            filtered_data = self.data.query(condition)
+        except ValueError as e:
+            raise ValueError(f"{e}: {condition}")
         # print(filtered_data)
         return filtered_data.groupby(depends_column)['BruttoleistungDerEinheit'].sum().reset_index()
 

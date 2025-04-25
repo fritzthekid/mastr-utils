@@ -79,7 +79,12 @@ def test_a_s():
     # doplot(args)
     assert True
 
-    
+def xx():
+    teststr = f'/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.csv;-q;is_pv#Energieträger="Biomasse"&HauptbrennstoffDerEinheit!="Biogas"#HauptbrennstoffDerEinheit=="Biogas";-d;Ort;-o;/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]'
+    args = teststr.split(';')
+    doplot(args)
+    pass
+
 def x():
     analyse = Analyse(file_path=f"{testdir}/data/rng_bawue_bay.csv",timeout = DEBUGTIMEOUT)
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
@@ -92,8 +97,9 @@ def x():
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
 
-test_plot_stacked_pv()
-test_plot_stacked_rng_bawue_bay()
-test_pv_brd_simple()
-test_plot_stacked_rng_bawue_bay()
-test_plot_stacked_speicher()
+xx()
+# test_plot_stacked_pv()
+# test_plot_stacked_rng_bawue_bay()
+# test_pv_brd_simple()
+# test_plot_stacked_rng_bawue_bay()
+# test_plot_stacked_speicher()
