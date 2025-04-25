@@ -54,7 +54,7 @@ def test_plot_stacked_rng_bawue_bay():
 
 def test_plot_stacked_speicher():
     analyse = Analyse(file_path=f"{testdir}/data/pv_speicher_ge_1mw.csv",timeout = DEBUGTIMEOUT)
-    analyse.plot_stacked('is_speicher & ge_1mw & lt_10mw#is_speicher & ge_10mw & lt_100mw#is_speicher & ge_100mw', 
+    analyse.plot_stacked('is_battery & ge_1mw & lt_10mw#is_battery & ge_10mw & lt_100mw#is_battery & ge_100mw', 
                          'Bundesland', artefact="Speicher (Betrieb + Planung)",
                          output_filename=f"{testdir}/tmp/x.svg")
     pass
@@ -85,7 +85,7 @@ def test_a_s():
 #     doplot(args)
 #     pass
 
-def xx():
+def test_before_after():
     teststr = f'/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.csv;-q;is_pv & after_01.01.2021#is_pv & before_31.12.2024;-d;Ort;-o;/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]'
     args = teststr.split(';')
     doplot(args)
@@ -104,7 +104,7 @@ def x():
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
     # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
 
-xx()
+# xx()
 # test_plot_stacked_pv()
 # test_plot_stacked_rng_bawue_bay()
 # test_pv_brd_simple()
