@@ -183,7 +183,8 @@ class Analyse:
         try:
             self.data['is_new'] = self.data['InbetriebnahmedatumDerEinheit'] > str_to_datetime('01.01.2021')
             self.data['is_active'] = self.data['BetriebsStatus'] == 'In Betrieb'
-            self.data['is_battery'] = self.data['Energieträger'] == 'Speicher'
+#            self.data['is_battery'] = ( self.data['Energieträger'] == 'Speicher' and self.data['Speichertechnologie'] == 'Batterie' )
+            self.data['is_battery'] = ( self.data['Speichertechnologie'] == 'Batterie' )
             self.data['is_pv'] = self.data['Energieträger'] == 'Solare Strahlungsenergie'
         except Exception as e:
             raise e

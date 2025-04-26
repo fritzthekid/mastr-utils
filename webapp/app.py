@@ -167,6 +167,7 @@ def plot():
         querb = request.form.get('querb', '')  # Query parameter
         querc = request.form.get('querc', '')  # Query parameter
         querd = request.form.get('querd', '')  # Query parameter
+        quere = request.form.get('quere', '')  # Query parameter
         min_weight = request.form.get('min_weight', "0")  # Minimum weight
         radius = request.form.get('radius', 2000)  # Radius
         depends = request.form.get('depends', "Bundesland")  # Radius
@@ -199,6 +200,7 @@ def plot():
         print(f'Query B: {querb}')
         print(f'Query C: {querc}')
         print(f'Query D: {querd}')
+        print(f'Query E: {quere}')
         print(f'Output: {output_file}')
         print('Converting...')
 
@@ -211,6 +213,8 @@ def plot():
             query += f"#{querc}" 
         if len(querd) > 0:
             query += f"#{querd}" 
+        if len(quere) > 0:
+            query += f"#{quere}" 
         command = [
             'mastrtoplot', file_path,
             '-q', query,
