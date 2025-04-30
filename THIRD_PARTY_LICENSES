@@ -1,0 +1,6 @@
+Includes material from:
+
+- Leaflet.js (https://leafletjs.com/), BSD 2-Clause License
+- Leaflet-GPX (https://github.com/mpetazzoni/leaflet-gpx), MIT License
+- Flask (https://flask.palletsprojects.com/), BSD 3-Clause License
+- Flask-CORS (https://flask-cors.readthedocs.io/), MIT License
