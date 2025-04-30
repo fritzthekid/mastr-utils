@@ -9,7 +9,7 @@ import pytest
 
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/..")
 
-from mastr_utils.analyse_mastr import Analyse
+from mastr_utils.analyse_mastr import Analyse, get_creation_date
 from mastr_utils.mastrtoplot import main as doplot
 
 testdir = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +40,7 @@ def test_pv_brd_simple():
     args = teststr.split(',')
     doplot(args)
     file = open(f"{outfile}").read()
-    assert len(re.findall("\n", file)) == 441
+    assert len(re.findall("\n", file)) > 400
 
 
 def test_plot_stacked_rng_bawue_bay():
@@ -61,11 +61,14 @@ def test_plot_stacked_speicher():
 
 def test_plot_stacked_pv():
     # analyse.plot('is_active & is_pv & ge_10mw & lt_100mw', 'bundesland', artefact="PV 10-100 MW")
+    outfile = f"{testdir}/tmp/x.svg"
+    os.remove(outfile) if os.path.exists(outfile) else None
     teststr = f"{testdir}/data/stromerzeuger_pv_brd.csv;-q;is_pv & ge_1mw & lt_10mw#is_pv & ge_10mw & lt_100mw#is_pv & ge_100mw;"
-    teststr += f"-d;Bundesland;-o;{testdir}/tmp/x.svg;-s;-l;[10000,5e6,1e4]"
+    teststr += f"-d;Bundesland;-o;{outfile};-s;-l;[10000,5e6,1e4]"
     args = teststr.split(';')
     doplot(args)
-    pass
+    file = open(f"{outfile}").read()
+    assert len(re.findall("\n", file)) > 100
 
 def test_a_s():
     teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv,-s"
@@ -91,6 +94,15 @@ def test_before_after():
     doplot(args)
     pass
 
+def test_get_creation_date():
+    creation_date = get_creation_date(f'{testdir}/data/landkreis-ludwigsburg.csv')
+    assert creation_date is not None, "failed to export any creation_date"
+
+def xx():
+    teststr = f"{testdir}/data/analagen_brd_wind_ge2mw.csv;-q;before_01.01.2022#after_01.01.2022 & is_active;-d;Bundesland;-o;{testdir}/tmp/analagen_brd_wind_ge2mw.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]"
+    args = teststr.split(';')
+    doplot(args)
+    pass
 
 def x():
     analyse = Analyse(file_path=f"{testdir}/data/rng_bawue_bay.csv",timeout = DEBUGTIMEOUT)

@@ -290,7 +290,7 @@ PC:
 
 Dieses Projekt steht unter der [BSD-Lizenz](LICENSE).
 
-To logo is licensed 
+Für das Logo gilt die CC BY-SA 4.0 Lizenz
 ```
 https://commons.wikimedia.org/wiki/File:Eyes-blitz.svg
 ```

@@ -52,10 +52,10 @@ def index():
         if firstarg in links:
             print(f"{links[firstarg]}")
             return show_page(links[firstarg])
-        elif "mastrutils" in request.form:
-            return render_template("mastrutils.html", debug=app.debug)
-        elif "mastrplot" in request.form:
-            return render_template("mastrplot.html", debug=app.debug)
+        elif "mastrtogpx" in request.form:
+            return render_template("mastrtogpx.html", debug=app.debug)
+        elif "mastrtoplot" in request.form:
+            return render_template("mastrtoplot.html", debug=app.debug)
         elif 'query' in request.form:
             # Verarbeitung für 'convert'
             return convert() # redirect(url_for('convert_function'))
@@ -67,6 +67,14 @@ def index():
             return serve_tmp_file(output_file)
         print('Index page')
         return render_template('index.html')
+
+@app.route('/mastrtogpx', methods=['GET', 'POST'])
+def mastrtoutils():
+    return render_template("mastrtogpx.html", debug=app.debug)
+
+@app.route('/mastrtoplot', methods=['GET','POST'])
+def mastrtoplot():
+    return render_template("mastrtoplot.html", debug=app.debug)
 
 def convert():
     global password_crypt

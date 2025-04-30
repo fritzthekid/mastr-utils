@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
+import math
 import datetime
 import os
 import re
 import math
 import shutil
 import time
+import subprocess
+import platform
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
@@ -97,8 +100,6 @@ def isnum(s):
         r = False
     return r
 
-import math
-
 # Haversine-Formel
 # def haversine(lon1, lat1, lon2, lat2):
 #     # Radius der Erde in Metern
@@ -124,6 +125,40 @@ def clean_bruttoleistung(data):
             val = round(float(re.sub(',','.',val))) 
         data.at[data.iloc[i].name,"BruttoleistungDerEinheit"] = np.float64(val)
 
+def get_creation_date(file_path):
+    stat = os.stat(file_path)
+    
+    # Versuch 1: Direkt über st_birthtime (nur macOS)
+    if hasattr(stat, 'st_birthtime'):
+        try:
+            ftime = datetime.datetime.fromtimestamp(stat.st_birthtime)
+            return ftime.strftime("%d.%m.%Y")
+        except Exception:
+            pass
+
+    # Versuch 2: Über "stat" Kommando auswerten
+    if platform.system() == "Linux" or platform.system() == "Darwin":
+        try:
+            res = subprocess.run(["stat", file_path], capture_output=True, text=True)
+            for line in res.stdout.splitlines():
+                if re.search(r'(?i)birth|geburt', line):
+                    date_match = re.search(r'\d{4}-\d{2}-\d{2}', line)
+                    if date_match:
+                        y, m, d = date_match.group(0).split('-')
+                        return f"{d}.{m}.{y}"
+        except Exception:
+            pass
+
+    # Versuch 3: Fallback auf Änderungszeit
+    ftime = datetime.datetime.fromtimestamp(stat.st_mtime)
+    return ftime.strftime("%d.%m.%Y")
+
+def get_date_last_modified(data,col):
+    alldates = []
+    for date in data[col]:
+        alldates.append(datetime.datetime.strptime(date,"%d.%m.%Y"))
+    return sorted(alldates)[-1].strftime("%d.%m.%Y")
+
 # Beispiel:
 # lon1, lat1 = 13.4050, 52.5200  # Berlin
 # lon2, lat2 = 11.5810, 48.1351  # München
@@ -145,6 +180,7 @@ class Analyse:
     def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0, 
                  timeout = 5, filesize = 10e6, datasize=2e4):
         logging.info(f"Initializing Analyse with file_path={file_path}")
+        self.file_path = file_path
         self.timeout, self.filesize, self.datasize = timeout, filesize, datasize
         global timeout_value
         timeout_value = timeout
@@ -179,6 +215,8 @@ class Analyse:
         
         columns_rename_dict = {c:to_camel_case(c) for c in self.data.columns}
         self.data.rename(columns=columns_rename_dict, inplace=True)
+        self.creation_date = get_creation_date(file_path)
+        self.last_modified = get_date_last_modified(self.data,"LetzteAktualisierung")
         # Add new columns based on conditions
         try:
             self.data['is_new'] = self.data['InbetriebnahmedatumDerEinheit'] > str_to_datetime('01.01.2021')
@@ -275,6 +313,7 @@ class Analyse:
             condition += f" & before_cond"
         condition = re.sub('&[ \t]*&', '&', condition)
         condition = re.sub('&[ \t]*&', '&', condition)
+        condition = re.sub("^ *& *","", condition)
         # print(f"amastr condition: {condition}")
         # print(f"amastr depends: {depends}")
 
@@ -339,11 +378,16 @@ class Analyse:
         # Gestapeltes Balkendiagramm erstellen
         sns.set_theme(style="whitegrid")
         grouped_data.plot(kind="bar", stacked=True, figsize=(14, 9))
-        plt.title(artefact if artefact else ' ')
+        if artefact:
+            title = artefact
+        else:
+            title = os.path.splitext(os.path.basename(self.file_path))[0]
+        plt.title(title)
         plt.xlabel(depends)
         plt.ylabel('Bruttoleistung')
         plt.xticks(rotation=45, ha='right', fontsize=14)
         # plt.legend(title='_')
+        plt.figtext(0.95, 0.01, f'MaStR Stand {self.last_modified}', ha='right', va='center')
         plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))
         if splitfile[1] not in ["svg", "png"]:
@@ -420,5 +464,3 @@ class Analyse:
             raise
         finally:
             signal.alarm(0)
-
-
