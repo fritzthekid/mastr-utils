@@ -382,6 +382,8 @@ class Analyse:
             title = artefact
         else:
             title = os.path.splitext(os.path.basename(self.file_path))[0]
+            if min_weight > 0:
+                title += f" (min Leistung im Cluster: {int(min_weight)}kW)"
         plt.title(title)
         plt.xlabel(depends)
         plt.ylabel('Bruttoleistung')
