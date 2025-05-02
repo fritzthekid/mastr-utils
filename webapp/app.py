@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, render_template, send_file
 from flask import redirect, url_for, send_from_directory
 from flask_cors import CORS
 from werkzeug.exceptions import RequestEntityTooLarge
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
 from mastr_utils.mastrtoplot import main as mtoplot
@@ -18,7 +19,14 @@ password_crypt = b""
 global output_file
 output_file = ""
 
+
 app = Flask(__name__)
+app.config['APPLICATION_ROOT'] = '/mastrutils'
+
+application = DispatcherMiddleware(Flask('dummy'), {
+    '/mastrutils': app
+})
+
 CORS(app)  # Enable CORS for all routes
 
 MAX_CONTENT_LENGTH = 15 * 1024 * 1024  # 5 MB
@@ -45,6 +53,12 @@ links = {
 def index():
     global output_file
     if request.method == 'GET':
+        if request.args.get("command") is not None:
+            command = request.args.get("command")
+            if command == "mastrtogpx":
+                return render_template("mastrtogpx.html", debug=app.debug)
+            elif command == "mastrtoplot":
+                return render_template("mastrtoplot.html", debug=app.debug)
         print('Index page')
         return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
