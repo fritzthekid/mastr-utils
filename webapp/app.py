@@ -293,7 +293,7 @@ def serve_tmp_file(filename):
             basefile = os.path.basename(filename)
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
-        elif ( filename.endswith(".svg") or filename.endswith(".png") ) and len(request.args)>0:
+        elif ( filename.endswith(".svg") or filename.endswith(".png") ) and ( len(request.args)>0 and request.args.get("command") == None ):
             basefile = os.path.basename(filename)
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='image/svg+xml')
