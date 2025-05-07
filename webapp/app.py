@@ -83,7 +83,7 @@ def index():
         return render_template('index.html')
 
 @app.route('/mastrtogpx', methods=['GET', 'POST'])
-def mastrtoutils():
+def mastrtogpx():
     return render_template("mastrtogpx.html", debug=app.debug)
 
 @app.route('/mastrtoplot', methods=['GET','POST'])
