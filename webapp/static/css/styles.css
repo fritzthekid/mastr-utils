@@ -309,8 +309,8 @@ button[type="submit"]:hover {
 
 /* Map styling */
 #map {
-    flex: 1; /* Allow the map to take up equal space as the form */
-    max-width: 400px; /* Limit the width of the map */
+    flex: 2; /* Allow the map to take up equal space as the form */
+    max-width: 700px; /* Limit the width of the map */
     aspect-ratio: 1 / 1; /* Make the map square */
     /* border: 2px solid #ccc; /* Add a simple border */
     border: 2px solid #000000; /* Add a simple border */
