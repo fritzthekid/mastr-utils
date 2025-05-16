@@ -126,6 +126,7 @@ def convert():
 
         # Generate output file path
         if output_file_basename:
+            output_file_basename = os.path.splitext(output_file_basename)[0]+".gpx"
             output_file = f"{tmpdir}/{output_file_basename}"
         else:
             output_file = f"{tmpdir}/{mastr_file.filename.rsplit('.', 1)[0]}.gpx"
@@ -207,6 +208,7 @@ def plot():
 
         # Generate output file path
         if output_file_basename:
+            output_file_basename = os.path.splitext(output_file_basename)[0]+".svg"
             output_file = f"{tmpdir}/{output_file_basename}"
         else:
             output_file = f"{tmpdir}/{mastr_file.filename.rsplit('.', 1)[0]}.svg"
@@ -289,18 +291,19 @@ def serve_tmp_file(filename):
         print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
         return jsonify({'status': 'error', 'message': f"Password failed"})
     try:
+        basefile = os.path.basename(filename)
+        if not os.path.isfile(f"{tmpdir}/{basefile}"):
+            return jsonify({'status': 'error', 'message': f"File not found: check ending"})
         if filename.endswith(".gpx"):
-            basefile = os.path.basename(filename)
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
         elif ( filename.endswith(".svg") or filename.endswith(".png") ) and ( len(request.args)>0 and request.args.get("command") == None ):
-            basefile = os.path.basename(filename)
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='image/svg+xml')
-        else:
-            basefile = os.path.basename(filename)
+        elif filename.endswith(".svg"):
             return send_from_directory(tmpdir, basefile, as_attachment=True, mimetype='application/xml')
-        
+        else:
+            return jsonify({'status': 'error', 'message': 'File not found.'}), 404
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 

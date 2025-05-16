@@ -394,6 +394,8 @@ class Analyse:
         splitfile = os.path.splitext(os.path.abspath(output_filename))
         if splitfile[1] not in ["svg", "png"]:
             output_filename = f"{splitfile[0]}.svg"
+        if not os.path.isdir(os.path.dirname(splitfile[0])):
+            raise ValueError("Output filename is no valid")
         plt.savefig(f'{output_filename}')
         plt.close()
 
@@ -453,16 +455,24 @@ class Analyse:
                 desc += f"<li>MaStR: {gpx_data['MaStRNrDerEinheit'][i]}</li></ul>"
                 point.description = desc
                 gpx.waypoints.append(point)
-
+                
+            splitfile = os.path.splitext(output_file)
+            output_file = splitfile[0]+".gpx"
+            if not os.path.isdir(os.path.dirname(output_file)):
+                raise ValueError("Output file - directory fails")
             with open(output_file, 'w') as f:
                 f.write(gpx.to_xml())
             logging.info(f"GPX file generated successfully: {output_file}")
             if self.test_timeout:
                 time.sleep(2)
                 raise ValueError("Test timeout failed")
+        except ValueError as e:
+            logging.error(f"ValueError: {e}")
+            signal.alarm(0)
+            raise ValueError(e)
         except Exception as e:
             logging.error(f"Error generating GPX file: {e}")
             signal.alarm(0)
-            raise
+            raise ValueError("Error generating GPX file")
         finally:
             signal.alarm(0)
