@@ -1,14 +1,112 @@
 # from mastr_utils import Analyse
 import os
 import hashlib
+import json
 from flask import Flask, request, jsonify, render_template, send_file 
 from flask import redirect, url_for, send_from_directory
 from flask_cors import CORS
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from flask import flash, session
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
 from mastr_utils.mastrtoplot import main as mtoplot
+
+# from loginhandler import login, logout, adduser, changepw, userhandler
+
+app = Flask(__name__)
+app.config['APPLICATION_ROOT'] = '/'
+app.config['SESSION_COOKIE_PATH'] = '/'
+app.secret_key = 'supersecretkey'
+
+USER_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/userdb.json"
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+def load_users():
+    if not os.path.exists(USER_FILE):
+        return {"admin": {"password":generate_password_hash("geheim")}}
+    with open(USER_FILE, 'r') as f:
+        return json.load(f)
+
+def save_users(users):
+    with open(USER_FILE, 'w') as f:
+        json.dump(users, f, indent=2)
+
+users = load_users()
+
+class User(UserMixin):
+    def __init__(self, username):
+        self.id = username
+
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id in users:
+        return User(user_id)
+    return None
+
+def userhandler():
+    if not current_user.is_authenticated:
+        return render_template('login.html')
+    else:
+        if current_user.id == "admin":
+            return render_template("admin.html")
+        return render_template("user.html")
+    
+def show_login():
+    return render_template('login.html')
+
+def login():
+    if request.method == 'POST':
+        name = request.form['username']
+        pw = request.form['password']
+        if name in users and check_password_hash(users[name]['password'], pw):
+            login_user(User(name))
+            print(f"User {name} wurde eingeloggt.")
+            return redirect(url_for('index', command="xxx"))
+        flash('Login fehlgeschlagen')
+    return render_template('login.html')
+
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index', command="xxx"))
+
+@login_required
+def changepw():
+    if not current_user.is_authenticated:
+        return render_template('403.html')
+    if request.method == 'POST':
+        old = request.form['old_password']
+        new = request.form['new_password']
+        if check_password_hash(users[current_user.id]['password'], old):
+            users[current_user.id]['password'] = generate_password_hash(new)
+            save_users(users)
+            flash('Passwort erfolgreich geändert.')
+            return redirect(url_for('index', command="xxx"))
+        flash('Altes Passwort stimmt nicht.')
+    return redirect(url_for('index', command="xxx")) #render_template('changepw.html')
+
+@login_required
+def adduser():
+    if not current_user.is_authenticated or current_user.id != 'admin':
+        return render_template('403.html')
+    if request.method == 'POST':
+        newuser = request.form['username']
+        initpw = request.form['new_password']
+        secondinitpw = request.form['secondnew_password']
+        # if initpw != secondinitpw:
+        #     flash('initpw und retry different')
+        if newuser not in users:
+            users[newuser] = {"password": generate_password_hash(initpw)}
+            save_users(users)
+            flash(f'Benutzer {newuser} angelegt.')
+        else:
+            flash('Benutzer existiert bereits.')
+    return redirect(url_for('index', command="xxx")) # render_template('adduser.html')
 
 UPLOAD_FOLDER = f'{tmpdir}'
 ALLOWED_EXTENSIONS = {'csv'}
@@ -20,12 +118,12 @@ global output_file
 output_file = ""
 
 
-app = Flask(__name__)
-app.config['APPLICATION_ROOT'] = '/mastrutils'
+global fristrun
+fristrun = True
 
-application = DispatcherMiddleware(Flask('dummy'), {
-    '/mastrutils': app
-})
+# application = DispatcherMiddleware(Flask('dummy'), {
+#     '/mastrutils': app
+# })
 
 CORS(app)  # Enable CORS for all routes
 
@@ -52,12 +150,20 @@ links = {
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global output_file
+    if current_user.is_authenticated:
+        print(f"Is Authorized")
+    else:
+        print("not authorized")
     if request.method == 'GET':
         if request.args.get("command") is not None:
             command = request.args.get("command")
             if command == "mastrtogpx":
+                if not current_user.is_authenticated:
+                    return render_template("login.html", debug=app.debug)
                 return render_template("mastrtogpx.html", debug=app.debug)
             elif command == "mastrtoplot":
+                if not current_user.is_authenticated:
+                    return render_template("login.html", debug=app.debug) 
                 return render_template("mastrtoplot.html", debug=app.debug)
         print('Index page')
         return render_template('index.html', debug=app.debug)
@@ -66,6 +172,29 @@ def index():
         if firstarg in links:
             print(f"{links[firstarg]}")
             return show_page(links[firstarg])
+        elif "command" in request.form:
+            command = request.form["command"]
+            if command == "mastrtogpx":
+                return mastrtogpx()
+            elif command == "convertx":
+                convert()
+            elif command == "mastrtoplot":
+                return mastrtoplot()
+            elif command == "plotx":
+                return plot()
+            elif command == "user":
+                return userhandler()
+            elif command == "show_login":
+                return show_login()
+            elif command == "login":
+                return login()
+            elif command == "changepw":
+                return changepw()
+            elif command == "adduser":
+                return adduser()
+            elif command == "logout":
+                return logout()
+            return render_template('index.html', debug=app.debug)
         elif "mastrtogpx" in request.form:
             return render_template("mastrtogpx.html", debug=app.debug)
         elif "mastrtoplot" in request.form:
@@ -80,28 +209,33 @@ def index():
         elif "downloadfile" in request.form:
             return serve_tmp_file(output_file)
         print('Index page')
-        return render_template('index.html')
+        return render_template('index.html', debug=app.debug)
 
-@app.route('/mastrtogpx', methods=['GET', 'POST'])
+# @app.route('/mastrtogpx', methods=['GET', 'POST'])
 def mastrtogpx():
+    if not current_user.is_authenticated:
+        return render_template("login.html", debug=app.debug)
     return render_template("mastrtogpx.html", debug=app.debug)
 
-@app.route('/mastrtoplot', methods=['GET','POST'])
+# @app.route('/mastrtoplot', methods=['GET','POST'])
+# @login_required
 def mastrtoplot():
+    if not current_user.is_authenticated:
+        return render_template("login.html", debug=app.debug) 
     return render_template("mastrtoplot.html", debug=app.debug)
 
 def convert():
-    global password_crypt
+    # global password_crypt
     global output_file
     try:
         # Retrieve POST arguments
-        password = request.form.get('pwd') # password
-        password_crypt = hashlib.shake_256(password.encode()).hexdigest(40)
-        try:
-            assert password_crypt == checkpassword_crypt
-        except Exception as e:
-            print(f'Password failed')
-            return jsonify({'status': 'error', 'message': f"<Large><b>Password failed</b></Large>"})
+        # password = request.form.get('pwd') # password
+        # password_crypt = hashlib.shake_256(password.encode()).hexdigest(40)
+        # try:
+        #     assert password_crypt == checkpassword_crypt
+        # except Exception as e:
+        #     print(f'Password failed')
+        #     return jsonify({'status': 'error', 'message': f"<Large><b>Password failed</b></Large>"})
         try:
             assert request.form.get("privacy") == "on"
         except:
@@ -168,18 +302,13 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
+#@login_required
 def plot():
-    global password_crypt
+    # global password_crypt
     global output_file
+    if not current_user.is_authenticated:
+        return render_template("login.html", debug=app.debug)
     try:
-        # Retrieve POST arguments
-        password = request.form.get('pwd') # password
-        password_crypt = hashlib.shake_256(password.encode()).hexdigest(40)
-        try:
-            assert password_crypt == checkpassword_crypt
-        except Exception as e:
-            print(f'Password failed')
-            return jsonify({'status': 'error', 'message': f"<Large><b>Password failed</b></Large>"})
         try:
             assert request.form.get("privacy") == "on"
         except:
@@ -270,6 +399,8 @@ def plot():
 
 
 def download_log():
+    if not current_user.is_authenticated:
+        render_template("login.html", debug=app.debug)
     if not app.debug:
         return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
     log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
@@ -284,12 +415,8 @@ def favicon():
 
 @app.route('/tmp/<path:filename>', methods=['GET'])
 def serve_tmp_file(filename):
-    global password_crypt
-    try:
-        assert password_crypt == checkpassword_crypt
-    except Exception as e:
-        print(f'Password failed: {password_crypt}, {checkpassword_crypt}')
-        return jsonify({'status': 'error', 'message': f"Password failed"})
+    if not current_user.is_authenticated:
+        render_template("login.html", debug=app.debug)
     try:
         basefile = os.path.basename(filename)
         if not os.path.isfile(f"{tmpdir}/{basefile}"):
@@ -312,6 +439,7 @@ def show_page(page):
 
 def impressum():
     return render_template('impressum.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

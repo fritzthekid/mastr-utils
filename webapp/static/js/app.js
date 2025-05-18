@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: formData
             });
 
+            // console.log("response.json")
+            // console.log(response.json());
             const result = await response.json();
 
             if (result.status === 'success') {

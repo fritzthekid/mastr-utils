@@ -34,7 +34,41 @@
           <button name="impressum" id="buti" onclick="formaction()">Kontakt</button>
       </form>
    </th>
-  </tr>
+   <!--th>
+    <form method="POST" action="/">
+        <button name="command" value="user" id="butu" onclick="formaction()">
+          {% if current_user.is_authenticated %}
+            {{ current_user.id }}
+          {% else %}
+            Login
+          {% endif %}
+        </button>
+    </form>
+ </th-->
+ <th>
+  <div class="dropdown">
+    <form method="post">
+      <button class="dropbtn" type="submit" name="command" value="profil">
+        {% if current_user.is_authenticated %}
+          {{ current_user.id }}
+        {% else %}
+          Login
+        {% endif %}
+      </button>
+    </form-->
+    <div class="dropdown-content">
+      {% if current_user.is_authenticated %}
+        <form method="post"><button name="command" value="user">Profil</button></form>
+        <!--form method="post"><button name="command" value="changepw">Passwort ändern</button></form-->
+        <form method="post"><button name="command" value="logout">Logout</button></form>
+      {% else %}
+        <form method="post"><button name="command" value="show_login">Login</button></form>
+      {% endif %}
+    </div>
+  </div>
+</th>
+ 
+</tr>
  </table>
  <!--script>
   formaction(){

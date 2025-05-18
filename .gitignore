@@ -2,3 +2,4 @@
 __pycache__/
 mastr_utils.egg-info/
 pytestdebug.log
+webapp/

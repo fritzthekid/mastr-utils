@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaStR to GPX Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+</head>
+<body>
+    <div id="root" />
+    {% include 'topbanner.html' %}
+    <div class="container">
+<h2>Login</h2>
+<form method="post">
+    <input input type="hidden" name="command" value="login" />
+  <input name="username" style="font-size: 2em;" placeholder="Benutzername"><br>
+  <input name="password" type="password" style="font-size: 2em;" placeholder="Passwort"><br>
+  <button type="submit">Login</button>
+</form>
+    </div>
+    {% include 'footer.html' %}
+
+</body>
+</html>

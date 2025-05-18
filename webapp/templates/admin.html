@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaStR to GPX Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+</head>
+<body>
+    <div id="root" />
+    {% include 'topbanner.html' %}
+    <div class="container">
+
+        <h2>Passwort ändern</h2>
+<form method="post">
+    <input input type="hidden" name="command" value="changepw" />
+  <input name="old_password" type="password" placeholder="Altes Passwort"><br>
+  <input name="new_password" type="password" placeholder="Neues Passwort"><br>
+  <input name="secondnew_password" type="password" placeholder="Wiederhole neues Passwort"><br>
+  <button type="submit">Ändern</button>
+</form>
+
+        <h2>Add User</h2>
+<form method="post">
+    <input input type="hidden" name="command" value="adduser" />
+  <input name="username" placeholder="User Name"><br>
+  <input name="new_password" type="password" placeholder="Neues Password"><br>
+  <input name="secondnew_password" type="password" placeholder="Repeat Password"><br>
+  <button type="submit">Add</button>
+</form>
+
+    <h2>
+    <form method="post">
+        <input input type="hidden" name="command" value="logout" />
+        <button type="submit">Logout</button>
+    </form>
+    </h2>
+    </div>
+    {% include 'footer.html' %}
+
+</body>
+</html>
+
