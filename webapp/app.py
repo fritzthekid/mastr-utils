@@ -145,16 +145,6 @@ def adduser():
 UPLOAD_FOLDER = f'{tmpdir}'
 ALLOWED_EXTENSIONS = {'csv'}
 
-checkpassword_crypt = '150b9efdf6e1c5b614b1e90cf7a17ca59b494b802e35f6ae467a540236d3ecaec7a27478fe1e9393'
-global password_crypt
-password_crypt = b""
-global output_file
-output_file = ""
-
-
-global fristrun
-fristrun = True
-
 # application = DispatcherMiddleware(Flask('dummy'), {
 #     '/mastrutils': app
 # })
@@ -183,7 +173,6 @@ links = {
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    global output_file
     if current_user.is_authenticated:
         print(f"Is Authorized")
     else:
@@ -243,7 +232,7 @@ def index():
         elif "downloadlog" in request.form:
             return download_log()
         elif "downloadfile" in request.form:
-            return serve_tmp_file(output_file)
+            return serve_tmp_file("",picfromsession=True)
         print('Index page')
         return render_template('index.html', debug=app.debug)
 
@@ -261,8 +250,6 @@ def mastrtoplot():
     return render_template("mastrtoplot.html", debug=app.debug)
 
 def convert():
-    # global password_crypt
-    global output_file
     try:
         # Retrieve POST arguments
         # password = request.form.get('pwd') # password
@@ -323,12 +310,12 @@ def convert():
             '-l','[10000,5e7,3e5]',
         ]
 
+        session["output_file"] = os.path.basename(output_file)
         print('Command:', ' '.join(command))
         # Capture stdout and stderr
         # result = subprocess.run(command, capture_output=True, text=True, check=True)
         mtogpx(command[1:])
         print('Conversion completed successfully.')
-
         return jsonify({
             'status': 'success',
             'message': 'Conversion completed successfully.',
@@ -340,8 +327,6 @@ def convert():
 
 #@login_required
 def plot():
-    # global password_crypt
-    global output_file
     if not current_user.is_authenticated:
         return render_template("login.html", debug=app.debug)
     try:
@@ -415,6 +400,7 @@ def plot():
             '-l','[10000,5e7,3e5]',
         ]
 
+        session["output_file"] = os.path.basename(output_file)
         print('Command:', ' '.join(command))
         # Capture stdout and stderr
         # result = subprocess.run(command, capture_output=True, text=True, check=True)
@@ -450,20 +436,25 @@ def favicon():
     return '', 204  # Return an empty response with a 204 No Content status
 
 @app.route('/tmp/<path:filename>', methods=['GET'])
-def serve_tmp_file(filename):
+def serve_tmp_file(filename, picfromsession=False):
+    if picfromsession:
+        basefile = session.get("output_file")
+    else:
+        basefile = os.path.basename(filename)
+    if basefile is None or basefile == "":
+        jsonify({'status': 'error', 'message': 'output_file not known.'}), 404
     if not current_user.is_authenticated:
         render_template("login.html", debug=app.debug)
     try:
-        basefile = os.path.basename(filename)
         if not os.path.isfile(f"{tmpdir}/{basefile}"):
             return jsonify({'status': 'error', 'message': f"File not found: check ending"})
-        if filename.endswith(".gpx"):
+        if basefile.endswith(".gpx"):
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
-        elif ( filename.endswith(".svg") or filename.endswith(".png") ) and ( len(request.args)>0 and request.args.get("command") == None ):
+        elif ( basefile.endswith(".svg") or basefile.endswith(".png") ) and ( len(request.args)>0 and request.args.get("command") == None ):
             # Serve files from the tmpdir directory
             return send_from_directory(tmpdir, basefile, mimetype='image/svg+xml')
-        elif filename.endswith(".svg"):
+        elif basefile.endswith(".svg"):
             return send_from_directory(tmpdir, basefile, as_attachment=True, mimetype='application/xml')
         else:
             return jsonify({'status': 'error', 'message': 'File not found.'}), 404
