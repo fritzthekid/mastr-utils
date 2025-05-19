@@ -1,3 +1,4 @@
+# coding=utf-8
 # from mastr_utils import Analyse
 import os
 import hashlib
