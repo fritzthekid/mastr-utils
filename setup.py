@@ -44,6 +44,7 @@ setup(
         "numpy",
 	"gunicorn",
 	"uwsgi",
+	"flask_login",
     ],
     tests_require=["pytest","pytest-cov"],
     cmdclass={"test": PyTest},
