@@ -65,30 +65,42 @@ def login():
         pw = request.form['password']
         if name in users and check_password_hash(users[name]['password'], pw):
             login_user(User(name))
+            if users[name]["status"] == "init":
+                print(f"User {name} zunächst Passwort ändern.")
+                flash(f'User {name} zunächst Passwort ändern.', category='message')
+                return render_template('user.html')
+            login_user(User(name))
             print(f"User {name} wurde eingeloggt.")
-            return redirect(url_for('index', command="xxx"))
-        flash('Login fehlgeschlagen')
+            return redirect(url_for('index'))
+        flash('User oder Password nicht korrekt', category='message')
     return render_template('login.html')
 
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index', command="xxx"))
+    return redirect(url_for('index'))
 
 @login_required
-def changepw():
+def changepw(user = ""):
     if not current_user.is_authenticated:
         return render_template('403.html')
     if request.method == 'POST':
         old = request.form['old_password']
         new = request.form['new_password']
-        if check_password_hash(users[current_user.id]['password'], old):
+        retry = request.form["secondnew_password"]    
+        if not check_password_hash(users[current_user.id]['password'], old):
+            flash('Altes Passwort nicht korrekt', category='message')
+            return render_template('user.html')            # login_user(User(name))
+        if new != retry:
+            flash('Neues Password und Retry sind ungleich', category="message")
+            return render_template('user.html')
+        else:
             users[current_user.id]['password'] = generate_password_hash(new)
+            users[current_user.id]['status'] = "changed"
             save_users(users)
-            flash('Passwort erfolgreich geändert.')
-            return redirect(url_for('index', command="xxx"))
-        flash('Altes Passwort stimmt nicht.')
-    return redirect(url_for('index', command="xxx")) #render_template('changepw.html')
+            print(f"Passwurd korrekt.")
+            return redirect(url_for('index'))
+    return redirect(url_for('index'))    
 
 @login_required
 def adduser():
@@ -100,13 +112,15 @@ def adduser():
         secondinitpw = request.form['secondnew_password']
         # if initpw != secondinitpw:
         #     flash('initpw und retry different')
-        if newuser not in users:
-            users[newuser] = {"password": generate_password_hash(initpw)}
+        if initpw != secondinitpw:
+            flash("initpw und retry ungleich",category="message")
+        elif newuser not in users:
+            users[newuser] = {"password": generate_password_hash(initpw), "status":"init"}
             save_users(users)
-            flash(f'Benutzer {newuser} angelegt.')
+            flash(f'Benutzer {newuser} angelegt.', category="message")
         else:
-            flash('Benutzer existiert bereits.')
-    return redirect(url_for('index', command="xxx")) # render_template('adduser.html')
+            flash('Benutzer existiert bereits.', category="message")
+    return render_template('admin.html')
 
 UPLOAD_FOLDER = f'{tmpdir}'
 ALLOWED_EXTENSIONS = {'csv'}

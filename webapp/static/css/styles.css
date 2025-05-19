@@ -389,3 +389,13 @@ input[type="text"] {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+ul.flashes {
+  list-style: none;
+  padding: 10px;
+  background-color: #fee;
+  color: #900;
+  border: 1px solid #f99;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}

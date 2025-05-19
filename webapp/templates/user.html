@@ -14,13 +14,38 @@
     <div class="container">
 
         <h2>Passwort ändern</h2>
-<form method="post">
-    <input input type="hidden" name="command" value="changepw" />
+<!--form method="post">
+    <input input type="hidden" name="command" value="changepwx" />
   <input name="old_password" type="password" style="font-size: 2em;" placeholder="Altes Passwort"><br>
   <input name="new_password" type="password" style="font-size: 2em;" placeholder="Neues Passwort"><br>
   <input name="secondnew_password" type="password" style="font-size: 2em;" placeholder="Wiederhole neues Passwort"><br>
   <button type="submit">Ändern</button>
+</form-->
+<form method="post">
+    <input input type="hidden" name="command" value="changepw" />
+<table style="font-size: 1em;">
+    <tr>
+     <th>Altes Password:</th>
+     <th><input name="old_password" type="password" style="font-size: 2em;" placeholder="Altes Passwort"></th>
+    </tr>
+    <tr>
+        <th>Neues Passwort:</th><th><input name="new_password" type="password" style="font-size: 2em;" placeholder="Passwort"></th>
+    </tr>
+    <tr>
+        <th width="10%">Retry Neues Passwort:</th><th><input name="secondnew_password" type="password" style="font-size: 2em;" placeholder="Passwort"></th>
+    </tr witdth="50%">
+    </table>
+<button type="submit">Ändern</button>
 </form>
+{% with messages = get_flashed_messages(category_filter=["message"]) %}
+{% if messages %}
+<ul class="flashes">
+  {% for msg in messages %}
+    <li>{{ msg }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
 
     <h2>
     <form method="post">

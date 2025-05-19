@@ -48,13 +48,15 @@
  <th>
   <div class="dropdown">
     <form method="post">
-      <button class="dropbtn" type="submit" name="command" value="profil">
         {% if current_user.is_authenticated %}
+        <button class="dropbtn" type="submit" name="command" value="profil" style="background-color:rgb(229, 134, 134); color:rgb(15, 15, 15)">
           {{ current_user.id }}
+        </button>
         {% else %}
+        <button class="dropbtn" type="submit" name="command" value="profil" style="background-color:rgb(211, 211, 211); color:rgb(15, 15, 15)">
           Login
+        </button>
         {% endif %}
-      </button>
     </form-->
     <div class="dropdown-content">
       {% if current_user.is_authenticated %}

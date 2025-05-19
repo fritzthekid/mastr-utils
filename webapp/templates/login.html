@@ -15,10 +15,26 @@
 <h2>Login</h2>
 <form method="post">
     <input input type="hidden" name="command" value="login" />
-  <input name="username" style="font-size: 2em;" placeholder="Benutzername"><br>
-  <input name="password" type="password" style="font-size: 2em;" placeholder="Passwort"><br>
+    <table style="font-size: 1em; width:30%">
+        <tr>
+         <th>Benutzername:</th>
+         <th><input name="username" style="font-size: 1em;" placeholder="Benutzername"></th>
+        </tr>
+        <tr>
+         <th>Passwort:</th><th><input name="password" type="password" style="font-size: 1em;" placeholder="Passwort"></th>
+        </tr>
+    </table>
   <button type="submit">Login</button>
 </form>
+{% with messages = get_flashed_messages(category_filter=["message"]) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for msg in messages %}
+        <li>{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
     </div>
     {% include 'footer.html' %}
 
