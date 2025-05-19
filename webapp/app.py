@@ -55,7 +55,7 @@ def userhandler():
     else:
         if current_user.id == "admin":
             return render_template("admin.html")
-        return render_template("user.html")
+        return render_template("user.html", userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
     
 def show_login():
     return render_template('login.html')
@@ -69,7 +69,7 @@ def login():
             if users[name]["status"] == "init":
                 print(f"User {name} zunächst Passwort ändern.")
                 flash(f'User {name} zunächst Passwort ändern.', category='message')
-                return render_template('user.html')
+                return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
             login_user(User(name))
             print(f"User {name} wurde eingeloggt.")
             return redirect(url_for('index'))
@@ -91,16 +91,31 @@ def changepw(user = ""):
         retry = request.form["secondnew_password"]    
         if not check_password_hash(users[current_user.id]['password'], old):
             flash('Altes Passwort nicht korrekt', category='message')
-            return render_template('user.html')            # login_user(User(name))
+            return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])            # login_user(User(name))
         if new != retry:
             flash('Neues Password und Retry sind ungleich', category="message")
-            return render_template('user.html')
+            return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
         else:
             users[current_user.id]['password'] = generate_password_hash(new)
             users[current_user.id]['status'] = "changed"
             save_users(users)
             print(f"Passwurd korrekt.")
             return redirect(url_for('index'))
+    return redirect(url_for('index'))    
+
+@login_required
+def adduserproperties():
+    if not current_user.is_authenticated:
+        return render_template('403.html')
+    if request.method == 'POST':
+        firstname = request.form['firstname']
+        secondname = request.form['secondname']
+        email = request.form["email"]    
+        users[current_user.id]['firstname'] = firstname
+        users[current_user.id]['secondname'] = secondname
+        users[current_user.id]['email'] = email
+        save_users(users)
+        print(f"user properties for {current_user.id} changed.")
     return redirect(url_for('index'))    
 
 @login_required
@@ -116,7 +131,11 @@ def adduser():
         if initpw != secondinitpw:
             flash("initpw und retry ungleich",category="message")
         elif newuser not in users:
-            users[newuser] = {"password": generate_password_hash(initpw), "status":"init"}
+            users[newuser] = {
+                "password": generate_password_hash(initpw), 
+                "status":"init",
+                "owner":"newuser",
+            }
             save_users(users)
             flash(f'Benutzer {newuser} angelegt.', category="message")
         else:
@@ -205,6 +224,8 @@ def index():
                 return login()
             elif command == "changepw":
                 return changepw()
+            elif command == "adduserproperties":
+                return adduserproperties()
             elif command == "adduser":
                 return adduser()
             elif command == "logout":

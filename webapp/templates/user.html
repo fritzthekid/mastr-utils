@@ -13,30 +13,63 @@
     {% include 'topbanner.html' %}
     <div class="container">
 
+    {% if isowner %}
         <h2>Passwort ändern</h2>
-<!--form method="post">
-    <input input type="hidden" name="command" value="changepwx" />
-  <input name="old_password" type="password" style="font-size: 2em;" placeholder="Altes Passwort"><br>
-  <input name="new_password" type="password" style="font-size: 2em;" placeholder="Neues Passwort"><br>
-  <input name="secondnew_password" type="password" style="font-size: 2em;" placeholder="Wiederhole neues Passwort"><br>
-  <button type="submit">Ändern</button>
-</form-->
-<form method="post">
-    <input input type="hidden" name="command" value="changepw" />
-<table style="font-size: 1em;">
-    <tr>
-     <th>Altes Password:</th>
-     <th><input name="old_password" type="password" style="font-size: 2em;" placeholder="Altes Passwort"></th>
-    </tr>
-    <tr>
-        <th>Neues Passwort:</th><th><input name="new_password" type="password" style="font-size: 2em;" placeholder="Passwort"></th>
-    </tr>
-    <tr>
-        <th width="10%">Retry Neues Passwort:</th><th><input name="secondnew_password" type="password" style="font-size: 2em;" placeholder="Passwort"></th>
-    </tr witdth="50%">
+
+        <form method="post">
+          <input input type="hidden" name="command" value="changepw" />
+          <table style="font-size: 1em;">
+            <tr>
+            <th>Altes Password:</th>
+            <th><input name="old_password" type="password" style="font-size: 2em;" placeholder="Altes Passwort"></th>
+            </tr>
+            <tr>
+                <th>Neues Passwort:</th><th><input name="new_password" type="password" style="font-size: 2em;" placeholder="Passwort"></th>
+            </tr>
+            <tr>
+                <th width="10%">Retry Neues Passwort:</th><th><input name="secondnew_password" type="password" style="font-size: 2em;" placeholder="Passwort"></th>
+            </tr witdth="50%">
+          </table>
+          <button type="submit">Ändern</button>
+        </form>
+
+    <h2>Properties (optional)</h2>
+    <table style="font-size: 1em;">
+        <tr>
+            {% if "firstname" in userprops %}
+            <th>Vorname:</th><th>{{ userprops["firstname"] }}</th>
+            {% endif %}
+        </tr>
+        <tr>
+            {% if "secondname" in userprops %}
+            <th>Nachname:</th><th>{{ userprops["secondname"] }}</th>
+            {% endif %}
+        </tr>
+        <tr>
+            {% if "email" in userprops %}
+            <th>e-mail</th><th>{{ userprops["email"] }}</th>
+            {% endif %}
+        </tr>
     </table>
-<button type="submit">Ändern</button>
-</form>
+
+    <form method="post" width="50%">
+        <input input type="hidden" name="command" value="adduserproperties" />
+        <table style="font-size: 1em;">
+            <tr>
+            <th>Vorname:</th>
+            <th><input name="firstname" style="font-size: 2em;" placeholder="Vorname"></th>
+            </tr>
+            <tr>
+                <th>Nachname:</th><th><input name="secondname" style="font-size: 2em;" placeholder="Nachnahme"></th>
+            </tr>
+            <tr>
+                <th width="10%">e-mail:</th><th><input name="email" style="font-size: 2em;" placeholder="e-mail"></th>
+            </tr witdth="50%">
+        </table>
+        <button type="submit">Add Properties</button>
+    </form>
+{% endif %}
+
 {% with messages = get_flashed_messages(category_filter=["message"]) %}
 {% if messages %}
 <ul class="flashes">
