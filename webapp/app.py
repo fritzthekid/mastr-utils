@@ -232,7 +232,7 @@ def index():
         elif "downloadlog" in request.form:
             return download_log()
         elif "downloadfile" in request.form:
-            return serve_tmp_file("",picfromsession=True)
+            return serve_tmp_file()
         print('Index page')
         return render_template('index.html', debug=app.debug)
 
@@ -319,7 +319,7 @@ def convert():
         return jsonify({
             'status': 'success',
             'message': 'Conversion completed successfully.',
-            'download_url': f"/tmp/{output_file.rsplit('/', 1)[-1]}"
+            'download_url': f"/download" # tmp/{output_file.rsplit('/', 1)[-1]}"
         })
     except Exception as e:
         print('Unexpected error:', e)
@@ -410,7 +410,7 @@ def plot():
         return jsonify({
             'status': 'success',
             'message': 'Conversion completed successfully.',
-            'download_url': f"/tmp/{output_file.rsplit('/', 1)[-1]}"
+            'download_url': "/download" # f"/tmp/{output_file.rsplit('/', 1)[-1]}"
         })
     except AssertionError as e:
         print('assertion error:', e)
@@ -435,16 +435,16 @@ def download_log():
 def favicon():
     return '', 204  # Return an empty response with a 204 No Content status
 
-@app.route('/tmp/<path:filename>', methods=['GET'])
-def serve_tmp_file(filename, picfromsession=False):
-    if picfromsession:
-        basefile = session.get("output_file")
-    else:
-        basefile = os.path.basename(filename)
-    if basefile is None or basefile == "":
-        jsonify({'status': 'error', 'message': 'output_file not known.'}), 404
+@app.route('/download', methods=['GET'])
+def serve_tmp_file():
     if not current_user.is_authenticated:
         render_template("login.html", debug=app.debug)
+    try:
+        basefile = session.get("output_file")
+        if basefile is None or basefile == "":
+            return jsonify({'status': 'error', 'message': 'output_file not known.'}), 404
+    except:
+        return jsonify({'status': 'error', 'message': 'trouble with output_file.'}), 404
     try:
         if not os.path.isfile(f"{tmpdir}/{basefile}"):
             return jsonify({'status': 'error', 'message': f"File not found: check ending"})
