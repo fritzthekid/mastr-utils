@@ -95,7 +95,7 @@ def login():
             session_data = load_session_data()
             session_data["id"] = session_data["id"]+1
             session["id"] = session_data["id"]
-            save_session_data()
+            save_session_data(session_data)
             make_sessiondir() # make sessiondir
             logging.info(f"user: {name}, successfully logged in, session[id]: {session_data['id']}")
             print(f"User {name} wurde eingeloggt. session[id]: {session_data['id']}")
@@ -191,7 +191,7 @@ def load_session_data():
     with open(SESSION_DATA_FILE, 'r') as f:
         return json.load(f)
 
-def save_session_data():
+def save_session_data(session_data):
     with open(SESSION_DATA_FILE, 'w') as f:
         json.dump(session_data, f, indent=2)
 
