@@ -1,7 +1,7 @@
 # coding=utf-8
 # from mastr_utils import Analyse
 import os
-import hashlib
+import shutil
 import json
 import logging
 from flask import Flask, request, jsonify, render_template, send_file 
@@ -24,6 +24,7 @@ app.config['SESSION_COOKIE_PATH'] = '/'
 app.secret_key = 'supersecretkey'
 
 USER_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/userdb.json"
+SESSION_DATA_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/session_data.json"
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -57,7 +58,24 @@ def userhandler():
         if current_user.id == "admin":
             return render_template("admin.html")
         return render_template("user.html", userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
+
+def make_sessiondir():
+    session_dir = f"{tmpdir}/{session['id']}"
+    if os.path.exists(session_dir):
+        if os.path.isdir(session_dir):
+            return session_dir
+        else:
+            shutil.rmtree(session_dir, ignore_errors=True)
+    os.makedirs(session_dir, exist_ok=True)
     
+def sessiondir():
+    session_dir = f"{tmpdir}/{session['id']}"
+    try:
+        assert os.path.exists and os.path.isdir(session_dir), "session_dir does exists"
+        return session_dir
+    except:
+        raise ValueError("tmp dir doesn't exists")
+        
 def show_login():
     return render_template('login.html')
 
@@ -74,7 +92,11 @@ def login():
                 flash(f'User {name} zunächst Passwort ändern.', category='message')
                 return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
             login_user(User(name))
-            logging.info(f"user: {name}, successfully logged in")
+            session_data["id"] = session_data["id"]+1
+            session["id"] = session_data["id"]
+            save_session_data()
+            make_sessiondir() # make sessiondir
+            logging.info(f"user: {name}, successfully logged in, session[id]: {session_data['id']}")
             print(f"User {name} wurde eingeloggt.")
             return redirect(url_for('index'))
         logging.info(f"User {name} or password not valid")
@@ -87,6 +109,8 @@ def logout():
         logging.err("someone tried to logged out without been authentication")
         return render_template('403.html')
     logging.info(f"User {current_user.id} logged out")
+    if not app.debug:
+        shutil.rmtree(sessiondir())
     logout_user()
     return redirect(url_for('index'))
 
@@ -154,8 +178,21 @@ def adduser():
             flash('Benutzer existiert bereits.', category="message")
     return render_template('admin.html')
 
-UPLOAD_FOLDER = f'{tmpdir}'
+# UPLOAD_FOLDER = f'{tmpdir}'
 ALLOWED_EXTENSIONS = {'csv'}
+
+def load_session_data():
+    if not os.path.exists(SESSION_DATA_FILE):
+        return {"id":0}
+    with open(SESSION_DATA_FILE, 'r') as f:
+        return json.load(f)
+
+def save_session_data():
+    with open(SESSION_DATA_FILE, 'w') as f:
+        json.dump(session_data, f, indent=2)
+
+users = load_users()
+session_data = load_session_data()
 
 # application = DispatcherMiddleware(Flask('dummy'), {
 #     '/mastrutils': app
@@ -283,11 +320,11 @@ def convert():
         radius = request.form.get('radius', 2000)  # Radius
         output_file_basename = request.form.get('output_file', '').strip()  # Output file name
 
-        # Save the uploaded file to the tmpdir location
+        # Save the uploaded file to the sessiondir() location
         if not mastr_file:
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
 
-        file_path = f"{tmpdir}/{mastr_file.filename}"
+        file_path = f"{sessiondir()}/{mastr_file.filename}"
         if not allowed_file(file_path):
             return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
         print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
@@ -296,9 +333,9 @@ def convert():
         # Generate output file path
         if output_file_basename:
             output_file_basename = os.path.splitext(output_file_basename)[0]+".gpx"
-            output_file = f"{tmpdir}/{output_file_basename}"
+            output_file = f"{sessiondir()}/{output_file_basename}"
         else:
-            output_file = f"{tmpdir}/{mastr_file.filename.rsplit('.', 1)[0]}.gpx"
+            output_file = f"{sessiondir()}/{mastr_file.filename.rsplit('.', 1)[0]}.gpx"
 
         if min_weight == "":
             min_weight = 0
@@ -358,11 +395,11 @@ def plot():
         depends = request.form.get('depends', "Bundesland")  # Radius
         output_file_basename = request.form.get('output_file', '').strip()  # Output file name
 
-        # Save the uploaded file to the tmpdir location
+        # Save the uploaded file to the sessiondir() location
         if not mastr_file:
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
 
-        file_path = f"{tmpdir}/{mastr_file.filename}"
+        file_path = f"{sessiondir()}/{mastr_file.filename}"
         if not allowed_file(file_path):
             return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
         print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
@@ -371,9 +408,9 @@ def plot():
         # Generate output file path
         if output_file_basename:
             output_file_basename = os.path.splitext(output_file_basename)[0]+".svg"
-            output_file = f"{tmpdir}/{output_file_basename}"
+            output_file = f"{sessiondir()}/{output_file_basename}"
         else:
-            output_file = f"{tmpdir}/{mastr_file.filename.rsplit('.', 1)[0]}.svg"
+            output_file = f"{sessiondir()}/{mastr_file.filename.rsplit('.', 1)[0]}.svg"
 
         if min_weight == "":
             min_weight = 0
@@ -437,7 +474,7 @@ def download_log():
         render_template("login.html", debug=app.debug)
     if not app.debug:
         return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
-    log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
+    log_file = f"{sessiondir()}/mastr_analyse.log"  # Path to the log file
     try:
         return send_file(log_file, as_attachment=True)
     except FileNotFoundError:
@@ -459,16 +496,16 @@ def serve_tmp_file():
     except:
         return jsonify({'status': 'error', 'message': 'trouble with output_file.'}), 404
     try:
-        if not os.path.isfile(f"{tmpdir}/{basefile}"):
+        if not os.path.isfile(f"{sessiondir()}/{basefile}"):
             return jsonify({'status': 'error', 'message': f"File not found: check ending"})
         if basefile.endswith(".gpx"):
-            # Serve files from the tmpdir directory
-            return send_from_directory(tmpdir, basefile, mimetype='application/gpx+xml')
+            # Serve files from the sessiondir() directory
+            return send_from_directory(sessiondir(), basefile, mimetype='application/gpx+xml')
         elif ( basefile.endswith(".svg") or basefile.endswith(".png") ) and ( len(request.args)>0 and request.args.get("command") == None ):
-            # Serve files from the tmpdir directory
-            return send_from_directory(tmpdir, basefile, mimetype='image/svg+xml')
+            # Serve files from the sessiondir() directory
+            return send_from_directory(sessiondir(), basefile, mimetype='image/svg+xml')
         elif basefile.endswith(".svg"):
-            return send_from_directory(tmpdir, basefile, as_attachment=True, mimetype='application/xml')
+            return send_from_directory(sessiondir(), basefile, as_attachment=True, mimetype='application/xml')
         else:
             return jsonify({'status': 'error', 'message': 'File not found.'}), 404
     except FileNotFoundError:
