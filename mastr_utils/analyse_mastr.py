@@ -472,7 +472,11 @@ class Analyse:
             raise ValueError(e)
         except Exception as e:
             logging.error(f"Error generating GPX file: {e}")
-            signal.alarm(0)
-            raise ValueError("Error generating GPX file")
+            if e.args[0] == "invalid syntax":
+                signal.alarm(0)
+                raise ValueError("Query: invalid syntax")
+            else:
+                signal.alarm(0)
+                raise ValueError("Error generating GPX file")                
         finally:
             signal.alarm(0)
