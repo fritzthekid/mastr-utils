@@ -110,7 +110,10 @@ def logout():
         return render_template('403.html')
     logging.info(f"User {current_user.id} logged out")
     if not app.debug:
-        shutil.rmtree(sessiondir())
+        try:
+            shutil.rmtree(sessiondir())
+        except:
+            pass
     logout_user()
     return redirect(url_for('index'))
 
