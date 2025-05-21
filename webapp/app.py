@@ -3,6 +3,7 @@
 import os
 import hashlib
 import json
+import logging
 from flask import Flask, request, jsonify, render_template, send_file 
 from flask import redirect, url_for, send_from_directory
 from flask_cors import CORS
@@ -64,20 +65,28 @@ def login():
     if request.method == 'POST':
         name = request.form['username']
         pw = request.form['password']
+        logging.info(f"user: {name}, tried to log in")
         if name in users and check_password_hash(users[name]['password'], pw):
             login_user(User(name))
             if users[name]["status"] == "init":
                 print(f"User {name} zunächst Passwort ändern.")
+                logging.info(f"User {name} has to set initial password")
                 flash(f'User {name} zunächst Passwort ändern.', category='message')
                 return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
             login_user(User(name))
+            logging.info(f"user: {name}, successfully logged in")
             print(f"User {name} wurde eingeloggt.")
             return redirect(url_for('index'))
+        logging.info(f"User {name} or password not valid")
         flash('User oder Password nicht korrekt', category='message')
     return render_template('login.html')
 
 @login_required
 def logout():
+    if not current_user.is_authenticated:
+        logging.err("someone tried to logged out without been authentication")
+        return render_template('403.html')
+    logging.info(f"User {current_user.id} logged out")
     logout_user()
     return redirect(url_for('index'))
 
@@ -85,11 +94,13 @@ def logout():
 def changepw(user = ""):
     if not current_user.is_authenticated:
         return render_template('403.html')
+    logging.info(f"User {current_user.id} change password")
     if request.method == 'POST':
         old = request.form['old_password']
         new = request.form['new_password']
         retry = request.form["secondnew_password"]    
         if not check_password_hash(users[current_user.id]['password'], old):
+            logging.info("old password does not fit")
             flash('Altes Passwort nicht korrekt', category='message')
             return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])            # login_user(User(name))
         if new != retry:
@@ -99,6 +110,7 @@ def changepw(user = ""):
             users[current_user.id]['password'] = generate_password_hash(new)
             users[current_user.id]['status'] = "changed"
             save_users(users)
+            logging.info(f"User {current_user.id} change password successfull")
             print(f"Passwurd korrekt.")
             return redirect(url_for('index'))
     return redirect(url_for('index'))    
@@ -438,6 +450,7 @@ def favicon():
 @app.route('/download', methods=['GET'])
 def serve_tmp_file():
     if not current_user.is_authenticated:
+        logging.err("someone tried to download file without been authentication")
         render_template("login.html", debug=app.debug)
     try:
         basefile = session.get("output_file")
