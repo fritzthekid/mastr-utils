@@ -92,12 +92,13 @@ def login():
                 flash(f'User {name} zunächst Passwort ändern.', category='message')
                 return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
             login_user(User(name))
+            session_data = load_session_data()
             session_data["id"] = session_data["id"]+1
             session["id"] = session_data["id"]
             save_session_data()
             make_sessiondir() # make sessiondir
             logging.info(f"user: {name}, successfully logged in, session[id]: {session_data['id']}")
-            print(f"User {name} wurde eingeloggt.")
+            print(f"User {name} wurde eingeloggt. session[id]: {session_data['id']}")
             return redirect(url_for('index'))
         logging.info(f"User {name} or password not valid")
         flash('User oder Password nicht korrekt', category='message')
