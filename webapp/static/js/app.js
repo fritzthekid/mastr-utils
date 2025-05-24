@@ -26,7 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // console.log(response.json());
             const result = await response.json();
 
-            if (result.status === 'success') {
+            if (result.status === 'info') {
+                console.log('info')
+                resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
+
+            } else if (result.status === 'success') {
                 // Display success message
                 resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
 

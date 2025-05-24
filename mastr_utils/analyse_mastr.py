@@ -3,6 +3,7 @@ import numpy as np
 import math
 import datetime
 import os
+import sys
 import re
 import math
 import shutil
@@ -254,37 +255,55 @@ class Analyse:
             raise TimeoutError("Test timeout failed")
         signal.alarm(0)
 
-    def show_columns(self, trailer=""):
+    def show_columns(self, trailer="", options=None):
+        if "output_file_name" in options:
+            f = open(options["output_file_name"], "w")
+        else:
+            f = sys.stdout
+
+        f.writelines("Columns in the MaStR file:<br>\n")
+    
         s = ""
         for c in self.data.columns:
-            s += f"{trailer}{c}\n"
-        return s
+            s += f"{trailer}{c}<br>\n"
+        f.writelines(s)
+        
+        
 
-    def analyse_datastruct(self):
+    def analyse_datastruct(self, options=None):
+        if "output_file_name" in options:
+            f = open(options["output_file_name"], "w")
+        else:
+            f = sys.stdout
         try:
-            print(f"Anzahl Einträge: {len(self.data)}")
+            f.writelines(f"Anzahl Einträge: {len(self.data)}<br>\n")
         except:
             pass
         try:
-            print(f"Bundesländer: {set(self.data['Bundesland'])}")
+            f.writelines(f"Bundesländer: {set(self.data['Bundesland'])}<br>\n")
         except:
             pass
         try:
-            print(f"Anzahl Gemeinden: {len(set(self.data['Ort']))}")
+            f.writelines(f"Anzahl Landkreise: {len(set(self.data['Landkreis']))}<br>\n")
         except:
             pass
         try:
-            print(f"Bruttoleistung min: {min(self.data['BruttoleistungDerEinheit'])}, max: {max(self.data['BruttoleistungDerEinheit'])}")
+            f.writelines(f"Anzahl Gemeinden: {len(set(self.data['Ort']))}<br>\n")
         except:
             pass
         try:
-            print("Energieträger: ", set(self.data['Energieträger']))
+            f.writelines(f"Bruttoleistung min: {min(self.data['BruttoleistungDerEinheit'])}kW, max: {max(self.data['BruttoleistungDerEinheit'])}kW<br>\n")
         except:
             pass
         try:
-            print("Betriebsstatus: ", set(self.data['BetriebsStatus']))
+            f.writelines(f"Energieträger: {set(self.data['Energieträger'])}<br>\n")
         except:
             pass
+        try:
+            f.writelines(f"Betriebsstatus: {set(self.data['BetriebsStatus'])}<br>\n")
+        except:
+            pass
+        f.close()
 
     # Method to query the data based on a condition and dependency
     def query(self, condition, depends=None):
@@ -448,10 +467,10 @@ class Analyse:
                     symbol=this_symbol
                 )
                 desc = f"Name: {gpx_data['AnzeigeNameDerEinheit'][i]}"
-                desc += f"<ul><li>Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp<br>\n"
-                desc += f"<li>Betriebs-Status: {gpx_data['BetriebsStatus'][i]}</li>\n"
-                desc += f"<li>Energieträger: {gpx_data['Energieträger'][i]}</li>\n"
-                desc += f"<li>Inbetriebnahmedatum der Einheit: {gpx_data['InbetriebnahmedatumDerEinheit'][i]}</li>\n"
+                desc += f"<ul><li>Leistung: {gpx_data['BruttoleistungDerEinheit'][i]} kWp<br><br>\n"
+                desc += f"<li>Betriebs-Status: {gpx_data['BetriebsStatus'][i]}</li><br>\n"
+                desc += f"<li>Energieträger: {gpx_data['Energieträger'][i]}</li><br>\n"
+                desc += f"<li>Inbetriebnahmedatum der Einheit: {gpx_data['InbetriebnahmedatumDerEinheit'][i]}</li><br>\n"
                 desc += f"<li>MaStR: {gpx_data['MaStRNrDerEinheit'][i]}</li></ul>"
                 point.description = desc
                 gpx.waypoints.append(point)

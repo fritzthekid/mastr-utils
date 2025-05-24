@@ -22,7 +22,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def main(testargs=None):
+def main(testargs=None, options=None):
     logging.info("Starting mastrtogpx conversion")
     try:
         parser = argparse.ArgumentParser(description="Convert MaStR file to GPX file")
@@ -35,7 +35,7 @@ def main(testargs=None):
         parser.add_argument("-a", "--analyse_datastruct", help="Value Ranges in Bundesland, Bruttoleistung", action="store_true")
         parser.add_argument("-e", "--energietraeger", help="Symbol = Energieträger", action="store_true")
         parser.add_argument("-s", "--show-columns", help="Show the columns of the MaStR file [default=False]", action="store_true")
-        parser.add_argument("-l", "--limits", help="limits", default='[5,10e6,2e4]')
+        parser.add_argument("-l", "--limits", help="limits", default='[5,15e6,4e4]')
         parser.add_argument("-h_query", "--help_query", help="Show Examples for Query [default=False]", action="store_true")
 
         # args = parser.parse_args([f"{tmpdir}/../tests/data/stromerzeuger_ludwigsburg.csv", "-o", "/tmp/x.gpx", "-s", "-e"])
@@ -58,22 +58,21 @@ def main(testargs=None):
         analyse = Analyse(file_path=args.mastr_file,
                           timeout = timeout, filesize = filesize, datasize = datasize)
         # if option -s Show the columns of the MaStR file
-        if args.show_columns:
-            print("Columns in the MaStR file:")
-            print(analyse.show_columns("    "))
-            return
-        
-        # if option -a analyse the data structure
-        if args.analyse_datastruct:
-            print(analyse.analyse_datastruct())
-            return
-
-        # Generate the GPX file
         if args.output is None:
             print("Please provide an output file (-o option)")
             parser.print_help()
             return
         
+        if args.show_columns:
+            analyse.show_columns(options={"output_file_name":args.output})
+            return
+        
+        # if option -a analyse the data structure
+        if args.analyse_datastruct:
+            analyse.analyse_datastruct(options={"output_file_name":args.output})
+            return
+
+        # Generate the GPX file        
         if args.energietraeger:
             symbol_part = [True, None]
         else:

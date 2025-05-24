@@ -253,7 +253,7 @@ def index():
             if command == "mastrtogpx":
                 return mastrtogpx()
             elif command == "convertx":
-                convert()
+                optgpx()
             elif command == "mastrtoplot":
                 return mastrtoplot()
             elif command == "plotx":
@@ -279,7 +279,7 @@ def index():
             return render_template("mastrtoplot.html", debug=app.debug)
         elif 'query' in request.form:
             # Verarbeitung für 'convert'
-            return convert() # redirect(url_for('convert_function'))
+            return optgpx() # redirect(url_for('convert_function'))
         elif 'quera' in request.form:
             return plot()
         elif "downloadlog" in request.form:
@@ -302,7 +302,7 @@ def mastrtoplot():
         return render_template("login.html", debug=app.debug) 
     return render_template("mastrtoplot.html", debug=app.debug)
 
-def convert():
+def optgpx():
     try:
         # Retrieve POST arguments
         # password = request.form.get('pwd') # password
@@ -318,24 +318,30 @@ def convert():
             print(f'Password failed')
             return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
         mastr_file = request.files.get('mastr_file')  # File upload
-        query = request.form.get('query', '')  # Query parameter
-        color = 'x'  # request.form.get('color', 'Amber')  # Waypoint color
-        min_weight = request.form.get('min_weight', "0")  # Minimum weight
-        radius = request.form.get('radius', 2000)  # Radius
-        output_file_basename = request.form.get('output_file', '').strip()  # Output file name
 
         # Save the uploaded file to the sessiondir() location
         if not mastr_file:
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
-
         file_path = f"{sessiondir()}/{mastr_file.filename}"
         if not allowed_file(file_path):
             return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
         print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
         mastr_file.save(file_path)
+        output_file_basename = request.form.get('output_file', '').strip() 
 
-        # Generate output file path
-        if output_file_basename:
+        if "opts" in request.form  and request.form.get("opts") == "help_queries":
+            return help_queries(file_path,  f"{sessiondir()}/output.txt")
+        elif "opts" in request.form and  request.form.get("opts") == "characteristics":
+            return characteristics(file_path, f"{sessiondir()}/output.txt")
+        elif "opts" in request.form  and request.form.get("opts") == "list-options":
+            return listoptions(file_path,  f"{sessiondir()}/output.txt")
+
+        # output_file_basename = request.form.get('output_file', '').strip()  # Output file name
+        query = request.form.get('query', '')  # Query parameter
+        color = 'x'  # request.form.get('color', 'Amber')  # Waypoint color
+        min_weight = request.form.get('min_weight', "0")  # Minimum weight
+        radius = request.form.get('radius', 2000)  # Radius
+        if len(output_file_basename) > 0:
             output_file_basename = os.path.splitext(output_file_basename)[0]+".gpx"
             output_file = f"{sessiondir()}/{output_file_basename}"
         else:
@@ -378,6 +384,68 @@ def convert():
         print('Unexpected error:', e)
         return jsonify({'status': 'error', 'message': str(e)})
 
+def listoptions(file_path, output_file):
+    command = [
+        'mastrtogpx', 
+        file_path,
+        '-s',
+        "-o",
+        output_file,
+    ]
+    print('Command:', ' '.join(command))
+    # Capture stdout and stderr
+    # result = subprocess.run(command, capture_output=True, text=True, check=True)
+    mtogpx(command[1:], options={"output_file_name":output_file})
+    print('Conversion completed successfully.')
+    message = open(output_file).read()
+    return jsonify({
+        'status': 'info',
+        'message': message, #'Conversion completed successfully.',
+        'download_url': f"/download" # tmp/{output_file.rsplit('/', 1)[-1]}"
+    })
+
+
+def characteristics(file_path, output_file):
+    command = [
+        'mastrtogpx', 
+        file_path,
+        '-a', 
+        "-o",
+        output_file,
+    ]
+    print('Command:', ' '.join(command))
+    # Capture stdout and stderr
+    # result = subprocess.run(command, capture_output=True, text=True, check=True)
+    mtogpx(command[1:], options={"output_file_name":output_file})
+    print('Characterics completed successfully.')
+    message = open(output_file).read()
+    return jsonify({
+        'status': 'info',
+        'message': message, 
+        'download_url': f"/download" 
+    })
+
+def help_queries(file_path, output_file):
+    message = """Hilfe für Query's, alle Query sind logische Ausdrücke der Form<br>
+&nbsp;    SpaltenkopfA == "&lt;Wert&gt;" & SpaltenkopfB > Zahl (meist in kW)<br>
+Typische Query's:
+&nbsp;    (Energieträger == "Biomasse" | Energieträger == "Wind") <br>
+dann gibt es einige spezielle Abkürzungen:<br>
+&nbsp;    ge_1mw, (ge_10mw, ge_100mw): für BruttoleistungDerEinheit >= 1000 (10000, 100000)<br>
+&nbsp;    lt_1mw: für BruttoleistungDerEinheit < 1000, ebso lt_10mw<br>
+&nbsp;    is_active: füŕ BetriebsStatus == "In Betrieb"<br>
+&nbsp;    is_pv: Energieträger == "Solare Strahlungsenergie"<br>
+&nbsp;    is_battery: Speichertechnologie == "Batterie"<br>
+die Spaltenköpfe sind alle unter "Hilfe -> list Options" zu finden.<br>
+<br>
+Zunächst ist sinnvoll erstmal die charakteristischen Größen der Datei mit Hilfe->Characteristics zu ermitteln. 
+"""
+    return jsonify({
+        'status': 'info',
+        'message': message, 
+        'download_url': f"/download" 
+    })
+
 #@login_required
 def plot():
     if not current_user.is_authenticated:
@@ -389,6 +457,24 @@ def plot():
             print(f'Password failed')
             return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
         mastr_file = request.files.get('mastr_file')  # File upload
+
+        # Save the uploaded file to the sessiondir() location
+        if not mastr_file:
+            return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
+        file_path = f"{sessiondir()}/{mastr_file.filename}"
+        if not allowed_file(file_path):
+            return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
+        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
+        mastr_file.save(file_path)
+        output_file_basename = request.form.get('output_file', '').strip()
+
+        if "opts" in request.form  and request.form.get("opts") == "help_queries":
+            return help_queries(file_path,  f"{sessiondir()}/output.txt")
+        elif "opts" in request.form and  request.form.get("opts") == "characteristics":
+            return characteristics(file_path, f"{sessiondir()}/output.txt")
+        elif "opts" in request.form  and request.form.get("opts") == "list-options":
+            return listoptions(file_path,  f"{sessiondir()}/output.txt")
+
         quera = request.form.get('quera', '')  # Query parameter
         querb = request.form.get('querb', '')  # Query parameter
         querc = request.form.get('querc', '')  # Query parameter
@@ -397,17 +483,6 @@ def plot():
         min_weight = request.form.get('min_weight', "0")  # Minimum weight
         radius = request.form.get('radius', 2000)  # Radius
         depends = request.form.get('depends', "Bundesland")  # Radius
-        output_file_basename = request.form.get('output_file', '').strip()  # Output file name
-
-        # Save the uploaded file to the sessiondir() location
-        if not mastr_file:
-            return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
-
-        file_path = f"{sessiondir()}/{mastr_file.filename}"
-        if not allowed_file(file_path):
-            return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
-        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
-        mastr_file.save(file_path)
 
         # Generate output file path
         if output_file_basename:

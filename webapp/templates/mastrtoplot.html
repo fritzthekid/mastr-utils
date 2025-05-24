@@ -110,9 +110,27 @@
                         <label for="privacy">Ich stimme zu, dass meine hochgeladenen Daten zur Verarbeitung genutzt werden dürfen.</label>
                         <input type="checkbox" id="privacy" name="privacy" required>
                     </div>
-                    <!-- button type="submit" form="convert-form">Convert</button-->
-                    <button type="submit" name="plot">Generate Plot</button>
-                <!-- Result Section -->
+
+                    <input type="hidden" id="opts_hidden" name="opts" value="">
+
+                    <!--button type="submit" onclick="setOpt('gpx')">Generate gpx</button>
+                    <button type="submit" onclick="setOpt('list-options')">Options</button>
+                    <button type="submit" onclick="setOpt('characteristics')">Characteristics</button-->        
+    
+                    <!-- GPX-Erzeugen-Button -->
+                    <button type="submit" onclick="setOpt('plot')">Generate Plot</button>
+    
+                    <!-- Dropdown für weitere Optionen -->
+                    <div class="form-group dropdown-wrapper">
+                    <button type="button" class="drophelp">Hilfe ▼</button>
+                    <div class="dropdown-content">
+                        <button style="background-color: #eeeeee; color:#333333" type="submit" onclick="setOpt('help_queries')">Zu Query's</button>
+                        <button style="background-color: #eeeeee; color:#333333" type="submit" onclick="setOpt('characteristics')">Characteristics</button>
+                        <button style="background-color: #eeeeee; color:#333333" type="submit" onclick="setOpt('list-options')">List Options</button>
+                    </div>
+                    </div>    
+
+                    <!-- Result Section -->
                 <div id="resultplot" style="margin-top: 20px;"></div>
             </form>
 
@@ -138,6 +156,7 @@
         {% endif %}
 
     </div>
+    <script src="{{ url_for('static', filename='js/general.js') }}"></script>
     <script src="{{ url_for('static', filename='js/appplot.js') }}"></script>
 
     {% include 'footer.html' %}
