@@ -271,7 +271,7 @@ class Analyse:
         
 
     def analyse_datastruct(self, options=None):
-        if "output_file_name" in options:
+        if options is not None and "output_file_name" in options:
             f = open(options["output_file_name"], "w")
         else:
             f = sys.stdout

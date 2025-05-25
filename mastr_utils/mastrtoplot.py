@@ -65,7 +65,8 @@ def main(testargs=None):
         
         # if option -a analyse the data structure
         if args.analyse_datastruct:
-            print(analyse.analyse_datastruct())
+            print(analyse.analyse_datastruct(options={"output_file_name":f"{tmpdir}/output.txt"}))
+            # print(open(f"{tmpdir}/output.txt").read())
             return
 
         # Generate the GPX file

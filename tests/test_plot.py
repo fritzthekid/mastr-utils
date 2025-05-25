@@ -97,28 +97,3 @@ def test_before_after():
 def test_get_creation_date():
     creation_date = get_creation_date(f'{testdir}/data/landkreis-ludwigsburg.csv')
     assert creation_date is not None, "failed to export any creation_date"
-
-def xx():
-    teststr = f"{testdir}/data/analagen_brd_wind_ge2mw.csv;-q;before_01.01.2022#after_01.01.2022 & is_active;-d;Bundesland;-o;{testdir}/tmp/analagen_brd_wind_ge2mw.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]"
-    args = teststr.split(';')
-    doplot(args)
-    pass
-
-def x():
-    analyse = Analyse(file_path=f"{testdir}/data/rng_bawue_bay.csv",timeout = DEBUGTIMEOUT)
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
-    # analyse.plot('is_active & is_pv & ge_10mw & lt_100mw', 'bundesland', artefact="PV 10-100 MW")
-    # analyse.plot('is_active & is_pv & ge_100mw', 'bundesland', artefact="PV >100 MW")
-    # analyse.plot_stacked(['is_pv & ge_100mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_1mw & lt_10mw'], 'bundesland', artefact="PV (Betrieb + Planung)", has_legend=True)
-
-    # analyse = Analyse(file_path=f"{rootpath}/../db/MarktStammregister/pvgt1mw.ods", figname="fig2", fig_num=10)
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw & is_active','is_pv & ge_10mw & lt_100mw & is_active', 'is_pv & ge_100mw & is_active'], 'bundesland', artefact="PV (in Betrieb)")
-    # analyse.plot_stacked(['is_pv & ge_1mw & lt_10mw','is_pv & ge_10mw & lt_100mw', 'is_pv & ge_100mw'], 'bundesland', artefact="PV (Betrieb + Planung)")
-
-# xx()
-# test_plot_stacked_pv()
-# test_plot_stacked_rng_bawue_bay()
-# test_pv_brd_simple()
-# test_plot_stacked_rng_bawue_bay()
-# test_plot_stacked_speicher()
