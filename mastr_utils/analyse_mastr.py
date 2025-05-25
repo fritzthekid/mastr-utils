@@ -372,8 +372,7 @@ class Analyse:
         if min_weight > 0:
             self.data = filter_large_weights(self.data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
 
-        grouped_data = pd.DataFrame()
-
+        grouped_list = []
         for expr in filter_exprs.split("#"):
             valc = self.validate(expr)
             if len(valc) > 0:
@@ -382,6 +381,22 @@ class Analyse:
                 raise ValueError(error_message)
             filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            grouped_list += [grouped]
+            
+        grouped_fill = sorted([(len(g),i, g) for i,g in enumerate(grouped_list)])[-1][2]*0
+        
+        grouped_data = pd.DataFrame()
+
+        for i, expr in enumerate(filter_exprs.split("#")):
+            valc = self.validate(expr)
+            if len(valc) > 0:
+                error_message = f"Invalid condition, with unknown arguments: {valc}"
+                logging.error(error_message)
+                raise ValueError(error_message)
+            filtered = self.query(expr, depends)
+            grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            if i == 0:
+                grouped = grouped.add(grouped_fill)
             grouped_data[expr] = grouped
 
         assert ( len(grouped_data.values.shape) == 2 and 
