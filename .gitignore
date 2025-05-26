@@ -4,3 +4,6 @@ mastr_utils.egg-info/
 pytestdebug.log
 webapp/userdb.json
 webapp/session_data.json
+profile.html
+profile.json
+

@@ -15,7 +15,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
 from mastr_utils.mastrtoplot import main as mtoplot
-
+import mastr_utils
+import numpy
+import pandas
+import matplotlib
+import seaborn
+import sklearn
+print(mastr_utils.__version__)
+print(numpy.__version__)
+print(pandas.__version__)
+print(matplotlib.__version__)
+print(seaborn.__version__)
+print(sklearn.__version__)
 # from loginhandler import login, logout, adduser, changepw, userhandler
 
 app = Flask(__name__)
@@ -480,21 +491,19 @@ def plot():
         querc = request.form.get('querc', '')  # Query parameter
         querd = request.form.get('querd', '')  # Query parameter
         quere = request.form.get('quere', '')  # Query parameter
-        min_weight = request.form.get('min_weight', "0")  # Minimum weight
-        radius = request.form.get('radius', 2000)  # Radius
-        depends = request.form.get('depends', "Bundesland")  # Radius
-
-        # Generate output file path
+        # min_weight = request.form.get('min_weight', "0")  # Minimum weight
+        # radius = request.form.get('radius', 2000)  # Radius
+        depends = request.form.get('depends', "Bundesland")
         if output_file_basename:
             output_file_basename = os.path.splitext(output_file_basename)[0]+".svg"
             output_file = f"{sessiondir()}/{output_file_basename}"
         else:
             output_file = f"{sessiondir()}/{mastr_file.filename.rsplit('.', 1)[0]}.svg"
 
-        if min_weight == "":
-            min_weight = 0
-        if len(depends) == 0:
-            depends="Bundesland"
+        # if min_weight == "":
+        #     min_weight = 0
+        # if len(depends) == 0:
+        #     depends="Bundesland"
 
         # Debugging logs
         print(f'Mastr file: {file_path}')
@@ -522,8 +531,6 @@ def plot():
             '-q', query,
             '-d', depends,
             '-o', output_file,
-            '-m', str(min_weight),
-            '-r', str(radius),
             '-s',
             '-l','[10000,5e7,3e5]',
         ]

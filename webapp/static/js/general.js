@@ -3,6 +3,5 @@
 // and updates the UI based on the responses.
 
 function setOpt(val) {
-    console.log("setOpt: ".concat(val))
   document.getElementById('opts_hidden').value = val;
 }

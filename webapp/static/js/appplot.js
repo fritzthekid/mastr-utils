@@ -5,13 +5,15 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('#plot-form');
     const resultDiv = document.querySelector('#resultplot');
+    const waitDiv = document.querySelector('#waitsection');
 
     form.addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent the default form submission
 
         // Clear previous results
         resultDiv.innerHTML = '';
-
+        // Wait annimation until plot is generated
+        waitDiv.innerHTML = '<img src="static/images/Wait.gif">';
         // Prepare form data
         const formData = new FormData(form);
 
@@ -24,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const result = await response.json();
             if (result.status === 'info') {
-                console.log('info')
                 resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
 
             } else if (result.status === 'success') {
                 // Display success message
+                waitDiv.innerHTML = '';
                 resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
 
                 // Add the download button

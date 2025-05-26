@@ -86,7 +86,7 @@
                             style="font-family: sans-serif;">
                 </div>
 
-                <div class="form-group">
+                <!--div class="form-group">
                     <label for="min_weight">Min. Bruttoleistung der Fläche [kW]:</label>
                     <input type="number" name="min_weight" id="min_weight" value="0">
                 </div>
@@ -94,7 +94,7 @@
                 <div class="form-group">
                     <label for="radius">Radius:</label>
                     <input type="number" name="radius" id="radius" value="2000">
-                </div>
+                </div-->
 
                 <div class="form-group">
                     <label for="depends">Abhängig von:</label>
@@ -130,6 +130,8 @@
                     </div>
                     </div>    
 
+                <!-- Wait Section -->
+                <div id="waitsection" style="margin-top: 20px; text-align: center;"></div>
                     <!-- Result Section -->
                 <div id="resultplot" style="margin-top: 20px;"></div>
             </form>
@@ -156,6 +158,10 @@
         {% endif %}
 
     </div>
+    <script>
+        document.getElementById('depends').value = "Bundesland"
+    </script>
+
     <script src="{{ url_for('static', filename='js/general.js') }}"></script>
     <script src="{{ url_for('static', filename='js/appplot.js') }}"></script>
 

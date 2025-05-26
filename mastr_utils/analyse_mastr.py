@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 import math
@@ -6,17 +7,12 @@ import os
 import sys
 import re
 import math
-import shutil
 import time
 import subprocess
 import platform
 import matplotlib
-matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
-# import plotly.express as px
-
-from .cluster import filter_large_weights
 import logging
 import signal
 from .symbols import energie_symbols
@@ -25,11 +21,10 @@ from gpxpy.gpx import GPX, GPXWaypoint
 # from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
-plt.rcParams['svg.fonttype'] = 'none'
+matplotlib.use('agg')
 
 # Get the root path of the current directory
 rootpath = os.path.dirname(os.path.abspath(__file__))
-# shutil.rmtree('/tmp/anamastr-*', ignore_errors=True)
 # tmpdir = f"/tmp/anamastr-{os.getpid()}"
 tmpdir = f"{rootpath}/../tmp/anamastr"
 os.makedirs(tmpdir, exist_ok=True)
@@ -82,9 +77,6 @@ def str_to_datetime(date):
     except:
         return datetime.datetime.strptime("01.01.2099", "%d.%m.%Y").date()   
 
-#def c_h(s):
-#    return re.sub('[^0-9A-Za-z]','_', str(s))
-
 # Function to convert string to camel case
 def to_camel_case(text):
     s = re.sub("[-.:]", " ",text)
@@ -100,25 +92,6 @@ def isnum(s):
     except:
         r = False
     return r
-
-# Haversine-Formel
-# def haversine(lon1, lat1, lon2, lat2):
-#     # Radius der Erde in Metern
-#     R = 6371000
-
-#     # Umrechnung in Bogenmaß
-#     phi1 = math.radians(lat1)
-#     phi2 = math.radians(lat2)
-#     delta_phi = math.radians(lat2 - lat1)
-#     delta_lambda = math.radians(lon2 - lon1)
-
-#     # Haversine-Formel
-#     a = math.sin(delta_phi / 2)**2 + \
-#         math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2)**2
-#     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-#     distance = R * c
-#     return distance  # in Metern
 
 def clean_bruttoleistung(data):
     for i,val in enumerate(data["BruttoleistungDerEinheit"]):
@@ -345,6 +318,11 @@ class Analyse:
 
     # Method to plot the data based on a condition and dependency
     def plot(self, condition, depends, artefact="X", output_filename="x"):
+        # import matplotlib
+        # matplotlib.use('agg')
+        # import matplotlib.pyplot as plt
+        plt.rcParams['svg.fonttype'] = 'none'
+        # import seaborn as sns
         grouped_data = self.query(condition, depends)
         depends_column = self.depends_dict.get(depends, depends)
         plt.figure(figsize=(10, 6))  # Adjust the figure size as needed
@@ -361,16 +339,12 @@ class Analyse:
         plt.savefig(f'{output_filename}')
         plt.close()
 
-    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False, min_weight=0, radius=2000):
-        import matplotlib.pyplot as plt
-        import pandas as pd
-
-        # Daten vorbereiten
-        # data = self.data  # Angenommen, self.data ist ein DataFrame
-        min_weight = float(min_weight)
-        radius = float(radius)
-        if min_weight > 0:
-            self.data = filter_large_weights(self.data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
+    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False, min_weight=0.0, radius=2000):
+        # import matplotlib
+        # matplotlib.use('agg')
+        # import matplotlib.pyplot as plt
+        # plt.rcParams['svg.fonttype'] = 'none'
+        # import pandas as pd
 
         grouped_list = []
         for expr in filter_exprs.split("#"):
@@ -411,19 +385,18 @@ class Analyse:
 
         # Gestapeltes Balkendiagramm erstellen
         sns.set_theme(style="whitegrid")
-        grouped_data.plot(kind="bar", stacked=True, figsize=(14, 9))
+        grouped_data.plot(kind="bar", stacked=True, grid=True, figsize=(14, 9))
         if artefact:
             title = artefact
         else:
             title = os.path.splitext(os.path.basename(self.file_path))[0]
-            if min_weight > 0:
-                title += f" (min Leistung im Cluster: {int(min_weight)}kW)"
         plt.title(title)
         plt.xlabel(depends)
         plt.ylabel('Bruttoleistung')
         plt.xticks(rotation=45, ha='right', fontsize=14)
-        # plt.legend(title='_')
         plt.figtext(0.95, 0.01, f'MaStR Stand {self.last_modified}', ha='right', va='center')
+        import mastr_utils
+        plt.figtext(0.05, 0.01, f'Copyright: \xa9 github.com/fritzthekid/mastr-utils {mastr_utils.__version__}', ha='left', va='center')
         plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))
         if splitfile[1] not in ["svg", "png"]:
@@ -441,6 +414,7 @@ class Analyse:
 
     # Method to generate GPX file
     def gen_gpx(self, conditions=None, output_file="gpx.gpx", symbol_part=[False, "Amber"], min_weight=0, radius=1000):
+        from .cluster import filter_large_weights
         logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, symbol_part={symbol_part}")
         signal.alarm(self.timeout)
         try:
@@ -462,7 +436,11 @@ class Analyse:
             if min_weight > 0:
                 gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
 
+            import mastr_utils
             gpx = GPX()
+            gpx.creator = f"github.com/fritzthekid/mastr_utils {mastr_utils.__version__}"
+            gpx.creator += f' information based on: marktstammdatenregister.de Stand {self.last_modified}'
+            gpx.copyright_author = f"Eduard Moser"
             for i in gpx_data.index:
                 if (math.isnan(gpx_data['KoordinateBreitengrad_wgs84_'][i]) or
                         math.isnan(gpx_data['KoordinateLängengrad_wgs84_'][i])):
