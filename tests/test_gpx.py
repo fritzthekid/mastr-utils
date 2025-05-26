@@ -36,7 +36,7 @@ def test_stromerzeuger_ludwigsburg():
         symbol_part=[True, None],    
     )
     file = open(f"{testdir}/tmp/x.gpx", "r").read()
-    assert len(re.findall("\n", file)) == 582
+    assert len(re.findall("\n", file)) == 586
     assert len(re.findall("<wpt", file)) == 58
     assert len(re.findall("</wpt>", file)) == 58
     symbols = []
@@ -56,7 +56,7 @@ def test_pv_brd_area_search():
     # args = [f"{testdir}/tests/data/stromerzeuger_ludwigsburg.csv", "-o", "{}/x.gpx", "-s", "-e"]
     dogpx(args)
     file = open(f"{testdir}/tmp/x.gpx").read()
-    assert len(re.findall("\n", file)) == 212
+    assert len(re.findall("\n", file)) == 216
     assert len(re.findall("<wpt", file)) == 21
     assert len(re.findall("</wpt>", file)) == 21
     symbols = []
@@ -73,7 +73,7 @@ def test_wind_bawue_area_search():
     dogpx(args)
     file = open(f"{testdir}/tmp/x20.gpx").read()
     print_properties_testfile(file)
-    assert len(re.findall("\n", file)) == 82
+    assert len(re.findall("\n", file)) == 86
     assert len(re.findall("<wpt", file)) == 8
     assert len(re.findall("</wpt>", file)) == 8
     symbols = []
@@ -121,7 +121,7 @@ def test_cleebronn():
     dogpx(args)
     file = open(f"{testdir}/tmp/x.gpx").read()
     print_properties_testfile(file)
-    assert len(re.findall("\n", file)) == 212
+    assert len(re.findall("\n", file)) == 216
     assert len(re.findall("<wpt", file)) == 21
     symbols = []
     for symbol in re.findall("<sym>(.*?)</sym>", file):
