@@ -449,7 +449,7 @@ dann gibt es einige spezielle Abkürzungen:<br>
 &nbsp;    is_battery: Speichertechnologie == "Batterie"<br>
 die Spaltenköpfe sind alle unter "Hilfe -> list Options" zu finden.<br>
 <br>
-Zunächst ist sinnvoll erstmal die charakteristischen Größen der Datei mit Hilfe->Characteristics zu ermitteln. 
+Zunächst ist es sinnvoll erstmal die charakteristischen Größen der Datei mit Hilfe->Characteristics zu ermitteln. 
 """
     return jsonify({
         'status': 'info',
