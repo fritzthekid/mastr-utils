@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Clear result section (might be open from further call)
         resultDiv.innerHTML = '';
         // Wait annimation until plot is generated
-        waitDiv.innerHTML = '<img src="static/images/Wait.gif">';
+        waitDiv.innerHTML = '<img style="-webkit-filter: grayscale(100%); filter: grayscale(100%);" src="static/images/Wait.gif">';
         // Prepare form data
         const formData = new FormData(form);
 
@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (result.status === 'info') {
+                waitDiv.innerHTML = '';
                 resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
 
             } else if (result.status === 'success') {
@@ -58,10 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Visualize the GPX file on the map
                 addGpxToMap(result.download_url);
             } else {
+                waitDiv.innerHTML = '';
                 // Display error message with proper formatting
                 resultDiv.innerHTML = `<pre style="color: red;">Error: ${result.message}</pre>`;
             }
         } catch (error) {
+            waitDiv.innerHTML = '';
             console.error('Error:', error);
             resultDiv.innerHTML = '<pre style="color: red;">An unexpected error occurred.</pre>';
         }
