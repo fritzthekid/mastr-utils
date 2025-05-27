@@ -129,9 +129,20 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.likeaform {
+    flex: 1;
+    max-width: 400px;
+    background: #ffffff;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .myform {
     background: #f4f4f4;
     padding: 0px;
+    border: none;
     border-radius: 0px;
     box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
 }
@@ -139,6 +150,7 @@ form {
 .myform-white {
     background: #ffffff;
     padding: 0px;
+    border: none;
     border-radius: 0px;
     box-shadow: none; /*0 0 10px rgba(0, 0, 0, 0.1);*/
 }

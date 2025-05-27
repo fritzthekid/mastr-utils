@@ -28,35 +28,18 @@
         </div>
         <!-- Flex container for form and map -->
         <div class="form-map-container">
+          <div>
+            <div width="30%" class="likeaform">
+                <label for="mastr_file">Upload MaStR Data File:</label>
+                <input width="30%" size="20" type="file" name="mastr_file" id="mastr_file_autoupload" required>
+                <div id="upload-status"></div>
+            </div>
             <!-- Form Section -->
             <form id="convert-form" method="post" enctype="multipart/form-data">
-                <!--div class="form-group">
-                    < input type="hidden" name="command" value="convert">
-                    <label for="pwd">Password:</label>
-                    <div style="position: relative;">
-                      <input type="password" id="pwd" name="pwd" style="padding-right: 30px;">
-                      <span onclick="togglePassword()" style="
-                        position: absolute;
-                        right: 8px;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        cursor: pointer;
-                        user-select: none;
-                      ">👁️</span>
-                    </div>
-                  </div>
-                  
-                  <script>
-                    function togglePassword() {
-                      const pwd = document.getElementById("pwd");
-                      pwd.type = pwd.type === "password" ? "text" : "password";
-                    }
-                  </script-->
-                  
-
                 <div class="form-group">
-                    <label for="mastr_file">Upload MaStR Data File:</label>
-                    <input type="file" name="mastr_file" id="mastr_file" required>
+                    <label for="mastr_file_1">Upload MaStR Data File:</label>
+                    <!--input type="file" name="mastr_file" id="mastr_file" required-->
+                    <label for="mastr_file_1" id="mastr_file_show"></label>
                 </div>
 
                 <div class="form-group">
@@ -85,7 +68,8 @@
                     <label for="privacy">Ich stimme zu, dass meine hochgeladenen Daten zur Verarbeitung genutzt werden dürfen.</label>
                     <input type="checkbox" id="privacy" name="privacy" required>
                 </div>
-                
+
+                <input type="hidden" id="mastr_file_uploaded" name="mastr_file" value="asfasdf">            
                 <input type="hidden" id="opts_hidden" name="opts" value="">
 
                 <!--button type="submit" onclick="setOpt('gpx')">Generate gpx</button>
@@ -111,6 +95,7 @@
                 <div id="result" style="margin-top: 20px;"></div>
 
             </form>
+            </div>
             <!-- Map Section -->
             <div id="map" style="height: 500px; margin-top: 20px;"></div>
         </div>

@@ -12,6 +12,7 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from flask import flash, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from mastr_utils.analyse_mastr import tmpdir
 from mastr_utils.mastrtogpx import main as mtogpx
 from mastr_utils.mastrtoplot import main as mtoplot
@@ -239,6 +240,7 @@ links = {
 def index():
     if current_user.is_authenticated:
         print(f"Is Authorized")
+
     else:
         print("not authorized")
     if request.method == 'GET':
@@ -283,6 +285,8 @@ def index():
                 return adduser()
             elif command == "logout":
                 return logout()
+            elif command == "auto_upload":
+                return upload_mastr_file()
             return render_template('index.html', debug=app.debug)
         elif "mastrtogpx" in request.form:
             return render_template("mastrtogpx.html", debug=app.debug)
@@ -328,16 +332,15 @@ def optgpx():
         except:
             print(f'Password failed')
             return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
-        mastr_file = request.files.get('mastr_file')  # File upload
+        mastr_file = request.form.get('mastr_file')  # File upload
 
         # Save the uploaded file to the sessiondir() location
-        if not mastr_file:
+        if len(mastr_file) == 0:
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
-        file_path = f"{sessiondir()}/{mastr_file.filename}"
+        file_path = f"{sessiondir()}/{mastr_file}"
         if not allowed_file(file_path):
             return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
-        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
-        mastr_file.save(file_path)
+        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file)}")
         output_file_basename = request.form.get('output_file', '').strip() 
 
         if "opts" in request.form  and request.form.get("opts") == "help_queries":
@@ -356,7 +359,7 @@ def optgpx():
             output_file_basename = os.path.splitext(output_file_basename)[0]+".gpx"
             output_file = f"{sessiondir()}/{output_file_basename}"
         else:
-            output_file = f"{sessiondir()}/{mastr_file.filename.rsplit('.', 1)[0]}.gpx"
+            output_file = f"{sessiondir()}/{mastr_file.rsplit('.', 1)[0]}.gpx"
 
         if min_weight == "":
             min_weight = 0
@@ -467,16 +470,15 @@ def plot():
         except:
             print(f'Password failed')
             return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
-        mastr_file = request.files.get('mastr_file')  # File upload
+        mastr_file = request.form.get('mastr_file')  # File upload
 
         # Save the uploaded file to the sessiondir() location
         if not mastr_file:
             return jsonify({'status': 'error', 'message': 'No file uploaded.'}), 400
-        file_path = f"{sessiondir()}/{mastr_file.filename}"
+        file_path = f"{sessiondir()}/{mastr_file}"
         if not allowed_file(file_path):
             return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
-        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file.filename)}")
-        mastr_file.save(file_path)
+        print(f"tmpfile/mastr_file: {os.path.abspath(mastr_file)}")
         output_file_basename = request.form.get('output_file', '').strip()
 
         if "opts" in request.form  and request.form.get("opts") == "help_queries":
@@ -498,7 +500,7 @@ def plot():
             output_file_basename = os.path.splitext(output_file_basename)[0]+".svg"
             output_file = f"{sessiondir()}/{output_file_basename}"
         else:
-            output_file = f"{sessiondir()}/{mastr_file.filename.rsplit('.', 1)[0]}.svg"
+            output_file = f"{sessiondir()}/{mastr_file.rsplit('.', 1)[0]}.svg"
 
         # if min_weight == "":
         #     min_weight = 0
@@ -596,6 +598,28 @@ def serve_tmp_file():
             return jsonify({'status': 'error', 'message': 'File not found.'}), 404
     except FileNotFoundError:
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
+
+def upload_mastr_file():
+    uploaded_file = request.files.get('mastr_file')
+
+    if not uploaded_file:
+        return jsonify({'status': 'error', 'message':'Keine Datei hochgeladen.'}), 400
+
+    filename = secure_filename(uploaded_file.filename)
+    if not allowed_file(uploaded_file.filename):
+            return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
+    filepath = os.path.join(f"{sessiondir()}", filename)
+    uploaded_file.save(filepath)
+
+    # → hier kannst du die Datei direkt weiterverarbeiten:
+    # z. B. als CSV, GPX, ZIP, etc.
+    return jsonify({
+        'status': 'ok',
+        'filename': filename,
+        'size_kb': round(os.path.getsize(filepath) / 1024, 1)
+    })
+
+
 
 def show_page(page):
     return render_template(page)
