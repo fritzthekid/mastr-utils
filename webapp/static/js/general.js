@@ -8,11 +8,8 @@ function setOpt(val) {
 
 document.getElementById('mastr_file_autoupload').addEventListener('change', function(event) {
   const fileInput = event.target;
-  // const mastrfileNameDiv = document.getElementById('mastr_file_uploaded');
   const file = fileInput.files[0];
   const statusDiv = document.getElementById('upload-status');
-  console.log("event on change");
-  console.log(file);
   if (!file) return;
 
   const formData = new FormData();
@@ -20,8 +17,6 @@ document.getElementById('mastr_file_autoupload').addEventListener('change', func
   formData.append('command', 'auto_upload');
 
   statusDiv.textContent = 'Upload läuft...';
-
-  console.log('Upload läuft...');
 
   async function uploadFile() {
     try {
@@ -41,10 +36,8 @@ document.getElementById('mastr_file_autoupload').addEventListener('change', func
       document.getElementById('mastr_file_show').innerHTML = result.filename;
       //document.getElementById('mastr_file_show').innerHTML = result.filename;
       document.getElementById('mastr_file_uploaded').value = result.filename;
-      console.log('Upload-Result:', result);
     } catch (error) {
       statusDiv.textContent = 'Error: ' + error.message;
-      console.error(error);
     }
   }
 
