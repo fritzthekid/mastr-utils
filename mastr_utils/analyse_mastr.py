@@ -16,6 +16,8 @@ import seaborn as sns
 import logging
 import signal
 from .symbols import energie_symbols
+from logging.handlers import TimedRotatingFileHandler
+from logging import Formatter
 
 from gpxpy.gpx import GPX, GPXWaypoint
 # from xml.etree import ElementTree
@@ -36,6 +38,10 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
+
+handler = TimedRotatingFileHandler(filename=log_file, when='midnight')
+formatter = Formatter('%(asctime)s, %(levelname)s, %(message)s', datefmt='%Y-%m-%d, %H:%M:%S')
+handler.setFormatter(formatter)
 
 global timeout_value
 timeout_value = 6

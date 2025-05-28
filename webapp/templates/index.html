@@ -46,6 +46,17 @@
             </form>    
         </div>                                    
     </div>
+
+{% with messages = get_flashed_messages(category_filter=["message"]) %}
+{% if messages %}
+<ul class="flashes">
+  {% for msg in messages %}
+    <li>{{ msg }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
     
     {% include 'footer.html' %}
 </body>

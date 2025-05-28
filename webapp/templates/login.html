@@ -24,6 +24,11 @@
          <th>Passwort:</th><th><input name="password" type="password" style="font-size: 1em;" placeholder="Passwort"></th>
         </tr>
     </table>
+    <div style="flex:1;">
+      <label for="privacy" style="flex: 1;">Ich stimme zu, dass meine hochgeladenen Daten für den Zweck und nur während der Session verwendet werden dürfen.</label><br>
+      <input type="checkbox" id="privacy" name="privacy" required style="flex:1; align-items:left;">
+    </div>
+
   <button type="submit">Login</button>
 </form>
 {% with messages = get_flashed_messages(category_filter=["message"]) %}

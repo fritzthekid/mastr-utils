@@ -139,6 +139,19 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.likeaform label {
+    flex: 1;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.likeaform input {
+    flex: 2;
+    padding: 5px;
+    font-size: 14px;
+}
+
 .myform {
     background: #f4f4f4;
     padding: 0px;
@@ -210,11 +223,10 @@ footer {
 
 /* Flex container for form and map */
 .form-map-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px; /* Space between the form and the map */
-    margin-bottom: 20px; /* Space between the form-map container and the buttons */
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: nowrap;
 }
 
 /* Form styling */
@@ -265,6 +277,14 @@ footer {
   flex: 0 0 100px;
   padding: 5px;
   font-size: 14px;
+}
+
+.form-wrapper {
+  flex: 0 0 450px; /* fixierte Breite, stabil bei Zoom */
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  box-sizing: border-box;
 }
 
 button[type="submit"] {

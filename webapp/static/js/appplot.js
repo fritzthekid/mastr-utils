@@ -28,7 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (result.status === 'info') {
                 waitDiv.innerHTML = '';
                 resultDiv.innerHTML = `<p style="color: black;">${result.message}</p>`;
-
+            } else if (result.status === 'panic') {
+                console.log('panic detected, login again.')
+                window.location.replace('/');
+                throw new Error(result.message || 'Login expired, you will be thrown out.');
             } else if (result.status === 'success') {
                 // Display success message
                 waitDiv.innerHTML = '';

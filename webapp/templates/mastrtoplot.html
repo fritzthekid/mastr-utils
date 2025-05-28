@@ -12,7 +12,6 @@
     <div id="root" />
     {% include 'topbanner.html' %}
     <div class="container">
-
         <div style="text-align: center;">
             <h1>MaStR zu Plot Konverter</h1>
             <p>Umwandeln Marktstammdatenregister-Downloads (CSV-Dateien) zu Plot-Dateien (die Plots werden angezeigt
@@ -21,41 +20,18 @@
         </div>
         <!-- Flex container for form and map -->
         <div class="form-map-container">
-          <div>
-            <div width="30%" class="likeaform">
+          <div class="form-wrapper">
+            <div class="likeaform">
                 <label for="mastr_file">Upload MaStR Data File:</label>
                 <input width="30%" size="20" type="file" name="mastr_file" id="mastr_file_autoupload" required>
                 <div id="upload-status"></div>
             </div>
             <!-- Form Section -->
             <form id="plot-form" method="post" enctype="multipart/form-data" style="border: 2px solid black;">
-                <!--div class="form-group">
-                    <label for="pwd">Password:</label>
-                    <div style="position: relative;">
-                      <input type="password" id="pwd" name="pwd" style="padding-right: 30px;">
-                      <span onclick="togglePassword()" style="
-                        position: absolute;
-                        right: 8px;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        cursor: pointer;
-                        user-select: none;
-                      ">👁️</span>
-                    </div>
-                  </div>
-                  
-                  <script>
-                    function togglePassword() {
-                      const pwd = document.getElementById("pwd");
-                      pwd.type = pwd.type === "password" ? "text" : "password";
-                    }
-                  </script-->
-                  
-
                 <div class="form-group">
                     <label for="mastr_file_1">Upload MaStR Data File:</label>
                     <!--input type="file" name="mastr_file" id="mastr_file" required-->
-                    <label for="mastr_file_1" id="mastr_file_show"></label>
+                    <label for="mastr_file_1" id="mastr_file_show" style="flex: 2;"></label>
                 </div>
 
                 <div class="form-group">
@@ -93,16 +69,6 @@
                             style="font-family: sans-serif;">
                 </div>
 
-                <!--div class="form-group">
-                    <label for="min_weight">Min. Bruttoleistung der Fläche [kW]:</label>
-                    <input type="number" name="min_weight" id="min_weight" value="0">
-                </div>
-
-                <div class="form-group">
-                    <label for="radius">Radius:</label>
-                    <input type="number" name="radius" id="radius" value="2000">
-                </div-->
-
                 <div class="form-group">
                     <label for="depends">Abhängig von:</label>
                     <input type="text" name="depends" id="depends" value="" placeholder="Bundesland">
@@ -112,18 +78,8 @@
                         <label for="output_file">Output File Name (optional):</label>
                         <input type="text" name="output_file" id="output_file" placeholder="e.g., custom_name.svg">
                     </div>
-                    <!-- Datenschutz Checkbox -->
-                    <div class="form-group-light">
-                        <label for="privacy">Ich stimme zu, dass meine hochgeladenen Daten zur Verarbeitung genutzt werden dürfen.</label>
-                        <input type="checkbox" id="privacy" name="privacy" required>
-                    </div>
-
                     <input type="hidden" id="mastr_file_uploaded" name="mastr_file" value="asfasdf">            
                     <input type="hidden" id="opts_hidden" name="opts" value="">
-
-                    <!--button type="submit" onclick="setOpt('gpx')">Generate gpx</button>
-                    <button type="submit" onclick="setOpt('list-options')">Options</button>
-                    <button type="submit" onclick="setOpt('characteristics')">Characteristics</button-->        
     
                     <!-- GPX-Erzeugen-Button -->
                     <button type="submit" onclick="setOpt('plot')">Generate Plot</button>

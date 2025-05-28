@@ -87,7 +87,7 @@ def sessiondir():
         return session_dir
     except:
         raise ValueError("tmp dir doesn't exists")
-        
+
 def show_login():
     return render_template('login.html')
 
@@ -249,11 +249,11 @@ def index():
             if command == "mastrtogpx":
                 if not current_user.is_authenticated:
                     return render_template("login.html", debug=app.debug)
-                return render_template("mastrtogpx.html", debug=app.debug)
+                return mastrtogpx() #render_template("mastrtogpx.html", debug=app.debug)
             elif command == "mastrtoplot":
                 if not current_user.is_authenticated:
                     return render_template("login.html", debug=app.debug) 
-                return render_template("mastrtoplot.html", debug=app.debug)
+                return mastrtoplot() # render_template("mastrtoplot.html", debug=app.debug)
         print('Index page')
         return render_template('index.html', debug=app.debug)
     elif request.method=='POST':
@@ -289,9 +289,9 @@ def index():
                 return upload_mastr_file()
             return render_template('index.html', debug=app.debug)
         elif "mastrtogpx" in request.form:
-            return render_template("mastrtogpx.html", debug=app.debug)
+            return mastrtogpx() #render_template("mastrtogpx.html", debug=app.debug)
         elif "mastrtoplot" in request.form:
-            return render_template("mastrtoplot.html", debug=app.debug)
+            return mastrtoplot() #render_template("mastrtoplot.html", debug=app.debug)
         elif 'query' in request.form:
             # Verarbeitung für 'convert'
             return optgpx() # redirect(url_for('convert_function'))
@@ -308,30 +308,36 @@ def index():
 def mastrtogpx():
     if not current_user.is_authenticated:
         return render_template("login.html", debug=app.debug)
+    try:
+        sessiondir()
+    except:
+        logout()
+        flash("User has been logged out, due to internal problems.")
+        return render_template("login.html", debug=app.debug) 
     return render_template("mastrtogpx.html", debug=app.debug)
 
 # @app.route('/mastrtoplot', methods=['GET','POST'])
 # @login_required
 def mastrtoplot():
     if not current_user.is_authenticated:
-        return render_template("login.html", debug=app.debug) 
+        return render_template("login.html", debug=app.debug)
+    try:
+        sessiondir()
+    except:
+        logout()
+        flash("User has been logged out, due to internal problems.")
+        return render_template("login.html", debug=app.debug)     
     return render_template("mastrtoplot.html", debug=app.debug)
 
 def optgpx():
+    if not current_user.is_authenticated:
+        return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
+    try: 
+        sessiondir()
+    except:
+        logout()
+        return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
     try:
-        # Retrieve POST arguments
-        # password = request.form.get('pwd') # password
-        # password_crypt = hashlib.shake_256(password.encode()).hexdigest(40)
-        # try:
-        #     assert password_crypt == checkpassword_crypt
-        # except Exception as e:
-        #     print(f'Password failed')
-        #     return jsonify({'status': 'error', 'message': f"<Large><b>Password failed</b></Large>"})
-        try:
-            assert request.form.get("privacy") == "on"
-        except:
-            print(f'Password failed')
-            return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
         mastr_file = request.form.get('mastr_file')  # File upload
 
         # Save the uploaded file to the sessiondir() location
@@ -463,13 +469,18 @@ Zunächst ist es sinnvoll erstmal die charakteristischen Größen der Datei mit 
 #@login_required
 def plot():
     if not current_user.is_authenticated:
+        return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
+    try: 
+        sessiondir()
+    except:
+        logout()
+        return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
+    if not current_user.is_authenticated:
+        return render_template("login.html", debug=app.debug)
+    if not os.path.isdir(sessiondir()):
+        logout()
         return render_template("login.html", debug=app.debug)
     try:
-        try:
-            assert request.form.get("privacy") == "on"
-        except:
-            print(f'Password failed')
-            return jsonify({'status': 'error', 'message': f"<Large><b>Haken zum hochladen fehlt</b></Large>"})
         mastr_file = request.form.get('mastr_file')  # File upload
 
         # Save the uploaded file to the sessiondir() location
@@ -562,7 +573,7 @@ def download_log():
         render_template("login.html", debug=app.debug)
     if not app.debug:
         return jsonify({'status': 'error', 'message': 'No access rights to log-file.'}), 404
-    log_file = f"{sessiondir()}/mastr_analyse.log"  # Path to the log file
+    log_file = f"{tmpdir}/mastr_analyse.log"  # Path to the log file
     try:
         return send_file(log_file, as_attachment=True)
     except FileNotFoundError:
@@ -582,6 +593,7 @@ def serve_tmp_file():
         if basefile is None or basefile == "":
             return jsonify({'status': 'error', 'message': 'output_file not known.'}), 404
     except:
+        logout()
         return jsonify({'status': 'error', 'message': 'trouble with output_file.'}), 404
     try:
         if not os.path.isfile(f"{sessiondir()}/{basefile}"):
@@ -597,11 +609,19 @@ def serve_tmp_file():
         else:
             return jsonify({'status': 'error', 'message': 'File not found.'}), 404
     except FileNotFoundError:
+        logout()
         return jsonify({'status': 'error', 'message': 'File not found.'}), 404
 
 def upload_mastr_file():
-    uploaded_file = request.files.get('mastr_file')
+    if not current_user.is_authenticated:
+        return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
+    try: 
+        sessiondir()
+    except:
+        logout()
+        return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
 
+    uploaded_file = request.files.get('mastr_file')
     if not uploaded_file:
         return jsonify({'status': 'error', 'message':'Keine Datei hochgeladen.'}), 400
 
