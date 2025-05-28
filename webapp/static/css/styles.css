@@ -21,6 +21,13 @@ body {
     background-color: #f4f4f4;
 }*/
 
+input[type="file"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;

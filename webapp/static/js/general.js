@@ -28,7 +28,6 @@ document.getElementById('mastr_file_autoupload').addEventListener('change', func
 
       const result = await response.json();
 
-      console.log(result);
       if (!response.ok) {
         if (result.status === 'panic') {
           console.log('panic detected, login again.')
