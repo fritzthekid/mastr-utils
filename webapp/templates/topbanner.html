@@ -6,7 +6,7 @@
    <tr>
     <th>
       <form method="POST" action="/">
-          <button name="home" id="buth" onclick="formaction()">Home</button>
+          <button name="home" id="buth">Home</button>
       </form>
     </th>
     <th>
@@ -21,62 +21,43 @@
     </th>
     <th>
       <form method="POST" action="/">
-          <button name="costs1" id="butB" onclick="formaction()">Kosten Atomkraft</button>
+          <button name="costs1" id="butB">Kosten Atomkraft</button>
       </form>
     </th>
     <th>
       <form method="POST" action="/">
-          <button name="costs2" id="butn" onclick="formaction()">Kosten Energiewende</button>
+          <button name="costs2" id="butn" >Kosten Energiewende</button>
       </form>
     </th>
     <th>
       <form method="POST" action="/">
-          <button name="impressum" id="buti" onclick="formaction()">Kontakt</button>
+          <button name="impressum" id="buti" >Kontakt</button>
       </form>
    </th>
-   <!--th>
-    <form method="POST" action="/">
-        <button name="command" value="user" id="butu" onclick="formaction()">
-          {% if current_user.is_authenticated %}
-            {{ current_user.id }}
-          {% else %}
-            Login
-          {% endif %}
-        </button>
-    </form>
- </th-->
- <th>
-  <div class="dropdown">
-    <form method="post">
-        {% if current_user.is_authenticated %}
-        <button class="dropbtn" type="submit" name="command" value="profil" style="background-color:rgb(229, 134, 134); color:rgb(15, 15, 15)">
-          {{ current_user.id }}
-        </button>
-        {% else %}
-        <button class="dropbtn" type="submit" name="command" value="profil" style="background-color:rgb(211, 211, 211); color:rgb(15, 15, 15)">
-          Login
-        </button>
-        {% endif %}
-    </form-->
-    <div class="dropdown-content">
+  <th>
       {% if current_user.is_authenticated %}
-        <form method="post"><button name="command" value="user">Profil</button></form>
-        <!--form method="post"><button name="command" value="changepw">Passwort ändern</button></form-->
-        <form method="post"><button name="command" value="logout">Logout</button></form>
+        <div class="dropdown">
+              <button class="dropbtn" type="submit" name="command" value="profil" style="background-color:rgb(229, 134, 134); color:rgb(15, 15, 15)">
+                {{ current_user.id }}
+              </button>
+          <div class="dropdown-content">
+              <form method="post"><button name="command" value="user">Profil</button></form>
+              <!--form method="post"><button name="command" value="changepw">Passwort ändern</button></form-->
+              <form method="post"><button name="command" value="logout">Logout</button></form>
+          </div>
+        </div>
       {% else %}
-        <form method="post"><button name="command" value="show_login">Login</button></form>
-      {% endif %}
-    </div>
-  </div>
-</th>
- 
-</tr>
+        <form method="POST" action="/">
+          <button name="command" value="show_login" style="background-color: #dad6d6;color:#333;" 
+          onmouseover="style='background-color:#555;color:#dad6d6;'"
+          onmouseout="style='background-color:#dad6d6;color: #333'"
+          >Login</button>
+        </form>
+        {% endif %}
+
+    </th> 
+  </tr>
  </table>
- <!--script>
-  formaction(){
-    form.submit();
-  }
- </script-->
-</div>
+ </div>
 </center>
 </div> 
