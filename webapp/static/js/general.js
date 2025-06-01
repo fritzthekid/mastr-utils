@@ -14,7 +14,7 @@ document.getElementById('mastr_file_autoupload').addEventListener('change', func
   if (!file) return;
 
   const formData = new FormData();
-  formData.append('mastr_file', file);
+  formData.append('mastr_file_name', file);
   formData.append('command', 'auto_upload');
 
   statusDiv.textContent = 'Upload läuft...';

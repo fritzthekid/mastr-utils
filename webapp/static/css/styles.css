@@ -75,7 +75,7 @@ table {
     padding: 10px 20px;
     background-color: #a0a0a0;
     color: #f0f0f5;
-    border: 2px;
+    border: 2px #1cda4f;
     border-radius: 2px;
     border-width: thin;
     font-size: 16px;
@@ -100,9 +100,10 @@ table {
 
   .inner-body {
     font-family: Arial, sans-serif;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: auto; /*5%;*/
+    margin-right: auto; /*5%;*/
     margin-top: 10px;
+    width: 80%;
     /*background-color: #d10a96;*/
   }
   .topbanner form {
@@ -139,11 +140,7 @@ form {
 .likeaform {
     flex: 1;
     max-width: 400px;
-    background: #ffffff;
     padding: 20px;
-    border: 2px solid black;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .likeaform label {
@@ -236,17 +233,6 @@ footer {
   flex-wrap: nowrap;
 }
 
-/* Form styling */
-#convert-form {
-    flex: 1; /* Allow the form to take up equal space as the map */
-    max-width: 400px; /* Limit the width of the form */
-    background: #ffffff;
-    padding: 20px;
-    border: 2px solid #000000; /* Add a simple border */
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 .form-group {
     display: flex;
     justify-content: space-between;
@@ -292,6 +278,11 @@ footer {
   flex-direction: column;
   gap: 0px;
   box-sizing: border-box;
+    background: #ffffff;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 button[type="submit"] {
@@ -315,7 +306,7 @@ button[type="submit"]:hover {
     max-width: 700px; /* Limit the width of the map */
     aspect-ratio: 1 / 1; /* Make the map square */
     /* border: 2px solid #ccc; /* Add a simple border */
-    border: 2px solid #000000; /* Add a simple border */
+    border: 2px solid black; /* Add a simple border */
     border-radius: 5px; /* Optional: Add rounded corners */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a subtle shadow */
 }
@@ -324,6 +315,8 @@ button[type="submit"]:hover {
 .buttons-container {
     display: flex;
     justify-content: center;
+    min-height: "80%";
+    /*background-color: #a0a0a0;*/
     gap: 20px; /* Space between the buttons */
 }
 

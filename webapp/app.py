@@ -35,11 +35,21 @@ app.config['APPLICATION_ROOT'] = '/'
 app.config['SESSION_COOKIE_PATH'] = '/'
 app.secret_key = 'supersecretkey'
 
+# application = DispatcherMiddleware(Flask('dummy'), {
+#     '/mastrutils': app
+# })
+
 USER_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/userdb.json"
 SESSION_DATA_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/session_data.json"
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+CORS(app)  # Enable CORS for all routes
+
+MAX_CONTENT_LENGTH = 20 * 1024 * 1024  # 5 MB
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+
 
 def load_users():
     if not os.path.exists(USER_FILE):
@@ -209,15 +219,6 @@ def save_session_data(session_data):
 
 users = load_users()
 session_data = load_session_data()
-
-# application = DispatcherMiddleware(Flask('dummy'), {
-#     '/mastrutils': app
-# })
-
-CORS(app)  # Enable CORS for all routes
-
-MAX_CONTENT_LENGTH = 20 * 1024 * 1024  # 5 MB
-app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
 
 @app.errorhandler(RequestEntityTooLarge)
@@ -411,6 +412,7 @@ def listoptions(file_path, output_file):
         '-s',
         "-o",
         output_file,
+        '-l','[10000,5e7,3e5]',
     ]
     print('Command:', ' '.join(command))
     # Capture stdout and stderr
@@ -432,6 +434,7 @@ def characteristics(file_path, output_file):
         '-a', 
         "-o",
         output_file,
+        '-l','[10000,5e7,3e5]',
     ]
     print('Command:', ' '.join(command))
     # Capture stdout and stderr
@@ -621,7 +624,7 @@ def upload_mastr_file():
         logout()
         return jsonify({'status': 'panic', 'message':'Your session has expired, please login again.'}), 400
 
-    uploaded_file = request.files.get('mastr_file')
+    uploaded_file = request.files.get('mastr_file_name')
     if not uploaded_file:
         return jsonify({'status': 'error', 'message':'Keine Datei hochgeladen.'}), 400
 

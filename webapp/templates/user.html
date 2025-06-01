@@ -11,7 +11,8 @@
 <body>
     <div id="root" />
     {% include 'topbanner.html' %}
-    <div class="container">
+<div class="inner-body" style="min-height: 73%;">
+    <!--div class="container"-->
 
     {% if isowner %}
         <h2>Passwort ändern</h2>
@@ -87,6 +88,7 @@
     </form>
     </h2>
     </div>
+{% include 'footer.html' %}
 </body>
 </html>
 
