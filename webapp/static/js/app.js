@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Send the form data to the server
-            const response = await fetch('/', {
+            const response = await fetch('.', {
                 method: 'POST',
                 body: formData
             });

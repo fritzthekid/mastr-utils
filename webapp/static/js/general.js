@@ -21,7 +21,7 @@ document.getElementById('mastr_file_autoupload').addEventListener('change', func
 
   async function uploadFile() {
     try {
-      const response = await fetch('/', {
+      const response = await fetch('.', {
           method: 'POST',
           body: formData
       });
@@ -31,7 +31,7 @@ document.getElementById('mastr_file_autoupload').addEventListener('change', func
       if (!response.ok) {
         if (result.status === 'panic') {
           console.log('panic detected, login again.')
-          window.location.replace('/');
+          window.location.replace('.');
           throw new Error(result.message || 'Login expired, you will be thrown out.');
         } else {
           throw new Error(result.message || 'Upload fehlgeschlagen');
