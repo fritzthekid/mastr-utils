@@ -115,8 +115,11 @@ Werte über 200kW reduzieren sich die Anlagen auf die deutschlandweit größte A
 
 ### Nutzung des Tools mastrtoplot
 
-1. **Zugriff auf die Anwendung**: Öffnen Sie Ihren Webbrowser und navigieren Sie zur Webanwendung unter der Adresse `https://eduard.uber.space/`. 
-  - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
+**Zugriff auf die Anwendung**: Öffne den Webbrowser und navigiere zur Webanwendung unter der Adresse
+
+- `https://eduard.uber.space/mastrutils/`. 
+
+- Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
 
 Zunächst unterscheidet sich mastrtoplot von mastrtogpx gering, allerdings wird mit diesem
 Tool eine Vektorgraphik mit akkumulierter Bruttoleistung abhänging von einer Zielgröße 
@@ -144,8 +147,7 @@ Für die 10er Potenzen bei den Bruttoleistungen gibt es Abkürzungen:
 
 **Beispiel 3**
 
-Es soll die pv Leistung vor und nach einem bestimmten Datum ermittelt werden, dafür 
-gibt es die Operatoren:
+Es soll die pv Leistung vor oder nach einem bestimmten Datum ermittel werden, an dem die Einheit das erste Mal erwähnt wird  ermittelt wird. Dafür gibt es die Operatoren:
 
 ~~~
 before_DD.MM.YYYY und
@@ -158,11 +160,13 @@ Eine solche Abfrage könne dann aussehen:
 
 ## Hinweis zu Querys
 
+Hier gibt es auch bereits online Hilfen zu auf den Seiten.
+
 Aus software technischen Gründen wird z.B. der Begriff
 `Bruttoleistung der Einheit` zu `BruttoleistungDerEinheit`. Es können alle Begriffe in dieser Art, die im csv Header stehen verwendet werden.
 Die Querys können Operatoren wie in den meisten Programmiersprächen
 enthalten also (`&` für und `|` für oder u.s.w.)
-Ein Ausdruck muss dabei aber immer die Form haben `Spaltenkopf == "Typ"`, anstelle von `"Typ"` kann im Fall von `>` oder `<` auch eine Zahl stehen.
+Ein Ausdruck muss dabei aber immer die Form haben `Spaltenkopf == "Typ"`, anstelle von `"Typ"` und nicht `'Typ'`. Im Fall von können auch `>`, `<`, `<=` oder `>=` als Operatoren verwendet werden.
 
 Das heißt die Abfrage:
 
