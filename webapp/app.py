@@ -30,14 +30,12 @@ print(seaborn.__version__)
 print(sklearn.__version__)
 # from loginhandler import login, logout, adduser, changepw, userhandler
 
-app = Flask(__name__)
-app.config['APPLICATION_ROOT'] = '/'
-app.config['SESSION_COOKIE_PATH'] = '/'
-app.secret_key = 'supersecretkey'
+url_prefix = '/mastrutils'
 
-# application = DispatcherMiddleware(Flask('dummy'), {
-#     '/mastrutils': app
-# })
+app = Flask(__name__)
+app.secret_key = 'supersecretkey'
+app.config['APPLICATION_ROOT'] = url_prefix
+app.config['SESSION_COOKIE_PATH'] = url_prefix
 
 USER_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/userdb.json"
 SESSION_DATA_FILE = f"{os.path.dirname(os.path.abspath(__file__))}/session_data.json"
@@ -399,7 +397,7 @@ def optgpx():
         return jsonify({
             'status': 'success',
             'message': 'Conversion completed successfully.',
-            'download_url': f"/download" # tmp/{output_file.rsplit('/', 1)[-1]}"
+            'download_url': f"./download" # tmp/{output_file.rsplit('/', 1)[-1]}"
         })
     except Exception as e:
         print('Unexpected error:', e)
@@ -423,7 +421,7 @@ def listoptions(file_path, output_file):
     return jsonify({
         'status': 'info',
         'message': message, #'Conversion completed successfully.',
-        'download_url': f"/download" # tmp/{output_file.rsplit('/', 1)[-1]}"
+        'download_url': f"./download" # tmp/{output_file.rsplit('/', 1)[-1]}"
     })
 
 
@@ -445,7 +443,7 @@ def characteristics(file_path, output_file):
     return jsonify({
         'status': 'info',
         'message': message, 
-        'download_url': f"/download" 
+        'download_url': f"./download" 
     })
 
 def help_queries(file_path, output_file):
@@ -466,7 +464,7 @@ Zunächst ist es sinnvoll erstmal die charakteristischen Größen der Datei mit 
     return jsonify({
         'status': 'info',
         'message': message, 
-        'download_url': f"/download" 
+        'download_url': f"./download" 
     })
 
 #@login_required
@@ -561,7 +559,7 @@ def plot():
         return jsonify({
             'status': 'success',
             'message': 'Conversion completed successfully.',
-            'download_url': "/download" # f"/tmp/{output_file.rsplit('/', 1)[-1]}"
+            'download_url': "./download" # f"/tmp/{output_file.rsplit('/', 1)[-1]}"
         })
     except AssertionError as e:
         print('assertion error:', e)
@@ -649,6 +647,11 @@ def show_page(page):
 
 def impressum():
     return render_template('impressum.html')
+
+# Dispatcher Middleware zum Einbinden unter /mastrutils
+application = DispatcherMiddleware(Flask('dummy'), {
+    url_prefix: app
+})
 
 
 if __name__ == '__main__':

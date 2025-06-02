@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // Send the form data to the server
-            const response = await fetch('/', {
+            const response = await fetch('./', {
                 method: 'POST',
                 body: formData
             });
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 resultDiv.innerHTML = `<p style="color: black;">${result.message}</p>`;
             } else if (result.status === 'panic') {
                 console.log('panic detected, login again.')
-                window.location.replace('/');
+                window.location.replace('./');
                 throw new Error(result.message || 'Login expired, you will be thrown out.');
             } else if (result.status === 'success') {
                 // Display success message
