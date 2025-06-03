@@ -34,8 +34,8 @@ Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gef
 
 1. **Zugriff auf die Anwendung**: Öffne den Webbrowser und navigieren zur Webanwendung unter der Adresse 
 
-  - `https://eduard.uber.space/mastrutils`. 
-  - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
+  - [https://eduard.uber.space/mastrutils](https://eduard.uber.space/mastrutils). 
+  - Bei lokaler Installation (siehe unten) würde der Zugriff über [localhost:5000](http://localhost:5000) erfolgen.
 
 ![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
 
