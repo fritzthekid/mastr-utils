@@ -108,18 +108,18 @@ function addGpxToMap(gpxUrl) {
             endIconUrl: '',
             shadowUrl: '',
             wptIconUrls: {
-                '': '/static/images/mypin.png',
-                'Navaid, Amber': '/static/images/fire_unknown.svg',
-                'Solare Strahlungsenergie': '/static/images/solar.svg',
-                'Biomasse': '/static/images/greenpin.svg',
-                'Speicher': '/static/images/batterie.svg',
-                'Wasser': '/static/images/wasser.svg',
-                'Wind': '/static/images/wind.svg',
-                'Geothermie': '/static/images/greenpin.svg',
-                'Steinkohle': '/static/images/fire.svg',
-                'Erdgas': '/static/images/fire.svg',
-                'andere Gase': '/static/images/fire.svg',
-                'Mineralölprodukte': '/static/images/fire.svg',
+                '': './static/images/mypin.png',
+                'Navaid, Amber': './static/images/fire_unknown.svg',
+                'Solare Strahlungsenergie': './static/images/solar.svg',
+                'Biomasse': './static/images/greenpin.svg',
+                'Speicher': './static/images/batterie.svg',
+                'Wasser': './static/images/wasser.svg',
+                'Wind': './static/images/wind.svg',
+                'Geothermie': './static/images/greenpin.svg',
+                'Steinkohle': './static/images/fire.svg',
+                'Erdgas': './static/images/fire.svg',
+                'andere Gase': './static/images/fire.svg',
+                'Mineralölprodukte': './static/images/fire.svg',
             },
             iconSize: [32, 32],
             iconAnchor: [16, 32],
@@ -135,7 +135,7 @@ function addGpxToMap(gpxUrl) {
 
             const popupContent = `<b>${name}</b><br>${desc}`;
             const icon = L.icon({
-                iconUrl: `/static/images/graydot.svg`,
+                iconUrl: `./static/images/graydot.svg`,
                 iconSize: [16, 16],
                 iconAnchor: [8, 16]
             });

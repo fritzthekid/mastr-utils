@@ -437,11 +437,15 @@ class Analyse:
             if len(gpx_data) == 0:
                 logging.error(f"No data found for condition: {conditions}")
                 raise ValueError(f"No data found for condition: {conditions}")
-                return
 
             if min_weight > 0:
                 gpx_data = filter_large_weights(gpx_data, cluster_radius_m=radius, min_weight=min_weight).query(f'BruttoleistungDerEinheit > {min_weight}')
 
+            if len(gpx_data) > 4000:
+                signal.alarm(0)
+                logging.error("resulting gpx file too large (> 4000 items)")
+                raise ValueError("resulting gpx file too large (> 4000 items)")
+            
             import mastr_utils
             gpx = GPX()
             gpx.creator = f"github.com/fritzthekid/mastr_utils {mastr_utils.__version__}"
