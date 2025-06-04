@@ -1,19 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>Utils</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaStR to GPX Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<head>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script> <!-- For GPX support -->
 </head>
-<body style="background-color: #ccc">
-   <center>
-   <h1 style="color: blue">This is the Homepage</h1>
-   <h2 style="color: pink">second line</h2>
-   <h3 style="color: green">green line</h3>
-   <a href="mastrutils"><h1 style="background-color:#444; color:#ccf;">
-                 Hier gehts zu Mastr-Utils</h1></a>
-   </center>
+<body>
+    <div id="root" />
+<div class="topbanner" style="margin-bottom: 20px;"> 
+<center>
+<img src="{{ url_for('static', filename='eyes-blitz.png') }}" alt="Eyes Blitz" width="5%"><br>
+<div class="topbanner">
+  <table style="width:100%">
+   <tr>
+    <th>
+      <form method="POST" action=".">
+          <button name="home" id="buth">Home</button>
+      </form>
+    </th>
+  </tr>
+ </table>
+ </div>
+</center>
+</div> 
+    <div class="inner-body" style="height: 73%;">
+        <h1>Das Marktstammdatenregister und die Energiewende</h1>
+
+        Auf diesen Seiten sind verschiedene Aspekte der Energiewende dargestellt.
+        
+        Zunächst liefert das Marktstammdatenregister der Bundesnetzagentur eine 
+        Liste aller Energieanlagen in Deutschland. Dort finden sich Kohle- und Gaskraftwerke,
+        Atomkraftwerke, Wasserkraftwerke, Biogassanlagen, PV Anlagen, Windräder und so weiter.
+
+        <div style="margin-top: 20%; margin-bottom: 20%;margin-block: auto;">
+            <h1></h1>
+        <div class="myform">
+            <form class="mylink" method="POST" action=".">
+                <button name="command" value="mastrutils" id="bax"><h1>Zur Mastr-Utils App</h1></button>
+            </form>
+        </div>
+
+        </div>
+
+        <!--div>
+        <div class="myform">
+            <form class="mylink" method="GET" action=".">
+                <button name="command" value="mastrtogpx" id="bax"><h2>Zur Visualisierung des Marktstammdatenregister (GPX)</h2></button>
+            </form>
+        </div>
+        <div class="myform">
+            <form class="mylink" method="GET" action=".">
+                <button name="command" value="mastrtoplot" id="bap" onclick="lformaction()"><h2>Zur Visulsierung des Marktstammdatenregister (Plots)</h2></button>
+            </form>    
+        </div>
+        <div class="myform">
+            <form class="mylink" method="POST">
+                <button name="costs2" id="bab" onclick="lformaction()"><h2>Kosten der verschiedenen Energieanlagen im Vergleich</h2></button>
+            </form>    
+        </div>
+        <div class="myform">
+            <form class="mylink" method="POST">
+                <button name="battery" id="bac" onclick="lformaction()"><h2>Batteriespeicher im Wandel</h2></button>
+            </form>    
+        </div>
+        </div-->
+    </div>
+<div class="topbanner" style="font-size: 10px; margin-top: 20px;">
+  <center>
+  <table style="width:100%">
+   <tr>
+    <th>
+      <form method="POST">
+          <button name="impressum" id="buthx" onclick="lformaction()">Impressum</button>
+      </form>
+    </th>
+    <th>
+      <form method="POST">
+          <button name="dataprotection" id="butmx" onclick="lformaction()">Datenschutzerklärung</button>
+      </form>
+    </th>
+  </tr>
+ </table>
+ <script>
+  function lformaction() {
+  //  form.submit();
+  }
+  function formaction() {
+  //  form.submit();
+  }
+ </script>
+</center>
+</div>
+
 </body>
 </html>
-
