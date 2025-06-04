@@ -110,7 +110,7 @@ def test_nan_float():
     assert True
 
 def test_large_file():
-    teststr = f"{testdir}/data//stromerzeuger_8MB_13T.csv;-o;{testdir}/tmp/x.gpx"
+    teststr = f"{testdir}/data//stromerzeuger_8MB_13T.csv;-o;{testdir}/tmp/x.gpx;-q;is_battery"
     args = teststr.split(';')
     dogpx(args)
 
