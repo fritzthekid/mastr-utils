@@ -9,7 +9,7 @@ import pytest
 
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/..")
 
-from mastr_utils.analyse_mastr import Analyse
+from mastr_utils.analyse_mastr import Analyse, validatemarktstammdatenfile
 from mastr_utils.mastrtogpx import main as dogpx
 
 testdir = os.path.dirname(os.path.abspath(__file__))
@@ -148,3 +148,15 @@ def test_plot():
     analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv",timeout = DEBUGTIMEOUT)
     analyse.plot("is_pv","Postleitzahl")
     assert True
+
+def test_short():
+    validatemarktstammdatenfile(f"{testdir}/data/short.csv")
+    assert True
+
+@pytest.mark.xfail(reason="Das ist nicht die erweiterte Ansicht des Marktstammdatenregister")
+def test_not_extended_marktstammdatenansicht():
+    validatemarktstammdatenfile(f"{testdir}/data/aktuelleansicht.csv")
+
+@pytest.mark.xfail(reason="Illegal file type")
+def test_illegal_file_type():
+    validatemarktstammdatenfile(f"{testdir}/data/true.csv")

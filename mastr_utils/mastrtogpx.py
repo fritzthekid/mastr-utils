@@ -8,22 +8,12 @@ calling convention:
     python mastrtogpx.py <path to mastr file> -q '<query>' -o <path to output gpx file>
 """
 
-import sys
 import argparse
-import logging
 import signal
-from .analyse_mastr import Analyse, tmpdir   # Import the Analyse class from analyse_mastr.py
-
-# Configure logging
-log_file = f"{tmpdir}/mastrtogpx.log"
-logging.basicConfig(
-    filename=log_file,
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from .analyse_mastr import Analyse, logger   # Import the Analyse class from analyse_mastr.py
 
 def main(testargs=None, options=None):
-    logging.info("Starting mastrtogpx conversion")
+    logger.info("Starting mastrtogpx conversion")
     try:
         parser = argparse.ArgumentParser(description="Convert MaStR file to GPX file")
         parser.add_argument("mastr_file", help="Path to the MaStR CSV file")
@@ -79,9 +69,9 @@ def main(testargs=None, options=None):
             symbol_part = [False, args.color] 
         analyse.gen_gpx(conditions=args.query, output_file=args.output,
                         min_weight = int(args.min_weight), symbol_part = symbol_part)
-        logging.info("Conversion completed successfully")
+        logger.info("Conversion completed successfully")
     except Exception as e:
-        logging.error(f"Error during mastrtogpx conversion: {e}")
+        logger.error(f"Error during mastrtogpx conversion: {e}")
         raise
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 import os
 import shutil
 import json
-import logging
+import subprocess
 from flask import Flask, request, jsonify, render_template, send_file 
 from flask import redirect, url_for, send_from_directory
 from flask_cors import CORS
@@ -13,7 +13,7 @@ from flask import flash, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from mastr_utils.analyse_mastr import tmpdir
+from mastr_utils.analyse_mastr import tmpdir, validatemarktstammdatenfile, logger
 from mastr_utils.mastrtogpx import main as mtogpx
 from mastr_utils.mastrtoplot import main as mtoplot
 import mastr_utils
@@ -103,12 +103,12 @@ def login():
     if request.method == 'POST':
         name = request.form['username']
         pw = request.form['password']
-        logging.info(f"user: {name}, tried to log in")
+        logger.info(f"user: {name}, tried to log in")
         if name in users and check_password_hash(users[name]['password'], pw):
             login_user(User(name))
             if users[name]["status"] == "init":
                 print(f"User {name} zunächst Passwort ändern.")
-                logging.info(f"User {name} has to set initial password")
+                logger.info(f"User {name} has to set initial password")
                 flash(f'User {name} zunächst Passwort ändern.', category='message')
                 return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])
             login_user(User(name))
@@ -117,19 +117,19 @@ def login():
             session["id"] = session_data["id"]
             save_session_data(session_data)
             make_sessiondir() # make sessiondir
-            logging.info(f"user: {name}, successfully logged in, session[id]: {session_data['id']}")
+            logger.info(f"user: {name}, successfully logged in, session[id]: {session_data['id']}")
             print(f"User {name} wurde eingeloggt. session[id]: {session_data['id']}")
             return redirect(url_for('index'))
-        logging.info(f"User {name} or password not valid")
+        logger.info(f"User {name} or password not valid")
         flash('User oder Password nicht korrekt', category='message')
     return render_template('login.html')
 
 @login_required
 def logout():
     if not current_user.is_authenticated:
-        logging.err("someone tried to logged out without been authentication")
+        logger.err("someone tried to logged out without been authentication")
         return render_template('403.html')
-    logging.info(f"User {current_user.id} logged out")
+    logger.info(f"User {current_user.id} logged out")
     if not app.debug:
         try:
             shutil.rmtree(sessiondir())
@@ -142,13 +142,13 @@ def logout():
 def changepw(user = ""):
     if not current_user.is_authenticated:
         return render_template('403.html')
-    logging.info(f"User {current_user.id} change password")
+    logger.info(f"User {current_user.id} change password")
     if request.method == 'POST':
         old = request.form['old_password']
         new = request.form['new_password']
         retry = request.form["secondnew_password"]    
         if not check_password_hash(users[current_user.id]['password'], old):
-            logging.info("old password does not fit")
+            logger.info("old password does not fit")
             flash('Altes Passwort nicht korrekt', category='message')
             return render_template('user.html', userprops = users[current_user.id], isowner = current_user.id == users[current_user.id]["owner"])            # login_user(User(name))
         if new != retry:
@@ -158,7 +158,7 @@ def changepw(user = ""):
             users[current_user.id]['password'] = generate_password_hash(new)
             users[current_user.id]['status'] = "changed"
             save_users(users)
-            logging.info(f"User {current_user.id} change password successfull")
+            logger.info(f"User {current_user.id} change password successfull")
             print(f"Passwurd korrekt.")
             return redirect(url_for('index'))
     return redirect(url_for('index'))    
@@ -375,9 +375,10 @@ def optgpx():
         print(f'Radius: {radius}')
         print('Converting...')
 
-        # Run the conversion command
-        command = [
-            'mastrtogpx', file_path,
+        command = ['mastrtogpx', file_path]
+        if len(query) > 0:
+            command += ['-q', query]
+        command += [
             '-q', query,
             '-o', output_file,
             '-c', color,
@@ -414,7 +415,7 @@ def listoptions(file_path, output_file):
     print('Command:', ' '.join(command))
     # Capture stdout and stderr
     # result = subprocess.run(command, capture_output=True, text=True, check=True)
-    mtogpx(command[1:], options={"output_file_name":output_file})
+    mtogpx(command[1:])
     print('Conversion completed successfully.')
     message = open(output_file).read()
     return jsonify({
@@ -436,7 +437,7 @@ def characteristics(file_path, output_file):
     print('Command:', ' '.join(command))
     # Capture stdout and stderr
     # result = subprocess.run(command, capture_output=True, text=True, check=True)
-    mtogpx(command[1:], options={"output_file_name":output_file})
+    mtogpx(command[1:])
     print('Characterics completed successfully.')
     message = open(output_file).read()
     return jsonify({
@@ -586,7 +587,7 @@ def favicon():
 @app.route('/download', methods=['GET'])
 def serve_tmp_file():
     if not current_user.is_authenticated:
-        logging.err("someone tried to download file without been authentication")
+        logger.err("someone tried to download file without been authentication")
         render_template("login.html", debug=app.debug)
     try:
         basefile = session.get("output_file")
@@ -630,9 +631,14 @@ def upload_mastr_file():
             return jsonify({'status': 'error', 'message': 'only csv files as MaStR files are allowed.'}), 400
     filepath = os.path.join(f"{sessiondir()}", filename)
     uploaded_file.save(filepath)
-
-    # → hier kannst du die Datei direkt weiterverarbeiten:
-    # z. B. als CSV, GPX, ZIP, etc.
+    try:
+        validatemarktstammdatenfile(filepath)
+    except ValueError as e:
+        subprocess.call(["/usr/bin/shred", filepath])
+        os.remove(filepath)
+        logger.info(f"filepath: {e}")
+        print(f"filepath: {e}")
+        return jsonify({'status': 'error', 'message': f"{e}"}), 400
     return jsonify({
         'status': 'ok',
         'filename': filename,

@@ -19,7 +19,7 @@ Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gef
 
 1. Aufruf des [**MarktStammdatenregisters**](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht)
 
-2. **Filterung der Daten**: Erstellen Sie einen Filter, um die gewünschten Anlagen einzugrenzen. Achten Sie darauf, dass das Ergebnis **10.000 Anlagen nicht übersteigt**. Typische Filterkriterien könnten sein:
+2. **Filterung der Daten**: Erstellen Sie einen Filter, um die gewünschten Anlagen einzugrenzen. Achten Sie darauf, dass das Ergebnis **25.000 Anlagen nicht übersteigt**. Typische Filterkriterien könnten sein:
    - **Bundesland**: Auswahl des spezifischen Bundeslandes.
    - **Anlagentyp**: Auswahl des gewünschten Anlagentypen (auch mehrere).
    - **Mindestbruttoleistung**: Festlegung einer minimalen Bruttoleistung.
@@ -34,15 +34,19 @@ Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gef
 
 1. **Zugriff auf die Anwendung**: Öffne den Webbrowser und navigieren zur Webanwendung unter der Adresse 
 
-  - [https://eduard.uber.space/mastrutils](https://eduard.uber.space/mastrutils). 
+  - [https://eduard.uber.space/mastrutils/](https://eduard.uber.space/mastrutils/). 
   - Bei lokaler Installation (siehe unten) würde der Zugriff über [localhost:5000](http://localhost:5000) erfolgen.
+
+Reiter: Mastr-2-GPX
+
+Die Verwendung der Tools erforder ein Login, der Zugriff kann beim Autor bezogen werden (siehe Kontakt).
+Anschließend kann das Tool aufgerufen werden.
 
 ![Mastr to GPX Query und Map](img/mastr_gpx_konverter_form_map.png)
 
 2. **Eingabe der Daten**:
 
 In der Abfrage muss eingegeben werden:
-- ein Passwort, ist beim Entwickler mit Begründung abzufragen.
 - File von Marktstammdatenregister
 - Query [kann auch leer sein]
 - Min. Bruttoleistung der Fläche in kW:
@@ -91,9 +95,8 @@ Wechsel zu [**MaStR to GPX Konverter**](https://eduard.user.space/)
 ### Einfache Suche
 
 Eingabe folgender Daten:
-- Passwort: bekannt
 - Filename: wie eben vom Marktstammdatenregister geholt
-- Querey: leer
+- Querey: BruttoleistungDerEinheit > 10000
 - Min. Bruttoleistung der Fläche in kW: 0
 - Radius [m]: 2000
 - Output File Name: leer
@@ -115,37 +118,41 @@ Die Karte wird jetzt deutlich übersichtlicher:
 
 Werte über 200kW reduzieren sich die Anlagen auf die deutschlandweit größte Anlage bei Leibzig.
 
-### Nutzung des Tools mastrtoplot
+![PV > 200MW in Deutschland](img/pv_500mw_deutschland.png)
+
+## Nutzung des Tools mastrtoplot
 
 **Zugriff auf die Anwendung**: Öffne den Webbrowser und navigiere zur Webanwendung unter der Adresse
 
 - `https://eduard.uber.space/mastrutils/`. 
-
 - Bei lokaler Installation (siehe unten) würde der Zugriff über `http://localhost:5000` erfolgen.
+
+Reiter: MaStR-2-Plot
 
 Zunächst unterscheidet sich mastrtoplot von mastrtogpx gering, allerdings wird mit diesem
 Tool eine Vektorgraphik mit akkumulierter Bruttoleistung abhänging von einer Zielgröße 
-(z.B. Bundesland, Landkreis oder Postleitzahl) ausgegeben.
+(z.B. Bundesland, Landkreis, Postleitzahl oder einer anderen Kategorie) ausgegeben.
 
 **Beispiel 1**
 
-Als erstes Beispiel die Abfrage der Anteile von Leistungen durch Energieträger pro Landkreis.
-(kurze Anmerkung: is_pv steht für Energieträger="Solare Strahlungsenergie", is_batterie ist eine Abkürzung für Batterien) 
-
-![Akumulierte Leistung aufgeteilt in Energieträger](img/plot_energietraeger_typen.png)
-
-Der Plot kann runtergeladen oder durch anklicken in eigenem Tab
-geöffnet werden.
-
-**Beispiel 2**
-
-Es soll die pv Leistungen in Segmenten summiert werden. Also
+Als erstes Beispiel soll die pv Leistungen in Segmenten summiert werden. Also
 im Interval zwischen 1MW und 10MV, 10MW und 100MW, sowie größer 100MW.
 Für die 10er Potenzen bei den Bruttoleistungen gibt es Abkürzungen:
 - Dabei steht ge_1mw für BruttoleistungDerEinheit >= 1000
 - lt_100mw analog für BruttoleistungDerEinheit < 100000
 
 ![pv Leistungsaufteilung nach Bundesland](img/plot_pv_leistungs_segmente.png)
+
+**Beispiel 2**
+
+Beispiel 2 liefert die Anteile von Leistungen pro Energieträger (nur "Solare Strahlungsenergie", "Biomasse (nicht Biogas)", "Biogas", "Wind") pro Landkreis. Dieser Marktstammdatenregisterauszung enthält nur diese Anlagen aus Bayern und Baden-Württemberg > 1MW, die Querys grenzen das Ergebnis auf Baden-Württemberg ein (is_BaWue.)
+(kurze Anmerkung: is_pv steht für Energieträger="Solare Strahlungsenergie") 
+
+![Akumulierte Leistung aufgeteilt in Energieträger](img/plot_energietraeger_typen.png)
+
+Der Plot kann runtergeladen oder durch anklicken in eigenem Tab
+geöffnet werden.
+
 
 **Beispiel 3**
 
@@ -158,11 +165,11 @@ after_DD.MM.YYYY
 
 Eine solche Abfrage könne dann aussehen:
 
-![PV vor und nach](img/pv_nach_2023.png)
+![PV vor und nach](img/pv_vor_nach_2021.png)
 
 ## Hinweis zu Querys
 
-Hier gibt es auch bereits online Hilfen zu auf den Seiten.
+Die Online-Hilfen sind beschränkt auf einer Charakterisierung der Daten nach Leistung, Energieträger, Betriebsstatus,  gibt es auch bereits online Hilfen zu auf den Seiten.
 
 Aus software technischen Gründen wird z.B. der Begriff
 `Bruttoleistung der Einheit` zu `BruttoleistungDerEinheit`. Es können alle Begriffe in dieser Art, die im csv Header stehen verwendet werden.

@@ -32,16 +32,15 @@ tmpdir = f"{rootpath}/../tmp/anamastr"
 os.makedirs(tmpdir, exist_ok=True)
 
 # Configure logging
+logger = logging.getLogger(__name__)
 log_file = f"{tmpdir}/mastr_analyse.log"
-logging.basicConfig(
-    filename=log_file,
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
 handler = TimedRotatingFileHandler(filename=log_file, when='midnight')
 formatter = Formatter('%(asctime)s, %(levelname)s, %(message)s', datefmt='%Y-%m-%d, %H:%M:%S')
 handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 global timeout_value
 timeout_value = 6
@@ -51,7 +50,7 @@ class TimeoutException(Exception):
 
 def timeout_handler(signum, frame):
     print(f"Execption exception timeout ({timeout_value} sec)")
-    logging.info(f"Execption exception timeout ({timeout_value} sec)")
+    logger.info(f"Execption exception timeout ({timeout_value} sec)")
     raise TimeoutError("time limit exceeded")
 
 signal.signal(signal.SIGALRM, timeout_handler)
@@ -139,6 +138,16 @@ def get_date_last_modified(data,col):
         alldates.append(datetime.datetime.strptime(date,"%d.%m.%Y"))
     return sorted(alldates)[-1].strftime("%d.%m.%Y")
 
+def validatemarktstammdatenfile(pathname):
+    if b'\xef\xbb\xbf"MaStR-Nr. der Einheit";' != open(pathname, mode="rb").read(27):
+        raise ValueError("Illegal file type")
+    with open(pathname) as f:
+        first_line = f.readline().strip()
+    count = len(re.findall(";",first_line))
+    if count < 50 or count > 70:
+        raise ValueError("Das ist nicht die erweiterte Ansicht des Marktstammdatenregister")
+    return
+
 # Beispiel:
 # lon1, lat1 = 13.4050, 52.5200  # Berlin
 # lon2, lat2 = 11.5810, 48.1351  # München
@@ -159,7 +168,7 @@ class Analyse:
     # Initialize the class with data from an Excel file
     def __init__(self, file_path=f"{rootpath}/../db/MarktStammregister/MaStR-Raw.ods", figname="fig", fig_num=0, 
                  timeout = 5, filesize = 10e6, datasize=2e4):
-        logging.info(f"Initializing Analyse with file_path={file_path}")
+        logger.info(f"Initializing Analyse with file_path={file_path}")
         self.file_path = file_path
         self.timeout, self.filesize, self.datasize = timeout, filesize, datasize
         global timeout_value
@@ -175,19 +184,20 @@ class Analyse:
         try:
             self.fig_num = fig_num
             self.figname = figname
+            assert file_path.endswith(".csv"), f"Only '.csv' Files accepted"
+            validatemarktstammdatenfile(file_path)
             assert os.path.getsize(file_path) <= self.filesize, f"File size exceeds limits {self.filesize}"
-            if file_path.endswith('.csv'):
-                self.data = pd.read_csv(file_path, sep=';', encoding='utf-8', decimal=',')
-            elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
-                self.data = pd.read_excel(file_path)
-            elif file_path.endswith('.ods'):
-                self.data = pd.read_excel(file_path, engine='odf')
-            else:
-                raise ValueError("Invalid file format. Please provide a CSV, XLS, or ODS file.")
+            self.data = pd.read_csv(file_path, sep=';', encoding='utf-8', decimal=',')
+            # elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
+            #     self.data = pd.read_excel(file_path)
+            # elif file_path.endswith('.ods'):
+            #     self.data = pd.read_excel(file_path, engine='odf')
+            # else:
+            #     raise ValueError("Invalid file format. Please provide a CSV, XLS, or ODS file.")
             assert len(self.data) < self.datasize, f"Number of recordnummers exceeds {self.datasize}"  
-            logging.info(f"Data loaded successfully from {file_path}")
+            logger.info(f"Data loaded successfully from {file_path}")
         except Exception as e:
-            logging.error(f"Error initializing Analyse: {e}")
+            logger.error(f"Error initializing Analyse: {e}")
             signal.alarm(0)
             raise
         for i in self.data.index:
@@ -220,7 +230,7 @@ class Analyse:
             self.data['is_gewaesser'] = self.data['ArtDerSolaranlage'] == 'Gewässer'
             self.data['is_freiflaeche'] = self.data['ArtDerSolaranlage'] == 'Freifläche'
         except Exception as e:
-            logging.info("cleaning Bruttoleistung der Einheit failed")
+            logger.info("cleaning Bruttoleistung der Einheit failed")
         finally:
             signal.alarm(0)
         try:
@@ -357,7 +367,7 @@ class Analyse:
             valc = self.validate(expr)
             if len(valc) > 0:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
-                logging.error(error_message)
+                logger.error(error_message)
                 raise ValueError(error_message)
             filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
@@ -371,7 +381,7 @@ class Analyse:
             valc = self.validate(expr)
             if len(valc) > 0:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
-                logging.error(error_message)
+                logger.error(error_message)
                 raise ValueError(error_message)
             filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
@@ -421,7 +431,7 @@ class Analyse:
     # Method to generate GPX file
     def gen_gpx(self, conditions=None, output_file="gpx.gpx", symbol_part=[False, "Amber"], min_weight=0, radius=1000):
         from .cluster import filter_large_weights
-        logging.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, symbol_part={symbol_part}")
+        logger.info(f"Generating GPX file with conditions={conditions}, output_file={output_file}, symbol_part={symbol_part}")
         signal.alarm(self.timeout)
         try:
             if conditions is None or conditions == "":
@@ -430,12 +440,12 @@ class Analyse:
                 valc = self.validate(conditions)
                 if len(valc) > 0:
                     error_message = f"Invalid condition, with unknown arguments: {valc}"
-                    logging.error(error_message)
+                    logger.error(error_message)
                     raise ValueError(error_message)
                 gpx_data = self.data.query(conditions)
 
             if len(gpx_data) == 0:
-                logging.error(f"No data found for condition: {conditions}")
+                logger.error(f"No data found for condition: {conditions}")
                 raise ValueError(f"No data found for condition: {conditions}")
 
             if min_weight > 0:
@@ -443,7 +453,7 @@ class Analyse:
 
             if len(gpx_data) > 4000:
                 signal.alarm(0)
-                logging.error("resulting gpx file too large (> 4000 items)")
+                logger.error("resulting gpx file too large (> 4000 items)")
                 raise ValueError("resulting gpx file too large (> 4000 items)")
             
             import mastr_utils
@@ -484,16 +494,16 @@ class Analyse:
                 raise ValueError("Output file - directory fails")
             with open(output_file, 'w') as f:
                 f.write(gpx.to_xml())
-            logging.info(f"GPX file generated successfully: {output_file}")
+            logger.info(f"GPX file generated successfully: {output_file}")
             if self.test_timeout:
                 time.sleep(2)
                 raise ValueError("Test timeout failed")
         except ValueError as e:
-            logging.error(f"ValueError: {e}")
+            logger.error(f"ValueError: {e}")
             signal.alarm(0)
             raise ValueError(e)
         except Exception as e:
-            logging.error(f"Error generating GPX file: {e}")
+            logger.error(f"Error generating GPX file: {e}")
             if e.args[0] == "invalid syntax":
                 signal.alarm(0)
                 raise ValueError("Query: invalid syntax")
