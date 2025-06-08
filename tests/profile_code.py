@@ -51,10 +51,9 @@ def profiling_plot():
     # analyse.plot('is_active & is_pv & ge_10mw & lt_100mw', 'bundesland', artefact="PV 10-100 MW")
     outfile = f"{testdir}/tmp/x.svg"
     os.remove(outfile) if os.path.exists(outfile) else None
-    teststr =  f"{testdir}/data/anlagen_brd_wind_ge2mw.csv;"
+    teststr =  f"{testdir}/data/anlagen_brd_pv_ge_500kw.csv;"
     teststr += f"-q;BruttoleistungDerEinheit < 5000#BruttoleistungDerEinheit >= 5000;"
     teststr += f"-d;Bundesland;-o;{outfile};-s;-l;[10000,5e7,3e5]"
-    # mastrtoplot /home/eduard/work/mastr-utils/tmp/anamastr/12/anlagen_brd_wind_ge2mw.csv -q 'BruttoleistungDerEinheit < 5000#BruttoleistungDerEinheit >= 5000' -d Bundesland -o /home/eduard/work/mastr-utils/tmp/anamastr/12/anlagen_brd_wind_ge2mw.svg -m 0 -r 2000 -s -l [10000,5e7,3e5]
     args = teststr.split(';')
     doplot(args)
     file = open(f"{outfile}").read()

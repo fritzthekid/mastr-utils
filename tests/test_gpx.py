@@ -1,8 +1,6 @@
 # tests
 
-import subprocess
 import os
-from flask import jsonify
 import sys
 import re
 import pytest
@@ -67,9 +65,7 @@ def test_pv_brd_area_search():
     
 def test_wind_bawue_area_search():
     teststr = f"{testdir}/data/stromerzeuger_wind_bawue.csv,-q,BruttoleistungDerEinheit > 6000,-o,{testdir}/tmp/x20.gpx,-c,x,-m,20000,-r,20000,-e"
-
     args = teststr.split(',')
-    # args = [f"{testdir}/tests/data/stromerzeuger_ludwigsburg.csv", "-o", "{}/x.gpx", "-s", "-e"]
     dogpx(args)
     file = open(f"{testdir}/tmp/x20.gpx").read()
     print_properties_testfile(file)
@@ -110,7 +106,7 @@ def test_nan_float():
     assert True
 
 def test_large_file():
-    teststr = f"{testdir}/data//stromerzeuger_8MB_13T.csv;-o;{testdir}/tmp/x.gpx;-q;is_battery"
+    teststr = f"{testdir}/data/anlagen_brd_pv_ge_500kw.csv;-o;{testdir}/tmp/x.gpx;-q;ge_10mw"
     args = teststr.split(';')
     dogpx(args)
 
@@ -127,12 +123,12 @@ def test_cleebronn():
     for symbol in re.findall("<sym>(.*?)</sym>", file):
         symbols.append(symbol)
     data = pd.read_csv(f"{testdir}/data/stromerzeuger_cleebronn.csv", sep=';', encoding='utf-8', decimal=',')
-    assert len(data) == 394
+    assert len(data) == 426
     streets = list(str(val) for val in data["Straße"])
     astreets = {val:len([v for v in streets if v == val]) for val in set(streets)}
     assert astreets["Daimlerstraße"] == 6
-    assert sum([astreets[val] for val in set(streets)]) == 394
-    assert astreets['nan'] == 373
+    assert sum([astreets[val] for val in set(streets)]) == 426
+    assert astreets['nan'] == 405
     assert set(symbols) == set([data['Energieträger'][i] for i in data.index if str(data["Straße"][i]) != "nan"])
 
 def test_muell_klaerschlamm():

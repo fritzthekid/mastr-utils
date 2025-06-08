@@ -82,10 +82,10 @@ Hier endet die Beschreibung der Web Applikation
 
 Zunächst wird ein [**Marktstammdatenregister Auszug**](https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht) erstellt, dabei wird folgender Filer angewendet:
 - "Energieträger" entspricht "Solare Strahlungsenergie"
-- "Bruttoleistung der Einheit" größer als 10000
+- "Bruttoleistung der Einheit" größer als 500 kW
 - "Betriebsstatus" entspricht nicht "Endgültig stillgelegt"
 
-(Stand 04.04.2025: 698 Stromerzeugungseinheiten.)
+(Stand 11.05.2025: 20244 Stromerzeugungseinheiten.)
 
 Tabelle Exportieren (als .csv) 
 - Datei "Stromerzeuger...csv" befindet sich jetzt in Downloads

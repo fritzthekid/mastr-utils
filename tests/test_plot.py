@@ -43,8 +43,8 @@ def test_pv_brd_simple():
     assert len(re.findall("\n", file)) > 400
 
 
-def test_plot_stacked_rng_bawue_bay():
-    analyse = Analyse(file_path=f"{testdir}/data/rng_bawue_bay.csv",timeout = DEBUGTIMEOUT)
+def test_plot_stacked_analyse_energie_types():
+    analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv",timeout = DEBUGTIMEOUT)
     query = 'Energieträger == "Biomasse"#'
     query += 'Energieträger == "Geothermie"#'
     query += 'Energieträger == "Solare Strahlungsenergie"#'
@@ -77,16 +77,7 @@ def test_a_s():
     teststr = f"{testdir}/data/stromerzeuger_ludwigsburg.csv,-a"
     args = teststr.split(',')
     doplot(args)
-    # teststr = f"-h"
-    # args = teststr.split(',')
-    # doplot(args)
     assert True
-
-# def xx():
-#     teststr = f'/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.csv;-q;is_pv#Energieträger="Biomasse"&HauptbrennstoffDerEinheit!="Biogas"#HauptbrennstoffDerEinheit=="Biogas";-d;Ort;-o;/home/eduard/work/mastr-utils/mastr_utils/../tmp/anamastr/landkreis-ludwigsburg.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]'
-#     args = teststr.split(';')
-#     doplot(args)
-#     pass
 
 def test_before_after():
     teststr = f'{testdir}/data/landkreis-ludwigsburg.csv;-q;is_pv & after_01.01.2021#is_pv & before_31.12.2024;-d;Ort;-o;{testdir}/tmp/landkreis-ludwigsburg.svg;-m;0;-r;2000;-s;-l;[10000,5e7,3e5]'
