@@ -98,4 +98,3 @@ def test_before_after():
 def test_get_creation_date():
     creation_date = get_creation_date(f'{testdir}/data/landkreis-ludwigsburg.csv')
     assert creation_date is not None, "failed to export any creation_date"
-test_pv_brd_pa()

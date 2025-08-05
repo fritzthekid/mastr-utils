@@ -239,9 +239,6 @@ class Analyse:
             raise e
         finally:
             signal.alarm(0)
-        if self.test_timeout:
-            time.sleep(2)
-            raise TimeoutError("Test timeout failed")
         l = []
         for i in self.data.index:
             if type(self.data["InbetriebnahmedatumDerEinheit"][i]) == datetime.date:
@@ -249,6 +246,9 @@ class Analyse:
             else:
                 l.append("2099")
         self.data["Inbetriebnahmejahr"] = l
+        if self.test_timeout:
+            time.sleep(2)
+            raise TimeoutError("Test timeout failed")
         signal.alarm(0)
 
     def show_columns(self, trailer="", options=None):
