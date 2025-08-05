@@ -362,13 +362,16 @@ class Analyse:
         plt.savefig(f'{output_filename}')
         plt.close()
 
-    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False, min_weight=0.0, radius=2000):
+    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False, pa=False):
         # import matplotlib
         # matplotlib.use('agg')
         # import matplotlib.pyplot as plt
         # plt.rcParams['svg.fonttype'] = 'none'
         # import pandas as pd
 
+
+        gebietsflaeche = pd.read_csv(f"{rootpath}/../data/gebietsflaeche.csv", 
+                                     sep=';', encoding='utf-8', decimal=',')
         grouped_list = []
         for expr in filter_exprs.split("#"):
             valc = self.validate(expr)
@@ -378,6 +381,8 @@ class Analyse:
                 raise ValueError(error_message)
             filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            # if depends == "Bundesland" and pa:
+            #     grouped = grouped / gebietsflaeche
             grouped_list += [grouped]
             
         grouped_fill = sorted([(len(g),i, g) for i,g in enumerate(grouped_list)])[-1][2]*0
@@ -392,6 +397,14 @@ class Analyse:
                 raise ValueError(error_message)
             filtered = self.query(expr, depends)
             grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            if depends == "Bundesland" and pa:
+                land = list(grouped.index)
+                flaeche = [val for i,val in enumerate(gebietsflaeche["Fläche"].values) 
+                                    if gebietsflaeche["Bundesland"][i] in list(grouped.index)]
+                laender = [land for land in list(gebietsflaeche["Bundesland"]) 
+                                    if land in list(grouped.index)]
+                assert laender == list(grouped.index), "Bundesländer sorting wrong?"
+                grouped = grouped / flaeche
             if i == 0:
                 grouped = grouped.add(grouped_fill)
             grouped_data[expr] = grouped
@@ -415,7 +428,10 @@ class Analyse:
             title = os.path.splitext(os.path.basename(self.file_path))[0]
         plt.title(title)
         plt.xlabel(depends)
-        plt.ylabel('Bruttoleistung')
+        if pa:
+            plt.ylabel('Bruttoleistung / Fläche (kW/qkm)')
+        else:
+            plt.ylabel('Bruttoleistung (kW)')
         plt.xticks(rotation=45, ha='right', fontsize=14)
         plt.figtext(0.95, 0.01, f'MaStR Stand {self.last_modified}', ha='right', va='center')
         import mastr_utils

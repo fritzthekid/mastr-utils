@@ -42,6 +42,16 @@ def test_pv_brd_simple():
     file = open(f"{outfile}").read()
     assert len(re.findall("\n", file)) > 400
 
+def test_pv_brd_pa():
+    outfile = f"{testdir}/tmp/x.svg"
+    os.remove(outfile) if os.path.exists(outfile) else None
+    teststr = f"{testdir}/data/stromerzeuger_pv_brd.csv;-q; BruttoleistungDerEinheit > 10000;-o;{outfile}x;"
+    teststr += f"-p;-l;[10000,5e6,1e4]"
+    args = teststr.split(';')
+    doplot(args)
+    file = open(f"{outfile}").read()
+    assert len(re.findall("\n", file)) > 400
+
 
 def test_plot_stacked_analyse_energie_types():
     analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv",timeout = DEBUGTIMEOUT)
@@ -88,3 +98,4 @@ def test_before_after():
 def test_get_creation_date():
     creation_date = get_creation_date(f'{testdir}/data/landkreis-ludwigsburg.csv')
     assert creation_date is not None, "failed to export any creation_date"
+test_pv_brd_pa()

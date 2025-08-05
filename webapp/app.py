@@ -531,6 +531,7 @@ def plot():
 
         # Run the conversion command
 
+        sort, pa = True, False
         query = quera
         if len(querb) > 0:
             query += f"#{querb}" 
@@ -539,13 +540,24 @@ def plot():
         if len(querd) > 0:
             query += f"#{querd}" 
         if len(quere) > 0:
-            query += f"#{quere}" 
+            if quere.startswith("#"):
+                if "alpha" in quere:
+                    sort = False
+                if "pa" in quere:
+                    pa = True
+            else:
+                query += f"#{quere}" 
         command = [
             'mastrtoplot', file_path,
             '-q', query,
             '-d', depends,
-            '-o', output_file,
-            '-s',
+            '-o', output_file
+        ]
+        if sort:
+            command += ['-s']
+        if pa:
+            command += ['-p']
+        command += [
             '-l','[10000,5e7,3e5]',
         ]
 
