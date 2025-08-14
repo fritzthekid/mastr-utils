@@ -38,57 +38,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 resultDiv.innerHTML = `<p style="color: green;">${result.message}</p>`;
 
                 // Add the download button
-                /*const downloadLink = document.createElement('a');
-                downloadLink.href = result.download_url;
-                downloadLink.textContent = 'Download GPX File';
-                downloadLink.classList.add('button'); // Use the same button style
-                downloadLink.download = ''; // Ensure it triggers a download
-                resultDiv.appendChild(downloadLink); */
-
-                // Add the download button
                 const downloadForm = document.createElement('form');
                 downloadForm.className = "myform-white";
                 downloadForm.method = "POST";
 
-                /*
-                const downloadbutton = document.createElement('button');
-                downloadbutton.textContent = 'Download Plot';
-                downloadbutton.name = "downloadfile";
-                downloadbutton.className = "buttons-container";
-                downloadbutton.style = 
-                "padding: 10px 20px;background-color: #4CAF50;color: white;border: none;border-radius: 5px;font-size: 16px;cursor: pointer;text-decoration: none;text-align: center;";
-                downloadForm.appendChild(downloadbutton);
-                const downloadbuttoncsv = document.createElement('button');
-                downloadbuttoncsv.textContent = 'Download Table';
-                downloadbuttoncsv.name = "downloadcsv";
-                downloadbuttoncsv.className = "buttons-container";
-                downloadbuttoncsv.style = 
-                "padding: 10px 20px;background-color: #4CAF50;color: white;border: none;border-radius: 5px;font-size: 16px;cursor: pointer;text-decoration: none;text-align: center;";
-                downloadForm.appendChild(downloadbuttoncsv);
-                resultDiv.appendChild(downloadForm);
-                */
-                // -----------------------------------
+                // Flexbox für horizontales Layout
+                downloadForm.style.display = "flex";
+                downloadForm.style.gap = "10px"; // Abstand zwischen Buttons
+
                 // Gemeinsamer Button-Stil
                 const buttonStyle = `
-                padding: 10px 20px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-                text-decoration: none;
-                text-align: center;
-                margin-bottom: 10px;  /* Abstand zwischen den Buttons */
+                    padding: 10px 20px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    text-decoration: none;
+                    text-align: center;
                 `;
 
                 function createStyledButton(text, name) {
-                const button = document.createElement('button');
-                button.textContent = text;
-                button.name = name;
-                button.className = "buttons-container";
-                button.style = buttonStyle;
-                return button;
+                    const button = document.createElement('button');
+                    button.textContent = text;
+                    button.name = name;
+                    button.className = "buttons-container";
+                    button.style = buttonStyle;
+                    return button;
                 }
 
                 const downloadButton = createStyledButton('Download Plot', 'downloadfile');
