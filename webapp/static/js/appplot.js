@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 downloadForm.className = "myform-white";
                 downloadForm.method = "POST";
                 const downloadbutton = document.createElement('button');
-                downloadbutton.textContent = 'Download Plot File';
+                downloadbutton.textContent = 'Download Results';
                 downloadbutton.name = "downloadfile";
                 downloadbutton.className = "buttons-container";
                 downloadbutton.style = 

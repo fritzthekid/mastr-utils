@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostenvergleich: Atomkraft vs. Erneuerbare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+</head>
+<body>
+<div id="root" />
+  {% include 'topbanner.html' %}
+
+<div class="inner-body">
+
+
+<h3>Stromerzeuger_pv_500k aktive Bruttoleistung pro Fläche</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_pv_500k_brd_bundesland_pa.svg') }}" alt="stromerzeuger_pv_500k_brd_bundesland_pa.svg">
+<h3>stromerzeuger_pv_500k_brd_sectorensplit</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_pv_500k_brd_sectorensplit.svg') }}" alt="stromerzeuger_pv_500k_brd_sectorensplit.svg">
+<h3>Stromerzeuger PV > 500kw installierte Leistung - Inbetriebnahmejahr</h3>
+<h3>??</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_pv_500k_brd.svg') }}" alt="stromerzeuger_pv_500k_brd.svg">
+<h3>Stromerzeuger Wind > 1.5mw installierte Leistung - Inbetriebnahmejahr</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_wind_brd_1-5m_inbetriebnahmejahr.svg') }}" alt="stromerzeuger_wind_brd_1-5m_inbetriebnahmejahr.svg">
+<h3>Stromerzeuger Wind > 1.5mw installierte Leistung pro Fläche</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_wind_brd_1-5m_pa.svg') }}" alt="stromerzeuger_wind_brd_1-5m_pa.svg">
+<h3>Landkreis Ludwigsburg > 7kw installierte Leistung - Split nach Energieträger</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_landkreis_ludwigsburg_energietraeger_split_7.svg') }}" alt="stromerzeuger_landkreis_ludwigsburg_energietraeger_split_7.svg.svg">
+<h3>Landkreis Ludwigsburg > 7kw installierte PV Leistung - Sectorsplit</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_landkreis_ludwigsburg_pv_sectorensplit.svg') }}" alt="stromerzeuger_landkreis_ludwigsburg_pv_sectorensplit.svg">
+       
+</div>
+{% include 'footer.html' %}
+</body>
+</html>
+  

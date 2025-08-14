@@ -232,7 +232,9 @@ links = {
     "costs2":"kosten_energiewende.html",
     "battery":"batterien.html",
     "impressum":'impressum.html',
-    "dataprotection":"datenschutzerklaerung.html"
+    "dataprotection":"datenschutzerklaerung.html",
+    "examples_gpx":"examples_gpx.html",
+    "examples_plot":"examples_plot.html",
 }
 
 @app.route('/', methods=['GET', 'POST'])
@@ -561,7 +563,7 @@ def plot():
             '-l','[10000,5e7,3e5]',
         ]
 
-        session["output_file"] = os.path.basename(output_file)
+        session["output_file"] = f"{os.path.basename(output_file)}"
         print('Command:', ' '.join(command))
         # Capture stdout and stderr
         # result = subprocess.run(command, capture_output=True, text=True, check=True)
@@ -619,6 +621,8 @@ def serve_tmp_file():
             return send_from_directory(sessiondir(), basefile, mimetype='image/svg+xml')
         elif basefile.endswith(".svg"):
             return send_from_directory(sessiondir(), basefile, as_attachment=True, mimetype='application/xml')
+        elif basefile.endswith(".csv"):
+            return send_from_directory(sessiondir(), basefile, as_attachment=True, mimetype='text/csv')
         else:
             return jsonify({'status': 'error', 'message': 'File not found.'}), 404
     except FileNotFoundError:
@@ -674,3 +678,8 @@ application = DispatcherMiddleware(Flask('dummy'), {
 if __name__ == '__main__':
     app.config['SESSION_COOKIE_PATH'] = '/'
     app.run(debug=True, host="0.0.0.0", port=5000)
+
+
+"""
+ls stromerzeuger*.png | sed "s|\(^.*$\)|<img src=\"{{ url_for('static', filename='images/\1') }}\" alt=\"\1\">|"
+"""

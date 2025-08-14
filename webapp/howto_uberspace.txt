@@ -1,2 +1,7 @@
 uberspace web backend set /mastrutils/ --http --port 42420
 
+and 
+
+cd work/mastr-utils/homepage
+ln ../webapp/static ./static
+

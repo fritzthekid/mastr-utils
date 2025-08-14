@@ -444,6 +444,8 @@ class Analyse:
             raise ValueError("Output filename is no valid")
         plt.savefig(f'{output_filename}')
         plt.close()
+        output_csv = os.path.splitext(output_filename)[0]+".csv"
+        grouped_data.to_csv(output_csv,sep=";", decimal=",")
 
     def validate(self, condition):
         valid_columns = self.data.columns

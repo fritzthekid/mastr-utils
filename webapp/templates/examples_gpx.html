@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostenvergleich: Atomkraft vs. Erneuerbare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+</head>
+<body>
+<div id="root" />
+  {% include 'topbanner.html' %}
+
+<div class="inner-body">
+
+    <h3>Stromerzeuger BRD PV >= 100kW (in der Fläche geclustert)</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_brd_pv_ge100.png') }}" alt="stromerzeuger_brd_pv_ge100.png">
+<h3>Stromerzeuger Baden-Würtemberg Wind >= 10kW (in der Fläche geclustert)</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_wind_cluster_bawue_ge10mw.png') }}" alt="stromerzeuger_wind_cluster_bawue_ge10mw.png">
+<h3>Alle Stromerzeuger >= 500kW im Landkreis Ludwigsburg</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_landkreisludwigsburg_100kw.png') }}" alt="stromerzeuger_landkreisludwigsburg_100kw.png">
+<h3>Alle Stromerzeuger >= 500kW im Landkreis Ludwigsburg (mit Erläuterungen einer Einheit)</h3>
+<img src="{{ url_for('static', filename='images/stromerzeuger_landkreisludwigsburg_500kw.gpx') }}" alt="stromerzeuger_landkreisludwigsburg_500kw.gpx">
+       
+</div>
+{% include 'footer.html' %}
+</body>
+</html>
+  
