@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const downloadForm = document.createElement('form');
                 downloadForm.className = "myform-white";
                 downloadForm.method = "POST";
+
+                /*
                 const downloadbutton = document.createElement('button');
                 downloadbutton.textContent = 'Download Plot';
                 downloadbutton.name = "downloadfile";
@@ -64,7 +66,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 "padding: 10px 20px;background-color: #4CAF50;color: white;border: none;border-radius: 5px;font-size: 16px;cursor: pointer;text-decoration: none;text-align: center;";
                 downloadForm.appendChild(downloadbuttoncsv);
                 resultDiv.appendChild(downloadForm);
+                */
+                // -----------------------------------
+                // Gemeinsamer Button-Stil
+                const buttonStyle = `
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                text-decoration: none;
+                text-align: center;
+                margin-bottom: 10px;  /* Abstand zwischen den Buttons */
+                `;
 
+                function createStyledButton(text, name) {
+                const button = document.createElement('button');
+                button.textContent = text;
+                button.name = name;
+                button.className = "buttons-container";
+                button.style = buttonStyle;
+                return button;
+                }
+
+                const downloadButton = createStyledButton('Download Plot', 'downloadfile');
+                const downloadButtonCSV = createStyledButton('Download Table', 'downloadcsv');
+
+                downloadForm.appendChild(downloadButton);
+                downloadForm.appendChild(downloadButtonCSV);
+                resultDiv.appendChild(downloadForm);
+
+                // -----------------------------------
                 // Visualize the GPX file on the map
                 addPlotToDiv(result.download_url);
             } else {
