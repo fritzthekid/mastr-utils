@@ -527,6 +527,9 @@ class Analyse:
             logger.error(f"ValueError: {e}")
             signal.alarm(0)
             raise ValueError(e)
+        except SyntaxError as e:
+            signal.alarm(0)
+            raise SyntaxError(f"Query: illegal syntax")
         except Exception as e:
             logger.error(f"Error generating GPX file: {e}")
             if e.args[0] == "invalid syntax":
