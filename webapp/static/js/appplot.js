@@ -50,12 +50,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 downloadForm.className = "myform-white";
                 downloadForm.method = "POST";
                 const downloadbutton = document.createElement('button');
-                downloadbutton.textContent = 'Download Results';
+                downloadbutton.textContent = 'Download Plot';
                 downloadbutton.name = "downloadfile";
                 downloadbutton.className = "buttons-container";
                 downloadbutton.style = 
                 "padding: 10px 20px;background-color: #4CAF50;color: white;border: none;border-radius: 5px;font-size: 16px;cursor: pointer;text-decoration: none;text-align: center;";
                 downloadForm.appendChild(downloadbutton);
+                const downloadbuttoncsv = document.createElement('button');
+                downloadbuttoncsv.textContent = 'Download Table';
+                downloadbuttoncsv.name = "downloadcsv";
+                downloadbuttoncsv.className = "buttons-container";
+                downloadbuttoncsv.style = 
+                "padding: 10px 20px;background-color: #4CAF50;color: white;border: none;border-radius: 5px;font-size: 16px;cursor: pointer;text-decoration: none;text-align: center;";
+                downloadForm.appendChild(downloadbuttoncsv);
                 resultDiv.appendChild(downloadForm);
 
                 // Visualize the GPX file on the map

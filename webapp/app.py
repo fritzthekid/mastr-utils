@@ -301,6 +301,8 @@ def index():
             return download_log()
         elif "downloadfile" in request.form:
             return serve_tmp_file()
+        elif "downloadcsv" in request.form:
+            return serve_tmp_file()
         print('Index page')
         return render_template('index.html', debug=app.debug)
 
@@ -619,10 +621,11 @@ def serve_tmp_file():
         elif ( basefile.endswith(".svg") or basefile.endswith(".png") ) and ( len(request.args)>0 and request.args.get("command") == None ):
             # Serve files from the sessiondir() directory
             return send_from_directory(sessiondir(), basefile, mimetype='image/svg+xml')
-        elif basefile.endswith(".svg"):
+        elif basefile.endswith(".svg") and "downloadfile" in request.form:
             return send_from_directory(sessiondir(), basefile, as_attachment=True, mimetype='application/xml')
-        elif basefile.endswith(".csv"):
-            return send_from_directory(sessiondir(), basefile, as_attachment=True, mimetype='text/csv')
+        elif basefile.endswith(".svg") and "downloadcsv" in request.form:
+            csvfileame = basefile.replace(".svg", "_grouped.csv")
+            return send_from_directory(sessiondir(), csvfileame, as_attachment=True, mimetype='text/csv')
         else:
             return jsonify({'status': 'error', 'message': 'File not found.'}), 404
     except FileNotFoundError:
