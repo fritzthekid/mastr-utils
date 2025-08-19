@@ -26,6 +26,7 @@ def main(testargs=None):
         parser.add_argument("-c", "--show-columns", help="Show the columns of the MaStR file [default=False]", action="store_true")
         parser.add_argument("-s", "--sort", help="Sort depends according to total power [default=False]", action="store_true")
         parser.add_argument("-p", "--pa", help="Calc per area (only in case of Bundesland)  [default=False]", action="store_true")
+        parser.add_argument("-t", "--ordinate", help="Ordinate (default 'BruttoleistungDerEinheit')", default='BruttoleistungDerEinheit')
         parser.add_argument("-l", "--limits", help="limits", default='[5,10e6,2e4]')
         parser.add_argument("-h_query", "--help_query", help="Show Examples for Query [default=False]", action="store_true")
 
@@ -67,7 +68,7 @@ def main(testargs=None):
             return
 
         analyse.plot_stacked(filter_exprs=args.query, depends=args.depends, output_filename=args.output, 
-                             sort=args.sort, pa=args.pa)
+                             sort=args.sort, pa=args.pa, ordinate=args.ordinate)
         logger.info("Conversion completed successfully")
     except Exception as e:
         logger.error(f"Error during mastrtogpx conversion: {e}")

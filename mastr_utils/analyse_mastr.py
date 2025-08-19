@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
 import signal
+import mastr_utils
 from .symbols import energie_symbols
 from logging.handlers import TimedRotatingFileHandler
 from logging import Formatter
@@ -103,6 +104,15 @@ def clean_bruttoleistung(data):
         if type(val) == str:
             val = round(float(re.sub(',','.',val))) 
         data.at[data.iloc[i].name,"BruttoleistungDerEinheit"] = np.float64(val)
+
+def clean_ordiante(data, ordinate="BruttoleistungDerEinheit"):
+    if ordinate is not "BruttoleistungDerEinheit":
+        for i,val in enumerate(data[ordinate]):
+            if type(val) == str:
+                val = round(float(re.sub(',','.',val))) 
+            if np.isnan(val):
+                val = 0
+            data.at[data.iloc[i].name,ordinate] = np.float64(val)
 
 def get_creation_date(file_path):
     stat = os.stat(file_path)
@@ -302,7 +312,7 @@ class Analyse:
         f.close()
 
     # Method to query the data based on a condition and dependency
-    def query(self, condition, depends=None):
+    def query(self, condition, depends=None, ordinate="BruttoleistungDerEinheit"):
         depends_column = self.depends_dict.get(depends, depends)
         
         # Extract date filters from the condition
@@ -337,10 +347,10 @@ class Analyse:
         except ValueError as e:
             raise ValueError(f"{e}: {condition}")
         # print(filtered_data)
-        return filtered_data.groupby(depends_column)['BruttoleistungDerEinheit'].sum().reset_index()
+        return filtered_data.groupby(depends_column)[ordinate].sum().reset_index()
 
     # Method to plot the data based on a condition and dependency
-    def plot(self, condition, depends, artefact="X", output_filename="x"):
+    def plot(self, condition, depends, artefact="X", ordinate="BruttoleistungDerEinheit", output_filename="x"):
         # import matplotlib
         # matplotlib.use('agg')
         # import matplotlib.pyplot as plt
@@ -349,7 +359,7 @@ class Analyse:
         grouped_data = self.query(condition, depends)
         depends_column = self.depends_dict.get(depends, depends)
         plt.figure(figsize=(10, 6))  # Adjust the figure size as needed
-        sns.barplot(x=depends_column, y='BruttoleistungDerEinheit', data=grouped_data)
+        sns.barplot(x=depends_column, y=ordinate, data=grouped_data)
         plt.title(f"Bruttoleistung der Einheit nach {depends_column} für Bedingung: {condition}")
         plt.xlabel(depends_column.capitalize())
         plt.ylabel('Bruttoleistung der Einheit (kW)')
@@ -362,7 +372,7 @@ class Analyse:
         plt.savefig(f'{output_filename}')
         plt.close()
 
-    def plot_stacked(self, filter_exprs, depends, artefact=None, output_filename="x", sort=False, pa=False):
+    def plot_stacked(self, filter_exprs, depends, ordinate="BruttoleistungDerEinheit", artefact=None, output_filename="x", sort=False, pa=False):
         # import matplotlib
         # matplotlib.use('agg')
         # import matplotlib.pyplot as plt
@@ -372,6 +382,8 @@ class Analyse:
 
         gebietsflaeche = pd.read_csv(f"{rootpath}/../data/gebietsflaeche.csv", 
                                      sep=';', encoding='utf-8', decimal=',')
+
+        clean_ordiante(self.data, ordinate=ordinate)
         grouped_list = []
         for expr in filter_exprs.split("#"):
             valc = self.validate(expr)
@@ -379,8 +391,8 @@ class Analyse:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
                 logger.error(error_message)
                 raise ValueError(error_message)
-            filtered = self.query(expr, depends)
-            grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            filtered = self.query(expr, depends,ordinate=ordinate)
+            grouped = filtered.groupby(depends)[ordinate].sum()
             # if depends == "Bundesland" and pa:
             #     grouped = grouped / gebietsflaeche
             grouped_list += [grouped]
@@ -395,8 +407,8 @@ class Analyse:
                 error_message = f"Invalid condition, with unknown arguments: {valc}"
                 logger.error(error_message)
                 raise ValueError(error_message)
-            filtered = self.query(expr, depends)
-            grouped = filtered.groupby(depends)['BruttoleistungDerEinheit'].sum()
+            filtered = self.query(expr, depends, ordinate=ordinate)
+            grouped = filtered.groupby(depends)[ordinate].sum()
             if depends == "Bundesland" and pa:
                 land = list(grouped.index)
                 flaeche = [val for i,val in enumerate(gebietsflaeche["Fläche"].values) 
@@ -420,6 +432,7 @@ class Analyse:
         grouped_data.fillna(0, inplace=True)
 
         # Gestapeltes Balkendiagramm erstellen
+        matplotlib.rcParams['svg.fonttype'] = 'none'
         sns.set_theme(style="whitegrid")
         grouped_data.plot(kind="bar", stacked=True, grid=True, figsize=(14, 9))
         if artefact:
@@ -429,12 +442,12 @@ class Analyse:
         plt.title(title)
         plt.xlabel(depends)
         if pa:
-            plt.ylabel('Bruttoleistung / Fläche (kW/qkm)')
+            plt.ylabel(f'{ordinate} / Fläche (kW/qkm)')
         else:
-            plt.ylabel('Bruttoleistung (kW)')
+            plt.ylabel(f'{ordinate} (kW)')
         plt.xticks(rotation=45, ha='right', fontsize=14)
         plt.figtext(0.95, 0.01, f'MaStR Stand {self.last_modified}', ha='right', va='center')
-        import mastr_utils
+        # import mastr_utils
         plt.figtext(0.05, 0.01, f'Copyright: \xa9 github.com/fritzthekid/mastr-utils {mastr_utils.__version__}', ha='left', va='center')
         plt.tight_layout()
         splitfile = os.path.splitext(os.path.abspath(output_filename))

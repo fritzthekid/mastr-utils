@@ -6,6 +6,8 @@ from flask import jsonify
 import sys
 import re
 import pytest
+import xml.etree.ElementTree as ET
+
 
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/..")
 
@@ -45,13 +47,16 @@ def test_pv_brd_simple():
 def test_pv_brd_pa():
     outfile = f"{testdir}/tmp/x.svg"
     os.remove(outfile) if os.path.exists(outfile) else None
-    teststr = f"{testdir}/data/stromerzeuger_pv_brd.csv;-q; BruttoleistungDerEinheit > 10000;-o;{outfile}x;"
-    teststr += f"-p;-l;[10000,5e6,1e4]"
+    teststr = f'{testdir}/data/anlagen_brd_pv_ge_500kw.csv;'
+    teststr += f'-q;is_pv&BruttoleistungDerEinheit<1000#is_pv&ge_1mw&lt_10mw#is_pv&ge_10mw&lt_100mw#is_pv&ge_100mw;'
+    teststr += f'-d;Bundesland;-o;{outfile};-s;-p;-l;[10000,5e7,3e5]'
     args = teststr.split(';')
     doplot(args)
-    file = open(f"{outfile}").read()
-    assert len(re.findall("\n", file)) > 400
-
+    svg_content = open(f"{outfile}").read()
+    root = ET.fromstring(svg_content)
+    all_texts = [el.text for el in root.iter() if el.tag.endswith('text')]
+    assert all(v in all_texts for v in ['BruttoleistungDerEinheit / Fläche (kW/qkm)','Mecklenburg-Vorpommern', 'MaStR Stand 11.05.2025'])
+    assert len(re.findall("\n", svg_content)) > 400
 
 def test_plot_stacked_analyse_energie_types():
     analyse = Analyse(file_path=f"{testdir}/data/stromerzeuger_ludwigsburg.csv",timeout = DEBUGTIMEOUT)
@@ -98,3 +103,17 @@ def test_before_after():
 def test_get_creation_date():
     creation_date = get_creation_date(f'{testdir}/data/landkreis-ludwigsburg.csv')
     assert creation_date is not None, "failed to export any creation_date"
+
+def test_alpha_ordinate():
+    outfile = f"{testdir}/tmp/x.svg"
+    os.remove(outfile) if os.path.exists(outfile) else None
+    teststr=f'{testdir}/data/stromerzeuger_ludwigsburg.csv;-q;BruttoleistungDerEinheit > 1;-d;Inbetriebnahmejahr;-o;{outfile};-t;ThermischeNutzleistungInKw;-l;[10000,5e7,3e5]'
+    args = teststr.split(';')
+    doplot(args)
+    svg_content = open(f"{outfile}").read()
+    root = ET.fromstring(svg_content)
+    all_texts = [el.text for el in root.iter() if el.tag.endswith('text')]
+    assert all(v in all_texts for v in ['Inbetriebnahmejahr', 'MaStR Stand 20.03.2025','ThermischeNutzleistungInKw (kW)', 'stromerzeuger_ludwigsburg'])
+    assert len(re.findall("\n", svg_content)) > 100
+
+

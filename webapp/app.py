@@ -4,6 +4,7 @@ import os
 import shutil
 import json
 import subprocess
+import re
 from flask import Flask, request, jsonify, render_template, send_file 
 from flask import redirect, url_for, send_from_directory
 from flask_cors import CORS
@@ -535,7 +536,7 @@ def plot():
 
         # Run the conversion command
 
-        sort, pa = True, False
+        sort, pa, ordinate = True, False, False
         query = quera
         if len(querb) > 0:
             query += f"#{querb}" 
@@ -549,6 +550,9 @@ def plot():
                     sort = False
                 if "pa" in quere:
                     pa = True
+                if "ordinate=" in quere:
+                    ordinate = True
+                    ordinateval = re.sub(" .*$","",re.sub("^.*ordinate=","",quere))
             else:
                 query += f"#{quere}" 
         command = [
@@ -561,6 +565,8 @@ def plot():
             command += ['-s']
         if pa:
             command += ['-p']
+        if ordinate:
+            command += ['-t', ordinateval]
         command += [
             '-l','[10000,5e7,3e5]',
         ]
