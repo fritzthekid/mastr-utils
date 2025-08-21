@@ -14,10 +14,11 @@ title: mastr-utils-docs
 <li><a href="#sec-area-search">Flächige Suche</a></li>
 </ul>
 <li><a href="#sec-mastrtoplot">Mastr To Plot</a></li>
-<li><a href="#sec-examples">Ergänzende Beispiele</a></li>
+<!--li><a href="#sec-examples">Ergänzende Beispiele</a></li-->
 <li><a href="examples_plot.html">Ergänzende Plots</a></li>
 <li><a href="examples_gpx.html">Ergänzende Maps / GPX</a></li>
-
+<li><a href="#sec-queries">Hinweis zu Querys</a></li>
+<li><a href="#sec-cmd-tools">Commandline Tools</a></li>
 </ul>
   </nav>
   
@@ -184,7 +185,7 @@ after_DD.MM.YYYY
   <a href="examples_gpx.html"><h3>Weitere Beispiele: Maps / GPX</h3></a>
 
 
-  <h2>Hinweis zu Querys</h2>
+  <h2 id="sec-queries">Hinweis zu Querys</h2>
   <p>Die Online-Hilfen sind beschränkt auf einer Charakterisierung der Daten nach Leistung, Energieträger, Betriebsstatus, gibt es auch bereits online Hilfen zu auf den Seiten.</p>
   <p>Aus software technischen Gründen wird z.B. der Begriff <code>Bruttoleistung der Einheit</code> zu <code>BruttoleistungDerEinheit</code>. Es können alle Begriffe in dieser Art, die im csv Header stehen verwendet werden.</p>
   <p>Die Querys können Operatoren wie in den meisten Programmiersprachen enthalten also (<code>&amp;</code> für und <code>|</code> für oder u.s.w.) Ein Ausdruck muss dabei aber immer die Form haben <code>Spaltenkopf == "Typ"</code>, anstelle von <code>"Typ"</code> und nicht <code>'Typ'</code>. Im Fall von können auch <code>&gt;</code>, <code>&lt;</code>, <code>&lt;=</code> oder <code>&gt;=</code> als Operatoren verwendet werden.</p>
@@ -195,7 +196,7 @@ after_DD.MM.YYYY
 is_active: Betriebsstatus == "in Betrieb"
   </pre>
   <hr>
-  <h1>Mastr-Utils (lokale Version)</h1>
+  <h1 id="sec-cmd-tools">Mastr-Utils (lokale Version)</h1>
   <h2>Installation</h2>
   <ol>
     <li><strong>Repository klonen</strong>:
