@@ -1,0 +1,267 @@
+---
+layout: default
+title: mastr-utils-docs
+---
+
+<section>
+  <nav>
+      <ul>
+<li><a href="#sec-goal">Ziel</a></li>
+<li><a href="#sec-marktstammdatenregister">Marktstammdatenregister</a></li>
+<li><a href="#sec-mastrtogpx">Mastr To GPX</a></li>
+<ul>
+<li><a href="#sec-simple-search">Einfache Suche</a></li>
+<li><a href="#sec-area-search">Flächige Suche</a></li>
+</ul>
+<li><a href="#sec-mastrtoplot">Mastr To Plot</a></li>
+<li><a href="#sec-examples">Ergänzende Beispiele</a></li>
+<li><a href="examples_plot.html">Ergänzende Plots</a></li>
+<li><a href="examples_gpx.html">Ergänzende Maps / GPX</a></li>
+
+</ul>
+  </nav>
+  
+  <article>
+  <h1>Dokumentation</h1>
+  <p><strong>Das wichtigste</strong>: Diese Tools und die Webanwendung werden angeboten wie in der 
+    <a href="assets/LICENSE.txt">LICENSE</a> angegeben. Es gibt keine Gewähr, keinen Support oder ähnliches.</p>
+  <p>Dieses Repository enthält Tools zur Auswertung der Daten des Marktstammdatenregisters (MaStR). Derzeit sind folgende Anwendungen verfügbar:</p>
+  <ol>
+    <li><strong>Webanwendung</strong>: Die Anwendung zur Nutzung der Offline Feature - wie unten beschrieben.</li>
+    <li><strong>mastrtogpx</strong>: Konvertierung und Visualisierung von MaStR-Daten und erstellen von GPX-Dateien.</li>
+    <li><strong>mastrtoplot</strong>: Erstellung von Plots aus MaStR-Dateien zur Anzeige und Download der SVG-Dateien.</li>
+  </ol>
+  <h2 id="sec-marktstammdatenregister">Marktstammdatenregisterin als Vektorgraphik (SVG-Format).</li>
+  </ol>
+  <h2 id="sec-goal">Ziel der Anwendung mastrtogpx</h2>
+  <p>Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gefunden werden. Für diese Anlagen gilt in der Regel, dass diese Stromerzeugungseinheiten in der Regel aus vielen Einheiten bestehen.</p>
+  <h2 id="sec-enginesearch">Ablaufe der Anlagensuche</h2>
+  <h3 id="sec-marktstammdatenregister">Abruf der Daten</h3>
+  <ol>
+    <li>Aufruf des <a href="https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht"><strong>MarktStammdatenregisters</strong></a></li>
+    <li><strong>Filterung der Daten</strong>: Erstellen Sie einen Filter, um die gewünschten Anlagen einzugrenzen. Achten Sie darauf, dass das Ergebnis <strong>25.000 Anlagen nicht übersteigt</strong>. Typische Filterkriterien:
+      <ul>
+        <li><strong>Bundesland</strong>: Auswahl des spezifischen Bundeslandes.</li>
+        <li><strong>Anlagentyp</strong>: Auswahl des gewünschten Anlagentypen (auch mehrere).</li>
+        <li><strong>Mindestbruttoleistung</strong>: Festlegung einer minimalen Bruttoleistung.</li>
+      </ul>
+    </li>
+  </ol>
+  <img src="static/img/mastr_query.png" alt="MaStR Query">
+  <p><em>Hinweis</em>: Am 31.03.2025 lieferte eine solche Abfrage beispielsweise 844 Anlagen (sowohl in Betrieb als auch in Planung).</p>
+  <ol start="3">
+    <li><strong>Export der Daten</strong>: Exportieren Sie die gefilterte Tabelle, beispielsweise als <code>Downloads/Stromerzeuger.csv</code>.</li>
+  </ol>
+  <h3 id="sec-mastrtogpx">Nutzung des Tools mastrtogpx</h3>
+  <ol>
+    <li><strong>Zugriff auf die Anwendung</strong>: Öffne den Webbrowser und navigieren zur Webanwendung unter der Adresse
+      <ul>
+        <li><a href="https://eduard.uber.space/mastrutils/">https://eduard.uber.space/mastrutils/</a></li>
+        <li>Bei lokaler Installation (siehe unten) würde der Zugriff über <a href="http://localhost:5000">localhost:5000</a> erfolgen.</li>
+      </ul>
+      Reiter: Mastr-2-GPX
+    </li>
+    <li>Die Verwendung der Tools erforder ein Login, der Zugriff kann beim Autor bezogen werden (siehe Kontakt). Anschließend kann das Tool aufgerufen werden.</li>
+  </ol>
+  <img src="static/img/mastr_gpx_konverter_form_map.png" alt="Mastr to GPX Query und Map">
+  <ol start="2">
+    <li><strong>Eingabe der Daten</strong>:
+      <ul>
+        <li>File von Marktstammdatenregister</li>
+        <li>Query [kann auch leer sein]</li>
+        <li>Min. Bruttoleistung der Fläche in kW:
+          <ul>
+            <li>für 0 werden alle Anlagen die die Query erfüllen angezeigt</li>
+            <li>für Werte größer 0 wird innerhalb des Radius um jede Anlage nach weiteren Anlagen gesucht und ein Zentrum identifiziert.</li>
+          </ul>
+        </li>
+        <li>Radius nur wesentlich bei flächiger Suche siehe Min Bruttoleistung der Fläche &gt; 0</li>
+        <li>Output File Name (optional)</li>
+      </ul>
+      Jetzt starten der App mit <strong>Convert</strong>
+    </li>
+    <li><strong>Ergebnisanzeige</strong>: Die Anwendung visualisiert die Anlagen auf einer Karte und fasst benachbarte Anlagen gemäß den angegebenen Kriterien zusammen.</li>
+  </ol>
+  <img src="static/img/popup_one_item.png" alt="popup">
+  <p>Bei flächiger Suche werden die Anlagen zusammengefasst und die Eigenschaften einer dieser Anlagen ausgegeben (allerdings mit der Gesamtbruttoleistung aller Anlagen.)</p>
+  <img src="static/img/flaechige_suche.png" alt="flaechige Suche">
+  <h3>Hinweise</h3>
+  <ul>
+    <li>Stellen Sie sicher, dass die exportierte CSV-Datei die erwartete Struktur und Datenfelder enthält, um eine korrekte Verarbeitung in der Webanwendung zu gewährleisten.</li>
+    <li>Bei Fragen oder Problemen konsultieren Sie bitte die bereitgestellten Dokumentationen.</li>
+  </ul>
+  <h3>Download gpx</h3>
+  <p>Anschließend kann das gewünschte gpx file runtergeladen und in z.b. eienr Handy-App verwendet werden.</p>
+  <p>Hier endet die Beschreibung der Web Applikation</p>
+  <h2>Beispiel Suche nach Solarparks mit Leistungen größer als 100MW</h2>
+  <ol>
+    <li>Zunächst wird ein <a href="https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht"><strong>Marktstammdatenregister Auszug</strong></a> erstellt, dabei wird folgender Filter genutzt:
+      <ul>
+        <li>"Energieträger" entspricht "Solare Strahlungsenergie"</li>
+        <li>"Bruttoleistung der Einheit" größer als 500 kW</li>
+        <li>"Betriebsstatus" entspricht nicht "Endgültig stillgelegt"</li>
+      </ul>
+      (Stand 11.05.2025: 20244 Stromerzeugungseinheiten.)
+    </li>
+    <li>Tabelle Exportieren (als .csv)
+      <ul>
+        <li>Datei "Stromerzeuger...csv" befindet sich jetzt in Downloads</li>
+      </ul>
+    </li>
+    <li>Wechsel zu <a href="https://eduard.user.space/">Mastr to GPX Konverter</a></li>
+  </ol>
+  <h3 id="sec-simple-search">Einfache Suche</h3>
+  <ul>
+    <li>Filename: wie eben vom Marktstammdatenregister geholt</li>
+    <li>Querey: BruttoleistungDerEinheit &gt; 10000</li>
+    <li>Min. Bruttoleistung der Fläche in kW: 0</li>
+    <li>Radius [m]: 2000</li>
+    <li>Output File Name: leer</li>
+  </ul>
+  <p>Drücke Convert</p>
+  <p>Es sollten jetzt auf der rechten Seite sämtlichen c.a. 700 Einheiten dargestellt sein.</p>
+  <img src="static/img/pv_10mw_deutschland.png" alt="PV > 10MW in Deutschland">
+  <h3 id="sec-area-search">Flächige Suche nach Solarparks mit Gesamtleistung größer 150 MW</h3>
+  <p>Einzige Unterschied zur obigen Eingabe ist die Eingabe einer Min. Bruttoleistung.</p>
+  <p>Dort kann dann 150000 [kW] stehen, erst jetzt wird der Radius relevant. Die Karte wird jetzt deutlich übersichtlicher:</p>
+  <img src="static/img/pv_150mw_deutschland.png" alt="PV > 150MW in Deutschland">
+  <p>Werte über 200kW reduzieren sich die Anlagen auf die deutschlandweit größte Anlage bei Leibzig.</p>
+  <img src="static/img/pv_500mw_deutschland.png" alt="PV > 200MW in Deutschland">
+  <h2 id="sec-mastrtoplot">Nutzung des Tools mastrtoplot</h2>
+  <p><strong>Zugriff auf die Anwendung</strong>: Öffne den Webbrowser und navigiere zur Webanwendung unter der Adresse:</p>
+  <ul>
+    <li><a href="https://eduard.uber.space/mastrutils/">https://eduard.uber.space/mastrutils/</a></li>
+    <li>Bei lokaler Installation (siehe unten) würde der Zugriff über <code>http://localhost:5000</code> erfolgen.</li>
+  </ul>
+  <p>Reiter: MaStR-2-Plot</p>
+  <p>Zunächst unterscheidet sich mastrtoplot von mastrtogpx gering, allerdings wird mit diesem Tool eine Vektorgraphik mit akkumulierter 
+    Bruttoleistung abhänging von einer Zielgröße (z.B. Bundesland, Landkreis, Postleitzahl oder 
+    einer anderen Kategorie) ausgegeben.</p>
+  <h3>Beispiel 1</h3>
+  <p>Als erstes Beispiel soll die pv Leistungen in Segmenten summiert werden. 
+    Also im Interval zwischen 1MW und 10MW, 10MW und 100MW, sowie größer 100MW. 
+    Für die 10er Potenzen bei den Bruttoleistungen gibt es Abkürzungen:</p>
+  <ul>
+    <li>ge_1mw für BruttoleistungDerEinheit &gt;= 1000</li>
+    <li>lt_100mw analog für BruttoleistungDerEinheit &lt; 100000</li>
+  </ul>
+  <img src="static/img/plot_pv_leistungs_segmente.png" alt="pv Leistungsaufteilung nach Bundesland">
+  <h3>Beispiel 2</h3>
+  Grundsätzlich können ergänzende Parameter zum Plot als Argumente in die Query E/Args Zeile eingefügt werden.
+  Dazu wird den Argumenten ein "&num;" vorgestellt.
+  Der gleiche plot über die PV Leistung wird jetzt im Verhältnis zur Fläche des Bundeslandes (pa) und
+  alphabetisch sortiert dargestellt, dazu werden die Optionen pa und alpha eingefügt:<br>
+  <pre style="font-size: x-large;">
+    Query E/Args:  # pa alpha
+  </pre>
+  <img src="static/img/plot_pv_leistungs_segmente_pa_alpha.png" alt="pv Leistungsaufteilung nach Bundesland">
+
+   
+  <h3>Beispiel 3</h3>
+  <p>Beispiel 3 liefert die Anteile von Leistungen pro Energieträger (nur "Solare Strahlungsenergie", "Biomasse (nicht Biogas)", "Biogas", "Wind") pro Landkreis. Dieser Marktstammdatenregisterauszung:</p>
+  <p>(kurze Anmerkung: is_pv steht für Energieträger="Solare Strahlungsenergie")</p>
+  <img src="static/img/plot_energietraeger_typen.png" alt="Akumulierte Leistung aufgeteilt in Energieträger">
+  <p>Der Plot kann runtergeladen oder durch anklicken in eigenem Tab geöffnet werden.</p>
+  <h3>Beispiel 3</h3>
+  <p>Es soll die pv Leistung vor oder nach einem bestimmten Datum ermittelt werden, an dem die Einheit das erste Mal erwähnt wird. Dafür gibt es die Operatoren:</p>
+  <pre style="font-size: x-large;">
+before_DD.MM.YYYY und
+after_DD.MM.YYYY
+  </pre>
+  <p>Eine solche Abfrage könne dann aussehen:</p>
+  <img src="static/img/pv_vor_nach_2021.png" alt="PV vor und nach">
+  <h3>Beispiel 4</h3>
+  Über ein Argument wird eine alternative Ordinate ausgewält, hier die "ThermischeNutzleistungInKw".
+  Hierzu wird im folgendes ausgewählt:
+  <pre style="font-size: x-large;">
+    Query E/Args:  # ordinate=ThermischeNutzleistungInKw
+  </pre>
+  <img src="static/img/ludwigsburg_termische_leistung.png" alt="Ludwigsburg Termische Leistung">
+
+  <h3 id="sec-examples">Weitere Beispiele</h3>
+
+  <a href="examples_plot.html"><h3>Weitere Beispiele: Plots</h3></a>
+  <a href="examples_gpx.html"><h3>Weitere Beispiele: Maps / GPX</h3></a>
+
+
+  <h2>Hinweis zu Querys</h2>
+  <p>Die Online-Hilfen sind beschränkt auf einer Charakterisierung der Daten nach Leistung, Energieträger, Betriebsstatus, gibt es auch bereits online Hilfen zu auf den Seiten.</p>
+  <p>Aus software technischen Gründen wird z.B. der Begriff <code>Bruttoleistung der Einheit</code> zu <code>BruttoleistungDerEinheit</code>. Es können alle Begriffe in dieser Art, die im csv Header stehen verwendet werden.</p>
+  <p>Die Querys können Operatoren wie in den meisten Programmiersprachen enthalten also (<code>&amp;</code> für und <code>|</code> für oder u.s.w.) Ein Ausdruck muss dabei aber immer die Form haben <code>Spaltenkopf == "Typ"</code>, anstelle von <code>"Typ"</code> und nicht <code>'Typ'</code>. Im Fall von können auch <code>&gt;</code>, <code>&lt;</code>, <code>&lt;=</code> oder <code>&gt;=</code> als Operatoren verwendet werden.</p>
+  <p>Das heißt die Abfrage:</p>
+  <pre>BruttoleistungDerEinheit > 1000 ist identisch zu ge_1mw.</pre>
+  <p>Weiter gibt es noch Abkürzungen für:</p>
+  <pre>
+is_active: Betriebsstatus == "in Betrieb"
+  </pre>
+  <hr>
+  <h1>Mastr-Utils (lokale Version)</h1>
+  <h2>Installation</h2>
+  <ol>
+    <li><strong>Repository klonen</strong>:
+      <pre>git clone https://github.com/fritzthekid/mastr-utils.git</pre>
+    </li>
+    <li><strong>In das Projektverzeichnis wechseln</strong>:
+      <pre>cd mastr-utils</pre>
+    </li>
+    <li><strong>Virtuelle Umgebung erstellen und aktivieren</strong>:
+      <pre>python3 -m venv venv
+source venv/bin/activate  # Für Unix-/Linux-Systeme
+venv\Scripts\activate     # Für Windows-Systeme</pre>
+    </li>
+    <li><strong>Abhängigkeiten installieren</strong>:
+      <pre>pip install -e .</pre>
+    </li>
+  </ol>
+  <h2>Nutzung des Kommandozeilen Tool zum Lokalisieren von Energieanlagen</h2>
+  <p>Die Nutzung des Tools <strong>mastrtogpx</strong> wird wie oben beschrieben durchgeführt.</p>
+  <p>Die kleine Hilfe liefert die Argumente:</p>
+  <pre>mastrtogpx -h</pre>
+  <p>Ergebnis ist eine gpx-Datei. Diese kann dann z.B. auf einer Handy-App genutzt werden.</p>
+  <pre>
+usage: mastrtogpx [-h] [-q QUERY] [-o OUTPUT] [-c COLOR] [-m MIN_WEIGHT] [-r RADIUS]
+                  [-a] [-s] [-h_query]
+                  mastr_file
+  </pre>
+  <p>Das <code>mastr_file</code> ist die Datei, die vom MaStR-Server heruntergeladen wurde.
+    Dann können noch weitere Einschränkungen über eine Query spezifiziert werden.
+    So dass schließlich in einer Datei mit allen Anlagen (auch Öl und Gas) einer Stadt die jeweils
+    interessanten untersucht werden können. Die Suchkriterien können mit der Option <code>-s</code> angezeigt werden. Typische Beispiele finden sich über die Option
+    <code>-h_query</code>. Die Punkte können mit einer Farbe markiert sein (nicht alle Tools
+    unterstützen die Anzeige). Für die Solarparks und Windparks gibt es zwei weitere
+    Optionen: Mit <code>-r</code> wird ein Suchradius (um jeden Punkt) beschrieben (Standard 1 km), mit <code>-m</code> eine weitere Mindestschwelle für die Bruttoenergie-Leistung des Parks. Übersteigt die Summe der Bruttoleistungen aller Anlagen im Radius den Wert, wird ein Zentrum markiert.
+  </p>
+  <h3 id="sec-examples-cmd">Nur drei Beispiele:</h3>
+  <ul>
+    <li><strong>Kleinstes Beispiel</strong>
+      <pre>mastrtogpx '~/Downloads/Stromerzeuger(15).csv' -o tmp/alles.gpx</pre>
+      <p>(Das File <code>~/Downloads/Stromerzeuger(15).csv</code> enthält alle größeren Anlagen im Landkreis Ludwigsburg.)</p>
+      <p>Diese Information ist geeignet, um schnell alle Anlagen in der Region zu finden und die wichtigsten Faktoren zu ermitteln.</p>
+    </li>
+    <li><strong>Suche der Großspeicher in der Nähe</strong>:
+      <pre>mastrtogpx '~/Downloads/Stromerzeuger(15).csv' -q 'is_battery & BruttoleistungDerEinheit > 10000 & (BetriebsStatus != "Endgültig stillgelegt")' -o tmp/speicher.gpx -c Red</pre>
+      <p>Dieses Beispiel hilft, den Stromspeicher in Marbach genauer zu lokalisieren. Geeignet für die nächste Fahrradtour. Das Ergebnis wird unten mit Hilfe der Handy-App OSMAnd dargestellt.</p>
+      <img src="static/img/OsmAnd_Marbach_Speicher_100mW.jpg" alt="OSMAnd" width="80%">
+    </li>
+    <li><strong>Suche großer Solarparks in Deutschland</strong>:
+      <pre>mastrtogpx '~/Downloads/Stromerzeuger(17).csv' -q 'is_pv & BruttoleistungDerEinheit > 10000 & (BetriebsStatus != \"Endgültig stillgelegt\")' -m 90000 -r 1000 -o tmp/ge_90_1000.gpx -c Black</pre>
+      <p>Das Zurechtfinden der wirklich großen Solarparks hilft die folgende Suche und das Ergebnis. (Siehe auch Online-Betrachter sowie Viking als PC-Tool)</p>
+      <img src="static/img/online2_10_90_1000_bei_Leibzig-SILUX-Solarpark.png" alt="" width="80%">
+      <img src="static/img/online1-ge_90_1000.png" alt="">
+      <img src="static/img/Viking_10_90_1000_bei_Leibzig-SILUX-Solarpark.png" alt="" width="80%">
+    </li">
+  </ul>
+  <h2>Tools zur Visualisierung von GPX-Dateien</h2>
+  <p>Hier sind Links zu einigen Online-Viewern:</p>
+  <ul>
+    <li><a href="https://www.j-berkemeier.de/ShowGPX.html">j-berkemeier</a></li>
+    <li><a href="https://gpx.studio/">gpx.studio</a></li>
+    <li>Mobile: <a href="https://osmand.net/">OSMAnd</a></li>
+    <li>PC: <a href="https://wiki.openstreetmap.org/wiki/Viking">Viking</a></li>
+  </ul>
+  <h1>Lizenz</h1>
+  <p>Dieses Projekt steht unter der <a href="assets/LICENSE.txt">BSD-Lizenz</a>.</p>
+  <p>Für das Logo gilt die CC BY-SA 4.0 Lizenz<br>
+  <a href="https://commons.wikimedia.org/wiki/File:Eyes-blitz.svg">https://commons.wikimedia.org/wiki/File:Eyes-blitz.svg</a></p>
+  </article>
+</section>

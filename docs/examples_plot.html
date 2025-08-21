@@ -1,0 +1,72 @@
+---
+layout: default
+title: Examples Plot
+---
+
+<section>
+  <nav>
+    <ul>
+      <li><a href="/mastr-utils-docs/">Home</a></li>
+        <li><a href="#sec-pv">PV Leistung > 500kw der BRD</a></li>
+        <ul>
+          <li><a href="#sec-pv_pa">PV Leistung per Fläche</a></li>
+          <li><a href="#sec-pv-sectors">PV Leistungssplit</a></li>
+          <li><a href="#sec-pv-dep-year">PV Ausbau pro Jahr</a></li>
+          <li><a href="#sec-table">Auszug aus Tabelle</a></li>
+        </ul>
+        <li><a href="#sec-wind">Wind Leistung > 1.5mw der BRD</a></li>
+        <ul>
+          <li><a href="#sec-wind-year">Wind Ausbau pro Jahr</a></li>
+          <li><a href="#sec-wind-pa">Wind pro Fläche</a></li>
+        </ul>
+        <li><a href="#sec-biogas-year">Biogas Ausbau pro Jahr</a></li>
+        <li><a href="#sec-ludwigsburg">Landkreis Ludwigsburg</a></li>
+        <ul>
+          <li><a href="#sec-ludwigsburg-split">Ludwigsburg Split</a></li>
+          <li><a href="#sec-ludwigsburg-pv-split">Ludwigsburg PV Split</a></li>
+          <li><a href="#sec-ludwigsburg-thermischeleistung">Ludwigsburg Wärmeleistung</a></li>
+        </ul>
+      </ul>
+    </nav>
+  
+  <article>
+
+<h2 id="sec-pv">Stromerzeuger PV > 500kw installierte Leistung</h2>
+<h3 id="sec-pv_pa">Stromerzeuger PV > 500kW: Aktive Bruttoleistung pro Fläche</h3>
+Hier wird die Option verwendet:<br>
+<code style="font-size: x-large;">Query E/Args: # pa</code><br> 
+
+  <img class="img-centered" src="static/img/anlagen_brd_pv_pa_500kw.svg" alt="anlagen_brd_pv_pa_500kw.svg" >
+  <h3 id="sec-pv-sectors">Stromerzeuger PV > 500kW Split in Leistungssektoren</h3>
+  <img class="img-centered" src="static/img/stromerzeuger_pv_500k_brd_sectorensplit.svg" alt="stromerzeuger_pv_500k_brd_sectorensplit.svg">
+  <h3 id="sec-pv-dep-year">Stromerzeuger PV > 500kw installierte Leistung - Abhängige: Inbetriebnahmejahr</h3>
+
+  <img class="img-centered" src="static/img/stromerzeuger_pv_500k_brd.svg" alt="Sektorensplit PV Erzeugung">
+    <h3 id="sec-table">Tabellarische Darstellung (hier nur bis 2013, kann als .csv komplett exportiert werden)</h3>
+  <div id="pv-table-wrapper" style="text-align: center;">
+    <table id="pv-table" style="background-color: white;"></table>
+  </div>
+  <script src="static/js/table.js"></script>
+  </div>
+  Tabelle kann <a href="data/stromerzeuger_pv_500k_brd.csv">hier</a> heruntergeladen werden."
+
+<!-- img src="static/img/stromerzeuger_pv_500k_brd.svg" alt="stromerzeuger_pv_500k_brd.svg"-->
+<h2 id="sec-wind">Stromerzeuger Wind > 1.5mw installierte Leistung</h2>
+<h3 id="sec-wind-year">Stromerzeuger Wind > 1.5mw installierte Leistung - Abhängige: Inbetriebnahmejahr</h3>
+<img class="img-centered" src="static/img/stromerzeuger_wind_brd_1-5m_inbetriebnahmejahr.svg" alt="stromerzeuger_wind_brd_1-5m_inbetriebnahmejahr.svg">
+<h3 id="sec-wind-pa">Stromerzeuger Wind > 1.5mw installierte Leistung pro Fläche</h3>
+<img class="img-centered" src="static/img/stromerzeuger_wind_brd_1-5m_pa.svg" alt="stromerzeuger_wind_brd_1-5m_pa.svg">
+<h3 id="sec-biogas-year">Stromerzeuger Biogas > 200kw installierte Leistung - Abhängige: Inbetriebnahmejahr</h3>
+<img class="img-centered" src="static/img/brd_biogas_200kW.svg" alt="brd_biogas_200kW.svg">
+<h2 id="sec-ludwigsburg">Landkreis Ludwigsburg</h2>
+<h3 id="sec-ludwigsburg-split">Landkreis Ludwigsburg > 7kw installierte Leistung - Split nach Energieträger</h3>
+<img class="img-centered" src="static/img/stromerzeuger_landkreis_ludwigsburg_energietraeger_split_7.svg" alt="stromerzeuger_landkreis_ludwigsburg_energietraeger_split_7.svg.svg">
+<h3 id="sec-ludwigsburg-pv-split">Landkreis Ludwigsburg > 7kw installierte PV Leistung - Sectorsplit</h3>
+<img class="img-centered" src="static/img/stromerzeuger_landkreis_ludwigsburg_pv_sectorensplit.svg" alt="stromerzeuger_landkreis_ludwigsburg_pv_sectorensplit.svg">
+<h3 id="sec-ludwigsburg-thermischeleistung">Landkreis Ludwigsburg installierte thermische Leistung</h3>
+Hier wird die Option verwendet:<br>
+<code style="font-size: x-large;">Query E/Args: # ordinate=ThermischeNutzleistungInKw</code><br> 
+
+<img class="img-centered" src="static/img/landkreis-ludwigsburg_thermischeleistung.svg" alt="landkreis-ludwigsburg_thermischeleistung.svg">
+   </article>
+</section>
