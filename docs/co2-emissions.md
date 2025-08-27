@@ -90,7 +90,7 @@ title: CO2-Emissionsfaktoren Strom und Wärme
 | Windkraft (onshore) | ~351 | 97% |
 | Biogas | ~333 | 92% |
 | Wasserkraft | ~313 | 86% |
-| Kernkraft | ~348 | 96% |
+| Kernkraft | -- | -- |
 
 ### Wärmemix-Vergleich (deutscher Wärmemix 2023: ~250 g CO₂/kWh)
 
