@@ -236,6 +236,7 @@ links = {
     "dataprotection":"datenschutzerklaerung.html",
     "examples_gpx":"examples_gpx.html",
     "examples_plot":"examples_plot.html",
+    "co2_emissions":"co2_emissions.html"
 }
 
 @app.route('/', methods=['GET', 'POST'])
@@ -683,6 +684,10 @@ application = DispatcherMiddleware(Flask('dummy'), {
     url_prefix: app
 })
 
+@app.route('/co2-emissions')
+def co2_emissions():
+    return render_template('co2_emissions.html')
+
 
 if __name__ == '__main__':
     app.config['SESSION_COOKIE_PATH'] = '/'
@@ -692,3 +697,4 @@ if __name__ == '__main__':
 """
 ls stromerzeuger*.png | sed "s|\(^.*$\)|<img src=\"{{ url_for('static', filename='images/\1') }}\" alt=\"\1\">|"
 """
+

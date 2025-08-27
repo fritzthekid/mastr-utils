@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CO₂-Emissionsfaktoren verschiedener Energiequellen</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+</head>
+<body>
+<div id="root" />
+    {% include 'topbanner.html' %}
+    <div class="inner-body" style="height:73%;">
+<div class="co2-emissions-container">
+    <h1 class="co2-title">CO₂-Emissionsfaktoren verschiedener Energiequellen</h1>
+    <p class="co2-subtitle">Strom und Wärme - Lebenszyklusbetrachtung mit funktionierenden Quellen-Links</p>
+    
+    <h2 class="co2-section-title">CO₂-Emissionsfaktoren Stromerzeugung (Lebenszyklusbetrachtung)</h2>
+    <div class="co2-table-container">
+        <table class="co2-table">
+            <thead>
+                <tr>
+                    <th>Energiequelle</th>
+                    <th>CO₂-Emissionen<br>(g CO₂/kWh)</th>
+                    <th>Volllaststunden<br>(h/a)</th>
+                    <th>Kapazitätsfaktor<br>(%)</th>
+                    <th>Quellen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="co2-category">
+                    <td colspan="5"><strong>Fossile Energieträger</strong></td>
+                </tr>
+                <tr class="co2-fossil">
+                    <td>Braunkohle</td>
+                    <td class="co2-number">800 - 1.200</td>
+                    <td class="co2-number">6.000 - 7.500</td>
+                    <td class="co2-number">68 - 86</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024">UBA Strommix 2024</a>, <a href="https://www.umweltbundesamt.de/sites/default/files/medien/11850/publikationen/23_2024_cc_strommix_11_2024.pdf">UBA Strommix-Studie PDF</a></td>
+                </tr>
+                <tr class="co2-fossil">
+                    <td>Steinkohle</td>
+                    <td class="co2-number">750 - 1.050</td>
+                    <td class="co2-number">3.000 - 6.000</td>
+                    <td class="co2-number">34 - 68</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024">UBA Strommix 2024</a>, <a href="https://www.umweltbundesamt.de/sites/default/files/medien/11850/publikationen/23_2024_cc_strommix_11_2024.pdf">UBA Strommix-Studie PDF</a></td>
+                </tr>
+                <tr class="co2-fossil">
+                    <td>Erdgas (GuD)</td>
+                    <td class="co2-number">350 - 490</td>
+                    <td class="co2-number">2.000 - 5.000</td>
+                    <td class="co2-number">23 - 57</td>
+                    <td><a href="https://volker-quaschning.de/datserv/CO2-spez/index.php">Quaschning CO₂-Tabelle</a>, <a href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024">UBA Strommix 2024</a></td>
+                </tr>
+                <tr class="co2-fossil">
+                    <td>Erdöl/Heizöl</td>
+                    <td class="co2-number">750 - 900</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024">UBA Strommix 2024</a></td>
+                </tr>
+                
+                <tr class="co2-category">
+                    <td colspan="5"><strong>Erneuerbare Energien</strong></td>
+                </tr>
+                <tr class="co2-renewable">
+                    <td>Photovoltaik</td>
+                    <td class="co2-number">40 - 50</td>
+                    <td class="co2-number">800 - 1.200</td>
+                    <td class="co2-number">9 - 14</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/klima-energie/energieversorgung/strom-waermeversorgung-in-zahlen">UBA Emissionsbilanzen Strom</a>, <a href="https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen">UBA Spezifische Emissionsfaktoren</a></td>
+                </tr>
+                <tr class="co2-renewable">
+                    <td>Windkraft (onshore)</td>
+                    <td class="co2-number">8 - 16</td>
+                    <td class="co2-number">1.400 - 3.000</td>
+                    <td class="co2-number">16 - 34</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/klima-energie/energieversorgung/strom-waermeversorgung-in-zahlen">UBA Emissionsbilanzen Strom</a>, <a href="https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen">UBA Spezifische Emissionsfaktoren</a></td>
+                </tr>
+                <tr class="co2-renewable">
+                    <td>Windkraft (offshore)</td>
+                    <td class="co2-number">12 - 23</td>
+                    <td class="co2-number">3.000 - 4.500</td>
+                    <td class="co2-number">34 - 51</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/klima-energie/energieversorgung/strom-waermeversorgung-in-zahlen">UBA Emissionsbilanzen Strom</a>, <a href="https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen">UBA Spezifische Emissionsfaktoren</a></td>
+                </tr>
+                <tr class="co2-renewable">
+                    <td>Wasserkraft</td>
+                    <td class="co2-number">10 - 150</td>
+                    <td class="co2-number">4.000 - 6.000</td>
+                    <td class="co2-number">46 - 68</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/klima-energie/energieversorgung/strom-waermeversorgung-in-zahlen">UBA Emissionsbilanzen Strom</a>, <a href="https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen">UBA Spezifische Emissionsfaktoren</a></td>
+                </tr>
+                
+                <tr class="co2-category">
+                    <td colspan="5"><strong>Biomasse (detailliert)</strong></td>
+                </tr>
+                <tr class="co2-biomass">
+                    <td>Biogas (Landwirt)</td>
+                    <td class="co2-number">20 - 40</td>
+                    <td class="co2-number">6.000 - 8.000</td>
+                    <td class="co2-number">68 - 91</td>
+                    <td><a href="https://biogas.fnr.de/rahmenbedingungen/treibhausgas-emissionen-von-biogasanlagen">FNR Treibhausgas-Emissionen Biogas</a>, <a href="https://eps-bhkw.de/emissionen-biogas-faktencheck/">EPS BHKW Faktencheck</a></td>
+                </tr>
+                <tr class="co2-biomass">
+                    <td>Holzpellets (Kraftwerk)</td>
+                    <td class="co2-number">20 - 25</td>
+                    <td class="co2-number">4.000 - 7.000</td>
+                    <td class="co2-number">46 - 80</td>
+                    <td><a href="https://depv.de/p/Bessere-CO2-Bilanz-mit-Holzpellets-pWuQQ4VvuNQoYjUzRf778Z">DEPV CO₂-Bilanz Pellets</a>, <a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a></td>
+                </tr>
+                <tr class="co2-biomass">
+                    <td>Holzheizkraftwerk</td>
+                    <td class="co2-number">150 - 350</td>
+                    <td class="co2-number">3.000 - 6.000</td>
+                    <td class="co2-number">34 - 68</td>
+                    <td><a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a>, <a href="https://volker-quaschning.de/datserv/CO2-spez/index.php">Quaschning CO₂-Tabelle</a></td>
+                </tr>
+                <tr class="co2-biomass">
+                    <td>Klärgas/Deponiegas</td>
+                    <td class="co2-number">22 - 30</td>
+                    <td class="co2-number">7.000 - 8.500</td>
+                    <td class="co2-number">80 - 97</td>
+                    <td><a href="https://eps-bhkw.de/emissionen-biogas-faktencheck/">EPS BHKW Faktencheck</a></td>
+                </tr>
+                
+                <tr class="co2-category">
+                    <td colspan="5"><strong>Kernenergie</strong></td>
+                </tr>
+                <tr class="co2-nuclear">
+                    <td>Kernkraft</td>
+                    <td class="co2-number">6 - 24</td>
+                    <td class="co2-number">7.000 - 8.000</td>
+                    <td class="co2-number">80 - 91</td>
+                    <td><a href="https://www.umweltbundesamt.de/themen/klima-energie/energieversorgung/strom-waermeversorgung-in-zahlen">UBA Emissionsbilanzen Strom</a>, <a href="https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen">UBA Spezifische Emissionsfaktoren</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h2 class="co2-section-title">CO₂-Emissionsfaktoren Wärmeerzeugung</h2>
+    <div class="co2-table-container">
+        <table class="co2-table">
+            <thead>
+                <tr>
+                    <th>Energiequelle</th>
+                    <th>CO₂-Emissionen<br>(g CO₂/kWh_th)</th>
+                    <th>Anmerkungen</th>
+                    <th>Quellen</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="co2-category">
+                    <td colspan="4"><strong>Fossile Brennstoffe</strong></td>
+                </tr>
+                <tr class="co2-fossil co2-heat">
+                    <td>Heizöl EL</td>
+                    <td class="co2-number">318</td>
+                    <td>Inkl. Vorkette</td>
+                    <td><a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a>, <a href="https://www.polarstern-energie.de/magazin/artikel/heizen-co2-vergleich-von-brennstoffen/">Polarstern Heizungsvergleich</a></td>
+                </tr>
+                <tr class="co2-fossil co2-heat">
+                    <td>Erdgas (Heizwert)</td>
+                    <td class="co2-number">247</td>
+                    <td>Brennwertkessel</td>
+                    <td><a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a>, <a href="https://www.polarstern-energie.de/magazin/artikel/heizen-co2-vergleich-von-brennstoffen/">Polarstern Heizungsvergleich</a></td>
+                </tr>
+                <tr class="co2-fossil co2-heat">
+                    <td>Flüssiggas (LPG)</td>
+                    <td class="co2-number">236</td>
+                    <td>Heizwertbezogen</td>
+                    <td><a href="https://www.tga-fachplaner.de/meldungen/behg-ebev-2030-amtliche-emissionsfaktoren-fuer-die-co2-bepreisung-ab-2023">TGA-Fachplaner EBeV 2030</a>, <a href="https://deumess.de/ermittlung-der-co2-emmissionsfaktoren/">DEUMESS CO₂-Faktoren</a></td>
+                </tr>
+                
+                <tr class="co2-category">
+                    <td colspan="4"><strong>Erneuerbare Wärmequellen</strong></td>
+                </tr>
+                <tr class="co2-renewable co2-heat">
+                    <td>Solarthermie</td>
+                    <td class="co2-number">15 - 25</td>
+                    <td>Nur Herstellung/Installation</td>
+                    <td><a href="https://www.ise.fraunhofer.de/de/geschaeftsfelder/waermetechnologien/solarthermie.html">Fraunhofer ISE</a>, Solar Heat Europe</td>
+                </tr>
+                <tr class="co2-biomass co2-heat">
+                    <td>Holzpellets (Heizung)</td>
+                    <td class="co2-number">22</td>
+                    <td>Nur Bereitstellung, CO₂-neutral</td>
+                    <td><a href="https://depv.de/p/Bessere-CO2-Bilanz-mit-Holzpellets-pWuQQ4VvuNQoYjUzRf778Z">DEPV CO₂-Bilanz Pellets</a>, <a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a></td>
+                </tr>
+                <tr class="co2-biomass co2-heat">
+                    <td>Scheitholz</td>
+                    <td class="co2-number">15 - 40</td>
+                    <td>Je nach Transportweg</td>
+                    <td><a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a></td>
+                </tr>
+                <tr class="co2-biomass co2-heat">
+                    <td>Hackschnitzel</td>
+                    <td class="co2-number">18 - 35</td>
+                    <td>Regional bezogen</td>
+                    <td><a href="https://www.unendlich-viel-energie.de/mediathek/grafiken/vergleich-der-emissionsfaktoren-von-fossilen-und-biogenen-energietraegern">AEE Emissionsfaktoren biogen</a>, <a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei">UBA Holzenergie CO₂-Rechner</a></td>
+                </tr>
+                
+                <tr class="co2-category">
+                    <td colspan="4"><strong>Wärmepumpen</strong></td>
+                </tr>
+                <tr class="co2-renewable co2-heat">
+                    <td>Luft-Wasser-WP (dt. Strommix)</td>
+                    <td class="co2-number">160 - 200</td>
+                    <td>Bei COP 3,5-4,0</td>
+                    <td><a href="https://www.waermepumpe.de/normen-technik/zahlen-daten/">BWP Faktenblatt</a>, <a href="https://uba.co2-rechner.de/de_DE/">UBA CO₂-Rechner</a></td>
+                </tr>
+                <tr class="co2-renewable co2-heat">
+                    <td>Sole-Wasser-WP (dt. Strommix)</td>
+                    <td class="co2-number">140 - 180</td>
+                    <td>Bei COP 4,0-4,5</td>
+                    <td><a href="https://www.waermepumpe.de/normen-technik/zahlen-daten/">BWP Faktenblatt</a>, <a href="https://uba.co2-rechner.de/de_DE/">UBA CO₂-Rechner</a></td>
+                </tr>
+                <tr class="co2-renewable co2-heat">
+                    <td>Wärmepumpe (100% Ökostrom)</td>
+                    <td class="co2-number">20 - 40</td>
+                    <td>Bei Ökostrom-Bezug</td>
+                    <td><a href="https://www.waermepumpe.de/normen-technik/zahlen-daten/">BWP Faktenblatt</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h2 class="co2-section-title">Einsparung gegenüber deutschem Energiemix</h2>
+    <div class="co2-stats-grid">
+        <div class="co2-stat-card">
+            <h4>Strommix-Vergleich (deutscher Strommix 2024: ~363 g CO₂/kWh)</h4>
+            <ul class="co2-savings-list">
+                <li>Photovoltaik: <span class="co2-number">~318 g CO₂/kWh (88% Einsparung)</span></li>
+                <li>Windkraft (onshore): <span class="co2-number">~351 g CO₂/kWh (97% Einsparung)</span></li>
+                <li>Biogas: <span class="co2-number">~333 g CO₂/kWh (92% Einsparung)</span></li>
+                <li>Wasserkraft: <span class="co2-number">~313 g CO₂/kWh (86% Einsparung)</span></li>
+                <li>Kernkraft: <span class="co2-number">~348 g CO₂/kWh (96% Einsparung)</span></li>
+            </ul>
+        </div>
+        
+        <div class="co2-stat-card">
+            <h4>Wärmemix-Vergleich (deutscher Wärmemix 2023: ~250 g CO₂/kWh)</h4>
+            <ul class="co2-savings-list">
+                <li>Solarthermie: <span class="co2-number">~225 g CO₂/kWh (90% Einsparung)</span></li>
+                <li>Pelletheizung: <span class="co2-number">~228 g CO₂/kWh (91% Einsparung)</span></li>
+                <li>Wärmepumpe (Ökostrom): <span class="co2-number">~220 g CO₂/kWh (88% Einsparung)</span></li>
+                <li>Biogas-Heizung: <span class="co2-number">~228 g CO₂/kWh (91% Einsparung)</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="co2-highlight">
+        <h4>Wichtige Hinweise zu den Daten</h4>
+        <p><strong>Lebenszyklusbetrachtung:</strong> Alle Werte berücksichtigen Herstellung, Transport, Betrieb und Entsorgung der Anlagen sowie Brennstoffvorketten.</p>
+        <p><strong>Biomasse-Besonderheit:</strong> Biogas aus Biomasse: CO₂-neutral, da nur so viel CO₂ freigesetzt wird, wie die Pflanzen zuvor gebunden haben.</p>
+        <p><strong>Regionale Unterschiede:</strong> Fernwärme variiert stark: 49 g CO₂/kWh (Mecklenburg-Vorpommern) bis 311 g CO₂/kWh (Niedersachsen).</p>
+        <p><strong>Aktualität:</strong> Deutscher Strommix 2024: 363 g CO₂/kWh (deutlich gesunken gegenüber 2023: 380 g CO₂/kWh).</p>
+    </div>
+    
+    <div class="co2-sources">
+        <h3 class="co2-sources-title">Quellenverzeichnis (Funktionierende Links - verifiziert August 2025)</h3>
+        
+        <div class="co2-source-category">
+            <h4>Offizielle Behörden und Institutionen</h4>
+            <div class="co2-source-list">
+                <p>• <a href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024"><strong>UBA Strommix 2024</strong></a> - Aktuelle CO₂-Emissionen pro kWh Strom</p>
+                <p>• <a href="https://www.umweltbundesamt.de/sites/default/files/medien/11850/publikationen/23_2024_cc_strommix_11_2024.pdf"><strong>UBA Strommix-Studie PDF</strong></a> - Vollständige Strommix-Analyse 2023/2024</p>
+                <p>• <a href="https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei"><strong>UBA Holzenergie CO₂-Rechner</strong></a> - Neue Berechnungsgrundlage Holzenergie 2024</p>
+                <p>• <a href="https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen"><strong>UBA Spezifische Emissionsfaktoren</strong></a> - Deutsche Strommix-Emissionsfaktoren</p>
+                <p>• <a href="https://www.umweltbundesamt.de/daten/energie/energiebedingte-emissionen"><strong>UBA Energiebedingte Emissionen</strong></a> - Energiesektor Emissionsstatistiken</p>
+            </div>
+        </div>
+        
+        <div class="co2-source-category">
+            <h4>Fachverbände und Institutionen</h4>
+            <div class="co2-source-list">
+                <p>• <a href="https://depv.de/p/Bessere-CO2-Bilanz-mit-Holzpellets-pWuQQ4VvuNQoYjUzRf778Z"><strong>DEPV CO₂-Bilanz Pellets</strong></a> - Deutscher Pelletverband CO₂-Studie</p>
+                <p>• <a href="https://eps-bhkw.de/emissionen-biogas-faktencheck/"><strong>EPS BHKW Faktencheck</strong></a> - Biogas-Emissionen Faktencheck 2022</p>
+                <p>• <a href="https://biogas.fnr.de/rahmenbedingungen/treibhausgas-emissionen-von-biogasanlagen"><strong>FNR Treibhausgas-Emissionen Biogas</strong></a> - Fachagentur Nachwachsende Rohstoffe</p>
+                <p>• <a href="https://www.waermepumpe.de/normen-technik/zahlen-daten/"><strong>BWP Faktenblatt</strong></a> - Bundesverband Wärmepumpe Faktendaten</p>
+                <p>• <a href="https://www.unendlich-viel-energie.de/mediathek/grafiken/vergleich-der-emissionsfaktoren-von-fossilen-und-biogenen-energietraegern"><strong>AEE Emissionsfaktoren biogen</strong></a> - Agentur Erneuerbare Energien</p>
+            </div>
+        </div>
+        
+        <div class="co2-source-category">
+            <h4>Wissenschaftliche und private Institutionen</h4>
+            <div class="co2-source-list">
+                <p>• <a href="https://www.polarstern-energie.de/magazin/artikel/heizen-co2-vergleich-von-brennstoffen/"><strong>Polarstern Heizungsvergleich</strong></a> - CO₂-Vergleich Heizsysteme 2025</p>
+                <p>• <a href="https://volker-quaschning.de/datserv/CO2-spez/index.php"><strong>Quaschning CO₂-Tabelle</strong></a> - Prof. Quaschning HTW Berlin, CO₂-Emissionsfaktoren</p>
+                <p>• <a href="https://www.tga-fachplaner.de/meldungen/behg-ebev-2030-amtliche-emissionsfaktoren-fuer-die-co2-bepreisung-ab-2023"><strong>TGA-Fachplaner EBeV 2030</strong></a> - Amtliche CO₂-Emissionsfaktoren ab 2023</p>
+                <p>• <a href="https://deumess.de/ermittlung-der-co2-emmissionsfaktoren/"><strong>DEUMESS CO₂-Faktoren</strong></a> - CO₂-Faktoren-Ermittlung für Messdienstleister</p>
+            </div>
+        </div>
+        
+        <div class="co2-source-category">
+            <h4>CO₂-Rechner</h4>
+            <div class="co2-source-list">
+                <p>• <a href="https://uba.co2-rechner.de/de_DE/"><strong>UBA CO₂-Rechner</strong></a> - Persönlicher CO₂-Fußabdruck-Rechner</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="co2-note">
+        <p><strong>Alle Links wurden im August 2025 auf Funktionalität geprüft</strong></p>
+        <p>Diese Tabelle bietet eine umfassende Übersicht über CO₂-Emissionsfaktoren mit direkten Links zu den Originalquellen. 
+        Besonders hervorzuheben ist die Differenzierung der Biomasse-Anwendungen (Biogas-Landwirt: 20-40 g CO₂/kWh, 
+        Pellet-Heizung: 22 g CO₂/kWh, Holzheizkraftwerk: 150-350 g CO₂/kWh) sowie die Berücksichtigung der 
+        Volllaststunden für die korrekte Umrechnung von installierter Leistung zu Jahresenergie.</p>
+    </div>
+    
+    <div class="co2-footer">
+        <p><strong>Bearbeitung:</strong> August 2025 | <strong>Datenstand:</strong> 2024/2025 | <strong>Lebenszyklusbetrachtung</strong> inkl. Vorketten</p>
+        <p>Wissenschaftlich fundierte CO₂-Emissionsfaktoren für Strom- und Wärmeerzeugung mit verifizierten Quellen</p>
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>
