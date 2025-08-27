@@ -19,22 +19,35 @@
           <button name="command" value="mastrtoplot" id="butp">MaStR-2-PLOT</button>
       </form>
     </th>
-    <th>
+    <!--th>
       <form method="POST" action=".">
           <button name="costs1" id="butB">Kosten Atomkraft</button>
       </form>
-    </th>
+    </th-->
     <th>
       <form method="POST" action=".">
           <button name="costs2" id="butn" >Kosten Energiewende</button>
       </form>
     </th>
-    <th>
+  <th>
+    <div class="dropdown">
+          <button class="dropbtn" type="submit" name="command" value="profil"style="background-color: #a0a0a0;color:#f0f0f5;" 
+          onmouseover="style='background-color:#555;color:#dad6d6;'"
+          onmouseout="style='background-color:#a0a0a0;color: #f0f0f5;'">Informationen</button>
+      <div class="dropdown-content">
+          
+          <form method="post"><button name="co2_emissions">CO₂-Emissionen</button></form>
+          <form method="post"><button name="bhkw">BHKW-Daten</button></form>
+          <form method="post"><button name="costs1" id="butB">Atomkraft</button></form>
+      </div>
+    </div>
+  </th>  
+  <th>
       <form method="POST" action=".">
           <button name="impressum" id="buti" >Kontakt</button>
       </form>
    </th>
-  <th>
+   <th>
       {% if current_user.is_authenticated %}
         <div class="dropdown">
               <button class="dropbtn" type="submit" name="command" value="profil" style="background-color:rgb(229, 134, 134); color:rgb(15, 15, 15)">

@@ -236,7 +236,8 @@ links = {
     "dataprotection":"datenschutzerklaerung.html",
     "examples_gpx":"examples_gpx.html",
     "examples_plot":"examples_plot.html",
-    "co2_emissions":"co2_emissions.html"
+    "co2_emissions":"co2_emissions.html",
+    "bhkw":"bhkw.html",
 }
 
 @app.route('/', methods=['GET', 'POST'])
