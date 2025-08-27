@@ -24,7 +24,7 @@ title: CO2-Emissionsfaktoren Strom und Wärme
 | Holzheizkraftwerk | 150 - 350 | 3.000 - 6.000 | 34 - 68 | [UBA Holzenergie CO₂-Rechner](https://www.umweltbundesamt.de/uba-co2-rechner-neue-berechnungsgrundlage-bei), [Quaschning CO₂-Tabelle](https://volker-quaschning.de/datserv/CO2-spez/index.php) |
 | Klärgas/Deponiegas | 22 - 30 | 7.000 - 8.500 | 80 - 97 | [EPS BHKW Faktencheck](https://eps-bhkw.de/emissionen-biogas-faktencheck/) |
 | **Kernenergie** | | | | |
-| Kernkraft | 6 - 24 | 7.000 - 8.000 | 80 - 91 | [UBA Emissionsbilanzen Strom](https://www.umweltbundesamt.de/themen/klima-energie/energieversorgung/strom-waermeversorgung-in-zahlen), [UBA Spezifische Emissionsfaktoren](https://www.umweltbundesamt.de/themen/luft/emissionen-von-luftschadstoffen/spezifische-emissionsfaktoren-fuer-den-deutschen) |
+| Kernkraft | -- | 7.000 - 8.000 | -- | Keine Vergleichswerte, da Lebenszeitbetrachtungen ausstehen |
 
 ## CO₂-Emissionsfaktoren Wärmeerzeugung
 
