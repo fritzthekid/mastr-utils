@@ -6,20 +6,20 @@ title: mastr-utils-docs
 <section>
   <nav>
       <ul>
-<li><a href="#sec-goal">Ziel</a></li>
-<li><a href="#sec-marktstammdatenregister">Marktstammdatenregister</a></li>
-<li><a href="#sec-mastrtogpx">Mastr To GPX</a></li>
-<ul>
-<li><a href="#sec-simple-search">Einfache Suche</a></li>
-<li><a href="#sec-area-search">Flächige Suche</a></li>
-</ul>
-<li><a href="#sec-mastrtoplot">Mastr To Plot</a></li>
-<!--li><a href="#sec-examples">Ergänzende Beispiele</a></li-->
-<li><a href="examples_plot.html">Ergänzende Plots</a></li>
-<li><a href="examples_gpx.html">Ergänzende Maps / GPX</a></li>
-<li><a href="#sec-queries">Hinweis zu Querys</a></li>
-<li><a href="#sec-cmd-tools">Commandline Tools</a></li>
-</ul>
+      <li><a href="#sec-goal">Ziel</a></li>
+      <li><a href="#sec-marktstammdatenregister">Marktstammdatenregister</a></li>
+      <li><a href="#sec-mastrtogpx">Mastr To GPX</a></li>
+      <ul>
+        <li><a href="#sec-simple-search">Einfache Suche</a></li>
+        <li><a href="#sec-area-search">Flächige Suche</a></li>
+      </ul>
+      <li><a href="#sec-mastrtoplot">Mastr To Plot</a></li>
+      <!--li><a href="#sec-examples">Ergänzende Beispiele</a></li-->
+      <li><a href="examples_plot.html">Ergänzende Plots</a></li>
+      <li><a href="examples_gpx.html">Ergänzende Maps / GPX</a></li>
+      <li><a href="#sec-queries">Hinweis zu Querys</a></li>
+      <li><a href="#sec-cmd-tools">Commandline Tools</a></li>
+    </ul>
   </nav>
   
   <article>
@@ -32,11 +32,15 @@ title: mastr-utils-docs
     <li><strong>mastrtogpx</strong>: Konvertierung und Visualisierung von MaStR-Daten und erstellen von GPX-Dateien.</li>
     <li><strong>mastrtoplot</strong>: Erstellung von Plots aus MaStR-Dateien zur Anzeige und Download der SVG-Dateien.</li>
   </ol>
-  <h2 id="sec-marktstammdatenregister">Marktstammdatenregisterin als Vektorgraphik (SVG-Format).</li>
-  </ol>
   <h2 id="sec-goal">Ziel der Anwendung mastrtogpx</h2>
-  <p>Mit der Anwendung sollten in erster Linie große Windparks oder Solaranlagen gefunden werden. Für diese Anlagen gilt in der Regel, dass diese Stromerzeugungseinheiten in der Regel aus vielen Einheiten bestehen.</p>
-  <h2 id="sec-enginesearch">Ablaufe der Anlagensuche</h2>
+  <ol>
+  <li><strong>Marktstammdatenregisterauszüge als Vektorgraphik (SVG-Format).</strong></li>
+  <li>
+    <strong>Lokalisiern von Energieanlagen</strong>. 
+    Gerade große Windparks oder Solaranlagen bestehen aus vielen kleineren Anlagen, diese können
+    über eine flächige Suche zusammengefasst werden.</li>
+  </ol>
+  <h2 id="sec-order">Vorgehen des Ansatzes</h2>
   <h3 id="sec-marktstammdatenregister">Abruf der Daten</h3>
   <ol>
     <li>Aufruf des <a href="https://www.marktstammdatenregister.de/MaStR/Einheit/Einheiten/ErweiterteOeffentlicheEinheitenuebersicht"><strong>MarktStammdatenregisters</strong></a></li>
