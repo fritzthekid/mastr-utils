@@ -1,1 +1,7 @@
 baseurl: "/mastr-utils"
+
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "CO₂-Emissionsfaktoren"
+    url: "/co2-emissions/"
