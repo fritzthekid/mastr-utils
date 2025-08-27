@@ -5,3 +5,5 @@ navigation:
     url: "/"
   - title: "CO₂-Emissionsfaktoren"
     url: "/co2-emissions/"
+  - title: "CO₂-Emission BHKW"
+    url: "/bhkw/"

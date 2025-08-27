@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: withinnerbody
 title: CO2-Emissionsfaktoren Strom und Wärme
 ---
 # CO₂-Emissionsfaktoren verschiedener Energiequellen - Strom und Wärme
@@ -83,6 +83,7 @@ title: CO2-Emissionsfaktoren Strom und Wärme
 ## Einsparung gegenüber deutschem Energiemix
 
 ### Strommix-Vergleich (deutscher Strommix 2024: ~363 g CO₂/kWh)
+
 | Energiequelle | Einsparung (g CO₂/kWh) | Einsparung (%) |
 |---------------|----------------------|---------------|
 | Photovoltaik | ~318 | 88% |
@@ -92,6 +93,7 @@ title: CO2-Emissionsfaktoren Strom und Wärme
 | Kernkraft | ~348 | 96% |
 
 ### Wärmemix-Vergleich (deutscher Wärmemix 2023: ~250 g CO₂/kWh)
+
 | Wärmequelle | Einsparung (g CO₂/kWh) | Einsparung (%) |
 |-------------|----------------------|---------------|
 | Solarthermie | ~225 | 90% |
