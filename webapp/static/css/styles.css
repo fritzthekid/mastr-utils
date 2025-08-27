@@ -567,6 +567,8 @@ ul.flashes {
 
 /* ===== CO₂-Emissions Table Styles ===== */
 
+/* ===== CO₂-Emissions Table Styles (Neutrale Grautöne) ===== */
+
 .co2-emissions-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -579,15 +581,12 @@ ul.flashes {
     margin-bottom: 10px;
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    /* Kein Gradient mehr, nur einfache Farbe */
 }
 
 .co2-subtitle {
     text-align: center;
-    color: #7f8c8d;
+    color: #6c757d;
     margin-bottom: 40px;
     font-size: 1.2rem;
     font-weight: 300;
@@ -597,18 +596,20 @@ ul.flashes {
     color: white;
     margin: 40px 0 20px 0;
     padding: 15px 20px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    /* Neutrales Grau statt Blau */
+    background: linear-gradient(135deg, #6c757d, #495057);
     border-radius: 10px;
     font-size: 1.4rem;
-    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
 }
 
 .co2-table-container {
     overflow-x: auto;
     margin: 20px 0;
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     background: white;
+    border: 1px solid #dee2e6;
 }
 
 .co2-table {
@@ -619,12 +620,13 @@ ul.flashes {
 }
 
 .co2-table th {
-    background: linear-gradient(135deg, #34495e, #2c3e50);
+    /* Neutrales Grau für Header */
+    background: linear-gradient(135deg, #495057, #343a40);
     color: white;
     padding: 15px 12px;
     text-align: left;
     font-weight: 600;
-    border-bottom: 3px solid #2980b9;
+    border-bottom: 2px solid #6c757d;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -632,46 +634,47 @@ ul.flashes {
 
 .co2-table td {
     padding: 12px;
-    border-bottom: 1px solid #ecf0f1;
+    border-bottom: 1px solid #e9ecef;
     transition: background-color 0.3s ease;
 }
 
 .co2-table tr:hover {
     background-color: #f8f9fa;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .co2-category {
     font-weight: bold;
-    background: linear-gradient(135deg, #ecf0f1, #bdc3c7) !important;
-    color: #2c3e50 !important;
-    border-left: 5px solid #3498db;
+    background: linear-gradient(135deg, #e9ecef, #ced4da) !important;
+    color: #495057 !important;
+    border-left: 4px solid #6c757d;
 }
 
+/* Energieträger-Farben bleiben bestehen */
 .co2-fossil {
-    border-left: 5px solid #e74c3c;
+    border-left: 5px solid #dc3545;
 }
 
 .co2-renewable {
-    border-left: 5px solid #27ae60;
+    border-left: 5px solid #28a745;
 }
 
 .co2-biomass {
-    border-left: 5px solid #f39c12;
+    border-left: 5px solid #fd7e14;
 }
 
 .co2-nuclear {
-    border-left: 5px solid #9b59b6;
+    border-left: 5px solid #6f42c1;
 }
 
 .co2-heat {
-    border-left-color: #e67e22;
+    border-left-color: #fd7e14;
 }
 
 .co2-number {
     font-weight: 600;
-    color: #2563eb;
+    color: #495057;
 }
 
 .co2-stats-grid {
@@ -682,15 +685,15 @@ ul.flashes {
 }
 
 .co2-stat-card {
-    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    background: white;
     padding: 20px;
     border-radius: 12px;
-    border-left: 5px solid #10b981;
+    border: 1px solid #dee2e6;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .co2-stat-card h4 {
-    color: #059669;
+    color: #495057;
     margin-bottom: 15px;
     font-size: 1.1rem;
 }
@@ -706,30 +709,32 @@ ul.flashes {
 }
 
 .co2-highlight {
-    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    background: #f8f9fa;
     padding: 20px;
     border-radius: 10px;
     margin: 20px 0;
-    border-left: 5px solid #fdcb6e;
+    border-left: 5px solid #6c757d;
+    border: 1px solid #e9ecef;
 }
 
 .co2-highlight h4 {
-    color: #d68910;
+    color: #495057;
     margin-bottom: 10px;
     font-size: 1.1rem;
 }
 
 .co2-sources {
-    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    background: #f8f9fa;
     padding: 25px;
     border-radius: 12px;
     margin: 30px 0;
-    border-left: 5px solid #3b82f6;
+    border: 1px solid #e9ecef;
+    border-left: 5px solid #6c757d;
 }
 
 .co2-sources-title {
     color: white;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: linear-gradient(135deg, #6c757d, #495057);
     margin: 0 0 15px 0;
     padding: 10px 15px;
     border-radius: 8px;
@@ -741,7 +746,7 @@ ul.flashes {
 }
 
 .co2-source-category h4 {
-    color: #1d4ed8;
+    color: #495057;
     margin-bottom: 8px;
     font-size: 1rem;
 }
@@ -751,11 +756,12 @@ ul.flashes {
 }
 
 .co2-note {
-    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    background: white;
     padding: 20px;
     border-radius: 10px;
     margin: 20px 0;
-    border-left: 5px solid #0ea5e9;
+    border: 1px solid #e9ecef;
+    border-left: 5px solid #6c757d;
     font-size: 0.95rem;
 }
 
@@ -763,10 +769,11 @@ ul.flashes {
     text-align: center;
     margin-top: 40px;
     padding: 20px;
-    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    background: #f8f9fa;
     border-radius: 10px;
-    color: #64748b;
+    color: #6c757d;
     font-size: 0.9rem;
+    border: 1px solid #e9ecef;
 }
 
 /* Responsive Design */
@@ -793,28 +800,27 @@ ul.flashes {
     }
 }
 
-/* Links styling for CO₂ table */
+/* Links styling für CO₂ table - dezenter */
 .co2-table a {
-    color: #3498db;
-    text-decoration: none;
+    color: #495057;
+    text-decoration: underline;
     transition: all 0.3s ease;
     font-weight: 500;
 }
 
 .co2-table a:hover {
-    color: #2980b9;
+    color: #212529;
     text-decoration: underline;
-    transform: translateY(-1px);
 }
 
 .co2-sources a {
-    color: #1d4ed8;
-    text-decoration: none;
+    color: #495057;
+    text-decoration: underline;
     transition: all 0.3s ease;
     font-weight: 500;
 }
 
 .co2-sources a:hover {
-    color: #1e40af;
+    color: #212529;
     text-decoration: underline;
 }
