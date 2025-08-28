@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaStR to GPX Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script> <!-- For GPX support -->
+</head>
+<!--!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"-->
+<body>
+<div id="root" />
+    {% include 'topbanner.html' %}
+    <div class="inner-body" style="height: 73%;">
+<!--nav>
+  <h1>Flaskr</h1>
+  <ul>
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('index') }}">Login</a></li>
+    <li><a href="{{ url_for('index') }}">Logout</a></li>
+  </ul>
+</nav-->
+<section class="content">
+  <!--header>
+    {% block header %}{% endblock %}
+  </header-->
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>

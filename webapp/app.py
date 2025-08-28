@@ -689,6 +689,10 @@ application = DispatcherMiddleware(Flask('dummy'), {
 def co2_emissions():
     return render_template('co2_emissions.html')
 
+@app.route('/x', methods=['GET', 'POST'])
+def x():
+    return render_template('x.html')
+
 
 if __name__ == '__main__':
     app.config['SESSION_COOKIE_PATH'] = '/'

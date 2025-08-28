@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaStR to GPX Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script> <!-- For GPX support -->
+</head>
+<body>
+<div id="root" />
+    {% include 'topbanner.html' %}
+    <section>
+    <div class="inner-body" style="height: 73%;">
+<div class="co2-emissions-container">
+      <h1 id="co-gesamtbilanz-bhkw-vs-getrennte-erzeugung">CO₂-Gesamtbilanz: BHKW vs. getrennte Erzeugung</h1>
+
+<h2 id="grundprinzip-der-co-einsparung-durch-bhkws">Grundprinzip der CO₂-Einsparung durch BHKWs</h2>
+
+<p><strong>Die entscheidende Erkenntnis:</strong> BHKWs sparen bei gleicher Nutzenergie (Strom + Wärme) insgesamt CO₂ ein, weil sie effizienter arbeiten als die getrennte Erzeugung.</p>
+
+<h2 id="vergleichsrechnung-für-verschiedene-brennstoffe">Vergleichsrechnung für verschiedene Brennstoffe</h2>
+
+<h3 id="1-erdgas-bhkw">1. Erdgas-BHKW</h3>
+
+<p><strong>Scenario:</strong> 1 kWh Erdgas einsetzen für Erzeugung von 0,3 kWh Strom + 0,5 kWh Wärme</p>
+
+<h4 id="variante-a-getrennte-erzeugung">Variante A: Getrennte Erzeugung</h4>
+<ul>
+  <li><strong>Gaskessel (92% Wirkungsgrad):</strong> 0,54 kWh Gas für 0,5 kWh Wärme → 108 g CO₂</li>
+  <li><strong>Strombezug (363 g CO₂/kWh):</strong> 0,3 kWh Strom → 109 g CO₂</li>
+  <li><strong>Gesamt:</strong> 0,54 kWh Gas + 0,3 kWh Strom → <strong>217 g CO₂</strong></li>
+</ul>
+
+<h4 id="variante-b-erdgas-bhkw-80-gesamtwirkungsgrad">Variante B: Erdgas-BHKW (80% Gesamtwirkungsgrad)</h4>
+<ul>
+  <li><strong>BHKW:</strong> 1 kWh Gas → 0,3 kWh Strom + 0,5 kWh Wärme → <strong>200 g CO₂</strong></li>
+  <li><strong>CO₂-Einsparung:</strong> 217 - 200 = <strong>17 g CO₂ (8% Einsparung)</strong></li>
+</ul>
+
+<h3 id="2-biogas-bhkw">2. Biogas-BHKW</h3>
+
+<p><strong>Scenario:</strong> 1 kWh Biogas einsetzen für Erzeugung von 0,35 kWh Strom + 0,5 kWh Wärme</p>
+
+<h4 id="variante-a-getrennte-erzeugung-1">Variante A: Getrennte Erzeugung</h4>
+<ul>
+  <li><strong>Gaskessel mit Biogas:</strong> 0,54 kWh Biogas für 0,5 kWh Wärme → 11 g CO₂ (20 g/kWh)</li>
+  <li><strong>Strombezug (363 g CO₂/kWh):</strong> 0,35 kWh Strom → 127 g CO₂</li>
+  <li><strong>Gesamt:</strong> <strong>138 g CO₂</strong></li>
+</ul>
+
+<h4 id="variante-b-biogas-bhkw-85-gesamtwirkungsgrad">Variante B: Biogas-BHKW (85% Gesamtwirkungsgrad)</h4>
+<ul>
+  <li><strong>BHKW:</strong> 1 kWh Biogas → 0,35 kWh Strom + 0,5 kWh Wärme → <strong>20 g CO₂</strong></li>
+  <li><strong>CO₂-Einsparung:</strong> 138 - 20 = <strong>118 g CO₂ (85% Einsparung!)</strong></li>
+</ul>
+
+<h3 id="3-holz-bhkw-holzvergaser--gasmotor">3. Holz-BHKW (Holzvergaser + Gasmotor)</h3>
+
+<p><strong>Scenario:</strong> 1 kWh Holz einsetzen für Erzeugung von 0,2 kWh Strom + 0,6 kWh Wärme</p>
+
+<h4 id="variante-a-getrennte-erzeugung-2">Variante A: Getrennte Erzeugung</h4>
+<ul>
+  <li><strong>Holzkessel:</strong> 0,67 kWh Holz für 0,6 kWh Wärme → 15 g CO₂ (22 g/kWh Pellets)</li>
+  <li><strong>Strombezug (363 g CO₂/kWh):</strong> 0,2 kWh Strom → 73 g CO₂</li>
+  <li><strong>Gesamt:</strong> <strong>88 g CO₂</strong></li>
+</ul>
+
+<h4 id="variante-b-holz-bhkw-80-gesamtwirkungsgrad">Variante B: Holz-BHKW (80% Gesamtwirkungsgrad)</h4>
+<ul>
+  <li><strong>BHKW:</strong> 1 kWh Holz → 0,2 kWh Strom + 0,6 kWh Wärme → <strong>22 g CO₂</strong></li>
+  <li><strong>CO₂-Einsparung:</strong> 88 - 22 = <strong>66 g CO₂ (75% Einsparung!)</strong></li>
+</ul>
+
+<h2 id="zusammenfassung-der-co-einsparungen">Zusammenfassung der CO₂-Einsparungen</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Brennstoff</th>
+      <th>BHKW Gesamt-CO₂</th>
+      <th>Getrennte Erzeugung</th>
+      <th>CO₂-Einsparung</th>
+      <th>Einsparung (%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Erdgas</strong></td>
+      <td>200 g CO₂</td>
+      <td>217 g CO₂</td>
+      <td>17 g CO₂</td>
+      <td>8%</td>
+    </tr>
+    <tr>
+      <td><strong>Biogas</strong></td>
+      <td>20 g CO₂</td>
+      <td>138 g CO₂</td>
+      <td>118 g CO₂</td>
+      <td><strong>85%</strong></td>
+    </tr>
+    <tr>
+      <td><strong>Holz</strong></td>
+      <td>22 g CO₂</td>
+      <td>88 g CO₂</td>
+      <td>66 g CO₂</td>
+      <td><strong>75%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="typische-bhkw-wirkungsgrade-aus-der-praxis">Typische BHKW-Wirkungsgrade aus der Praxis</h2>
+
+<h3 id="erdgas-bhkw">Erdgas-BHKW</h3>
+<ul>
+  <li><strong>Elektrischer Wirkungsgrad:</strong> 25-44% (je nach Anlagengröße)</li>
+  <li><strong>Thermischer Wirkungsgrad:</strong> 50-60%</li>
+  <li><strong>Gesamtwirkungsgrad:</strong> 80-90%</li>
+</ul>
+
+<h3 id="biogas-bhkw">Biogas-BHKW</h3>
+<ul>
+  <li><strong>Elektrischer Wirkungsgrad:</strong> 34-42% (Praxis: oft 3%-Punkte weniger als Herstellerangabe)</li>
+  <li><strong>Thermischer Wirkungsgrad:</strong> 34-55%</li>
+  <li><strong>Gesamtwirkungsgrad:</strong> bis zu 90%</li>
+</ul>
+
+<h3 id="holz-bhkw-holzvergaser">Holz-BHKW (Holzvergaser)</h3>
+<ul>
+  <li><strong>Elektrischer Wirkungsgrad:</strong> 15-25%</li>
+  <li><strong>Thermischer Wirkungsgrad:</strong> 50-65%</li>
+  <li><strong>Gesamtwirkungsgrad:</strong> 70-85%</li>
+</ul>
+
+<h2 id="warum-diese-enormen-einsparungen">Warum diese enormen Einsparungen?</h2>
+
+<h3 id="1-effizienzgewinn-durch-kraft-wärme-kopplung">1. Effizienzgewinn durch Kraft-Wärme-Kopplung</h3>
+<p><strong>Vergleich zu konventioneller Stromerzeugung:</strong></p>
+<ul>
+  <li>Kohlekraftwerk: nur 35-40% Wirkungsgrad (Rest wird als Abwärme verschwendet)</li>
+  <li>BHKW: nutzt die Abwärme → bis zu 90% Gesamtwirkungsgrad</li>
+</ul>
+
+<h3 id="2-vermeidung-von-transportverlusten">2. Vermeidung von Transportverlusten</h3>
+<ul>
+  <li>Bei zentraler Stromerzeugung: 3-6% Verluste im Stromnetz</li>
+  <li>BHKW: Erzeugung vor Ort → keine Transportverluste</li>
+</ul>
+
+<h3 id="3-besonders-große-einsparungen-bei-erneuerbaren-brennstoffen">3. Besonders große Einsparungen bei erneuerbaren Brennstoffen</h3>
+<ul>
+  <li><strong>Biogas/Holz-BHKW:</strong> Ersetzen fossil erzeugten Netzstrom (363 g CO₂/kWh)</li>
+  <li><strong>Erdgas-BHKW:</strong> Moderate Einsparung, da Erdgas selbst fossil ist</li>
+</ul>
+
+<h2 id="referenzwerte-für-vergleichsrechnungen">Referenzwerte für Vergleichsrechnungen</h2>
+
+<h3 id="separate-erzeugung-referenzsystem-nach-eu-richtlinie-20048eg">Separate Erzeugung (Referenzsystem nach EU-Richtlinie 2004/8/EG)</h3>
+<ul>
+  <li><strong>Referenz-GuD-Kraftwerk:</strong> 53% elektrischer Wirkungsgrad</li>
+  <li><strong>Referenz-Gaskessel:</strong> 92% thermischer Wirkungsgrad</li>
+</ul>
+
+<h3 id="aktueller-deutscher-strommix">Aktueller deutscher Strommix</h3>
+<ul>
+  <li><strong>2024:</strong> 363 g CO₂/kWh (gesunken von 380 g CO₂/kWh in 2023)</li>
+</ul>
+
+<h2 id="praktische-größenordnungen">Praktische Größenordnungen</h2>
+
+<h3 id="co-minderung-in-der-praxis">CO₂-Minderung in der Praxis</h3>
+<p>Laut BHKW-Infozentrum erreichen moderne Dieselmotor-Anlagen (Gesamtnutzungsgrad 85%, elektrischer Nutzungsgrad 40%) gegenüber einem GuD-Kondensationskraftwerk (Nutzungsgrad 56%) und einem Brennwertkessel (Nutzungsgrad 101% bezogen auf Hu) <strong>eine wesentliche CO₂-Minderung von nahezu 45%</strong> gegenüber dem ungekoppelten Referenzsystem.</p>
+
+<h2 id="fazit-gesamtsicht-bestätigt-bhkw-vorteil">Fazit: Gesamtsicht bestätigt BHKW-Vorteil</h2>
+
+<p><strong>Ihr ursprünglicher Gedanke ist vollkommen richtig:</strong> 
+BHKWs haben bei gleicher Nutzenergie einen <strong>deutlich geringeren Gesamt-CO₂-Ausstoß</strong> als die getrennte Erzeugung. Die Allokationsmethoden sind nur für die Verteilung der Emissionen auf Strom und Wärme relevant - sie ändern nichts an der grundsätzlichen CO₂-Einsparung durch die effiziente Kraft-Wärme-Kopplung.</p>
+
+<p><strong>Besonders effektiv</strong> sind BHKWs mit erneuerbaren Brennstoffen (Biogas, Holz), da sie zusätzlich fossil erzeugten Netzstrom ersetzen.</p>
+
+<hr />
+
+<h2 id="quellen">Quellen</h2>
+
+<ol>
+  <li><a href="https://www.ffe.de/wp-content/uploads/2022/10/ET_Allokationsmethoden_CO21.pdf">FfE-Studie Allokationsmethoden</a></li>
+  <li><a href="https://biogas.fnr.de/biogas-nutzung/waerme">FNR Biogas Wirkungsgrade</a></li>
+  <li><a href="https://biogas.fnr.de/daten-und-fakten/faustzahlen">FNR Biogas Faustzahlen</a></li>
+  <li><a href="https://www.heizung.de/bhkw/wissen/wirkungsgrad-im-bhkw-vergleich.html">Heizung.de BHKW-Wirkungsgrade</a></li>
+  <li><a href="https://de.wikipedia.org/wiki/Blockheizkraftwerk">Wikipedia Blockheizkraftwerk</a></li>
+  <li><a href="https://www.buderus.de/de/bhkw/einfamilienhaus">Buderus BHKW Einfamilienhaus</a></li>
+  <li><a href="https://energas-gmbh.de/wirkungsgrad-bhkw/">Energas GmbH BHKW-Wirkungsgrad</a></li>
+  <li><a href="https://www.heizungsfinder.de/bhkw/ratgeber/stromkennzahl-wirkungsgrad">Heizungsfinder Stromkennzahl</a></li>
+  <li><a href="https://www.lfl.bayern.de/ilt/umwelttechnik/biogas/028849/index.php">LfL Bayern BHKW-Praxis</a></li>
+  <li><a href="https://www.bhkw-infozentrum.de/allgemeine-erlaeuterungen-bhkw-kwk/co2-minderung-durch-bhkw.html">BHKW-Infozentrum CO₂-Minderung</a></li>
+</ol>
+</div>
+</section>
+    {% include 'footer.html' %}
+</body>
+</html>

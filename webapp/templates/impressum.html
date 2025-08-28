@@ -1,21 +1,7 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kostenvergleich: Atomkraft vs. Erneuerbare</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
-</head>
-<body>
-<div id="root" />
-    {% include 'topbanner.html' %}
-    <div class="inner-body" style="height:73%;">
-        <h1>Impressum und Kontakt</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Impressum und Kontakt</h1>
 
     <h2>Angaben gemäß § 5 TMG</h2>
     <p>
@@ -46,7 +32,4 @@
       Dokumentation ist unter <a href="https:/github.com/fritzthekid/mastr-utils/doc/dokumentation.md">Dokumentation</a> 
       zu finden.
     </p>
-</div>
-{% include 'footer.html' %}
-</body>
-</html>
+{% endblock %}

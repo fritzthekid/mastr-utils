@@ -1,20 +1,6 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CO₂-Emissionsfaktoren verschiedener Energiequellen</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
-</head>
-<body>
-<div id="root" />
-    {% include 'topbanner.html' %}
-    <div class="inner-body" style="height:73%;">
+{% extends 'base.html' %}
+
+{% block content %}
 <div class="co2-emissions-container">
     <h1 class="co2-title">CO₂-Emissionsfaktoren verschiedener Energiequellen</h1>
     <p class="co2-subtitle">Strom und Wärme - Lebenszyklusbetrachtung</p>
@@ -65,7 +51,7 @@
                 </tr>
                 
                 <tr class="co2-category">
-                    <td colspan="5"><strong>Erneuerbare Energien</strong></td>
+                    <td colspan="5"><strong>Erneuerbare Energien [nachhaltige Energie]</strong></td>
                 </tr>
                 <tr class="co2-renewable">
                     <td>Photovoltaik</td>
@@ -97,7 +83,7 @@
                 </tr>
                 
                 <tr class="co2-category">
-                    <td colspan="5"><strong>Biomasse (detailliert)</strong></td>
+                    <td colspan="5"><strong>Biomasse (detailliert) [regenerative Energie]</strong></td>
                 </tr>
                 <tr class="co2-biomass">
                     <td>Biogas (Landwirt)</td>
@@ -321,6 +307,4 @@
         <p>Wissenschaftlich fundierte CO₂-Emissionsfaktoren für Strom- und Wärmeerzeugung mit verifizierten Quellen</p>
     </div>
 </div>
-{% include 'footer.html' %}
-</body>
-</html>
+{% endblock %}
