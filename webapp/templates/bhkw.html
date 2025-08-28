@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MaStR to GPX Converter</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="eyes" href="{{ url_for('static', filename='eyes-blitz.png') }}">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script> <!-- For GPX support -->
-</head>
-<body>
-<div id="root" />
-    {% include 'topbanner.html' %}
-    <section>
-    <div class="inner-body" style="height: 73%;">
-<div class="co2-emissions-container">
+{% extends 'base.html' %}
+
+{% block content %}
       <h1 id="co-gesamtbilanz-bhkw-vs-getrennte-erzeugung">CO₂-Gesamtbilanz: BHKW vs. getrennte Erzeugung</h1>
 
 <h2 id="grundprinzip-der-co-einsparung-durch-bhkws">Grundprinzip der CO₂-Einsparung durch BHKWs</h2>
@@ -198,8 +182,6 @@ BHKWs haben bei gleicher Nutzenergie einen <strong>deutlich geringeren Gesamt-CO
   <li><a href="https://www.lfl.bayern.de/ilt/umwelttechnik/biogas/028849/index.php">LfL Bayern BHKW-Praxis</a></li>
   <li><a href="https://www.bhkw-infozentrum.de/allgemeine-erlaeuterungen-bhkw-kwk/co2-minderung-durch-bhkw.html">BHKW-Infozentrum CO₂-Minderung</a></li>
 </ol>
-</div>
-</section>
-    {% include 'footer.html' %}
-</body>
-</html>
+<!--/div-->
+<!--/section-->
+{% endblock %}
