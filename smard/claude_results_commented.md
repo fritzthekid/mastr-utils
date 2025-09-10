@@ -180,3 +180,22 @@ Our analysis aligns perfectly with established research from:
 - **Peer-reviewed academic literature** (multiple journals)
 
 The combination of **modest domestic storage + European grid integration** for achieving 90%+ renewable shares is exactly what these institutions are studying and recommending for Germany's energy transition.
+
+Und weiter.
+## Eigenes
+Betrachtung Deutschland
+
+- 130 GW installierte PV
+- 63 GW installierte Windanlagen
+- 50 GW sonstige
+
+Betrachtung Luxemburg 2022
+- 317 MWp installierte PV
+- 208 MW installierte Leistung, 280 GWh eingespeiste Energie Wind
+
+meine Batterie 20000 bei 5000 Wind und 20000 bei 10000 Sonne und einem Jahreverbrauch von 11.216 GWh, Windjahresgesamtleistung 12.429 GWh
+
+Bei Wind kann die renewable rate von 0.72 auf 0.81 angehoben werden. Bei Sonne ähnlich.
+(Bei Sonne liegt die Rate aber c.a. 10% schlechter.)
+
+

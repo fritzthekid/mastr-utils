@@ -685,13 +685,13 @@ application = DispatcherMiddleware(Flask('dummy'), {
     url_prefix: app
 })
 
-@app.route('/co2-emissions')
-def co2_emissions():
-    return render_template('co2_emissions.html')
+# @app.route('/co2-emissions')
+# def co2_emissions():
+#     return render_template('co2_emissions.html')
 
-@app.route('/x', methods=['GET', 'POST'])
-def x():
-    return render_template('x.html')
+# @app.route('/x', methods=['GET', 'POST'])
+# def x():
+#     return render_template('x.html')
 
 
 if __name__ == '__main__':
