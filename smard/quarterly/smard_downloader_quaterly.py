@@ -47,7 +47,7 @@ class SmardAPIDownloader:
             '4387': 'Pumpspeicher Verbrauch'
         }
         
-        self.region = 'DE'
+        self.region = 'LU'
         self.resolution = resolution["name"]
         
     def get_available_timestamps(self, filter_id: str) -> List[int]:
