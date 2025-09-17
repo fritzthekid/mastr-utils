@@ -78,7 +78,7 @@ class Senec(Analyse):
         current = np.minimum(max_cur,np.maximum(min_cur,self.data["act_battery_current"]))
         for i in range(1,self.data.shape[0]):
             # newlevel = max(0,min(capacity,level[-1]+(self.data["act_battery_inflow"][i]-self.data["act_battery_exflow"][i])*self.resolution))
-            newlevel = max(0,min(capacity,level[-1]+current.iloc[i]*self.resolution*factor))
+            newlevel = max(0,min(capacity,level[-1]+current.iloc[i]*self.resolution*self.resolution*factor))
             level.append(newlevel)
         self.data["act_battery"] = level
         pass
@@ -106,15 +106,16 @@ class Senec(Analyse):
 
 
 def main(argv=[]):
-    file_path=f"{os.path.abspath(os.path.dirname(__file__))}/sma/senec_data_2020/2020-combine.csv"
+    file_path=f"{os.path.abspath(os.path.dirname(__file__))}/sma/senec_data_2024/2024-combine.csv"
     if len(argv) > 1:
         file_path = f"{argv[1]}"
 
     senec = Senec(file_path)
-    senec.run_analysis(capaciy_list=[5, 10, 100, 5], power_list=[2.5,5,100,1.25])
-    # senec.visualise(start=23900, end=24200)
+    senec.run_analysis(capaciy_list=[5, 10, 100, 5], power_list=[2.5,5,100,0.12],year=2024)
+    # senec.visualise(start=23900, end=24200) ## 2020
+    # senec.visualise(start=24700,end=25700) ## 2024
     senec.simulate_battery(capacity=5,power=0.12)
-    senec.act_simulate_battery(capacity=5, factor=0.06)
+    senec.act_simulate_battery(capacity=5)
     # senec.details(start=23900, end=24200)
     pass
 
