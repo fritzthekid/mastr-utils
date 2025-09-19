@@ -13,80 +13,20 @@ logger = logging.getLogger(__name__)
 
 DEBUG = False
 
-
         
 class Analyse(BatterySimulation):
 
-    def __init__(self, data, costs=0.24):
-        # self.region = None
+    def __init__(self, data=None, basic_data_set={}):
         self.data = data
-        # self.battery_results = None
-        # pass
-
-    """
-    simulate_battery(self,capacity=20000, power=10000)
-       - power [kW]
-       - capacity [kWh]
-       - given the total_demand values and renewable source values at each timepoint
-         - total_demand [kWh]
-         - renewable_source [kWh]
-       - calculates 
-        - storage level (fillstand)
-        - residual       
-    """
-    def simulate_battery_simple(self,capacity=20000, power=10000):        
-        container = []
-        residual = []
-        exflow = []
-        battery_exflow= []
-        battery_inflow= []
-        exflow = []
-        fillstand = capacity / 2
-        for w,d in zip(self.data["my_renew"],self.data["my_demand"]):
-            p = w-d
-            diff = max(-power,min(power,p))
-            if p > 0:
-                battery_inflow.append(diff)
-                battery_exflow.append(0)
-                fillstand = min(capacity, fillstand+diff)
-                if fillstand+diff > capacity:
-                    exflow.append(fillstand+diff-capacity)
-                else:
-                    exflow.append(0)                    
-                residual.append(0)
-            else:
-                battery_inflow.append(0)
-                if fillstand <= 0:
-                    battery_exflow.append(0)
-                    fillstand = 0
-                    residual.append(fillstand+diff)
-                else:
-                    battery_exflow.append(diff)
-                    fillstand = fillstand+diff
-                    residual.append(0)
-                exflow.append(0)
-            container.append(fillstand)
-        self.data["battery_storage"] = container
-        self.data["residual"] = residual
-        self.data["exflow"] = exflow
-        self.data["battery_inflow"] = battery_inflow
-        self.data["battery_exflow"] = battery_exflow
-        share = (sum(self.data["my_demand"]) + sum(residual))/sum(self.data["my_demand"])
-        spot_price = -sum(residual*self.data["price_per_kwh"])/100
-        fix_price = -sum(residual)*self.costs_per_kwh/100
-        results = pd.DataFrame([[capacity/1000,f"{(-sum(residual)/1000):.2f}",f"{(sum(exflow)/1000):.2f}", f"{share:.2f}",f"{(spot_price/1000):.2f}",f"{(fix_price/1000):.2f}"]], 
-                               columns=["capacity MWh","residual MWh","exflow MWh", "autarky_rate", "spot price [T€]", "fix price [T€]"])
-        self.battery_results = pd.concat([self.battery_results, results], ignore_index=True)
-        pass
-
-    # def current_price(self, costs, time_point):
-    #     for i, t in enumerate(costs["dtime"]):
-    #         dt = datetime.strptime(str(t), "%Y-%m-%d %H:%M:%S")
-    #         if time_point >= dt:
-    #             return costs["price"].iloc[i]
-    #     return self.costs_per_kwh
+        self.basic_data_set = basic_data_set
+        self.costs_per_kwh = None
+        self.battery_results = None
 
     def prepare_price(self):
+        if "battery_discharge" in self.basic_data_set:
+            self.battery_discharge = max(0,min(1,self.basic_data_set["battery_discharge"]/self.data.shape[0]))
+        else:
+            self.battery_discharge = 1
         if self.year == None:
             self.data["price_per_kwh"] = self.data["my_demand"]*0+self.costs_per_kwh
         else:
@@ -95,17 +35,17 @@ class Analyse(BatterySimulation):
             total_average = costs["price"].mean()
             apl = []
             for i, p in enumerate(costs["price"]):
-                if i < 24:
-                    apl.append(p < total_average)
+                if i < 12 or i > len(costs["price"])-12:
+                    apl.append(total_average)
                 else:
-                    apl.append(p < costs["price"][-24:].mean())
-            costs["load"] = apl
+                    apl.append(costs["price"][i-12:i+12].mean())
+            costs["avrgprice"] = apl
             costs["dtime"] = [datetime.strptime(t, "%Y-%m-%d %H:%M:%S") for t in costs["time"]]
             costs = costs.set_index("dtime")
             if self.data.index[0].year != self.year:
                 raise Exception("Year mismatch")
             pl = []
-            loadstrategy = []
+            lstl = []
             i = costs.index[0]
             for t in self.data.index:
                 seconds = (t-i).seconds
@@ -114,9 +54,9 @@ class Analyse(BatterySimulation):
                     i += pd.Timedelta(hours=1)
                 price = costs["price"].iloc[int((i-costs.index[0]).total_seconds()/3600)]
                 pl.append(price)
-                loadstrategy.append(costs["load"].iloc[int((i-costs.index[0]).total_seconds()/3600)])
+                lstl.append(costs["avrgprice"].iloc[int((i-costs.index[0]).total_seconds()/3600)])
             self.data["price_per_kwh"] = pl
-            self.data["loadstrategy"] = loadstrategy
+            self.data["avrgprice"] = lstl
         pass
 
     # def prepare_price_old(self):
@@ -127,6 +67,10 @@ class Analyse(BatterySimulation):
 
 
     def prepare_data(self):
+        if "battery_discharge" in self.basic_data_set:
+            self.battery_discharge = max(0,min(1,self.basic_data_set["battery_discharge"]/self.data.shape[0]))
+        else:
+            self.battery_discharge = 1
         pos, neg, exflow = [], [], []
         for w,d in zip(self.data['my_renew'],self.data['my_demand']):
             if w > d:
@@ -141,7 +85,7 @@ class Analyse(BatterySimulation):
         self.exflow = exflow
         share = sum(self.pos)/sum(self.data["my_demand"])
         spot_price = sum(self.neg*self.data["price_per_kwh"])/100
-        fix_price = sum(self.pos)*self.costs_per_kwh/100
+        fix_price = sum(self.neg)*self.costs_per_kwh/100
         spot_price_no = sum(self.data["my_demand"]*self.data["price_per_kwh"])/100
         fix_price_no = self.data["my_demand"].sum()*self.costs_per_kwh/100
         savings_no = "NN"
@@ -155,7 +99,7 @@ class Analyse(BatterySimulation):
         self.my_total_demand = self.data["my_demand"].sum()
 
     def run_analysis(self, capaciy_list=[5000, 10000, 20000], 
-                     power_list=[2500,5000,10000],costs_per_kwh=24, year=None):
+                     power_list=[2500,5000,10000]):
         """Run the analysis"""
         if self.data is None:
             print("❌ No data loaded!")
@@ -163,18 +107,14 @@ class Analyse(BatterySimulation):
 
         logger.info("Starting analysis...")
 
-        self.year = year
-        self.costs_per_kwh = costs_per_kwh
+        self.year = self.basic_data_set["year"]
+        self.costs_per_kwh = self.basic_data_set["fix_costs_per_kwh"]
         self.prepare_price()
         self.prepare_data()
         self.print_results()
         for capacity, power in zip(capaciy_list, power_list):
             self.simulate_battery(capacity=capacity, power=power)
-            self.print_results_with_battery()
-        # self.simulate_battery(capacity=10000, power=5000)
-        # self.print_results_with_battery()
-        # self.simulate_battery(capacity=20000, power=10000)
-        # self.print_results_with_battery()
+            # self.print_results_with_battery()
         print(self.battery_results)
         self.visualise()
         pass
@@ -225,11 +165,14 @@ class Analyse(BatterySimulation):
 
 class MeineAnalyse(Analyse):
 
-    def __init__(self, csv_file_path, region = ""):
+    def __init__(self, csv_file_path, region = "", basic_data_set = {}):
         """Initialize with German SMARD data"""
+
         self.region = region
+        
+        self.basic_data_set = basic_data_set
         data = self.load_and_prepare_data(csv_file_path)
-        super().__init__(data)
+        super().__init__(data, basic_data_set)
 
     def load_and_prepare_data(self, csv_file_path):
         """Load and prepare SMARD data"""
@@ -267,7 +210,7 @@ class MeineAnalyse(Analyse):
         self.resolution = ((df.index[1]-df.index[0]).seconds)/3600
 
         total_demand = df["total_demand"].sum()*self.resolution
-        my_total_demand = 6*1000*2804
+        my_total_demand = self.basic_data_set["year_demand"]
         self.my_total_demand = my_total_demand
 
         """
@@ -295,8 +238,8 @@ class MeineAnalyse(Analyse):
         total_installed_solar = max(df["solar"])
         total_installed_wind = max(df["wind_onshore"])
         df["my_demand"] = df["total_demand"] * my_total_demand / total_demand * self.resolution
-        df["my_renew"] = df["wind_onshore"] * 5000 / total_installed_wind * self.resolution
-        df["my_renew"] += df["solar"] * 5000 / total_installed_solar * self.resolution
+        df["my_renew"] = df["wind_onshore"] * self.basic_data_set["wind_nominal_power"] / total_installed_wind * self.resolution
+        df["my_renew"] += df["solar"] * self.basic_data_set["solar_max_power"] / total_installed_solar * self.resolution
 
         # print(my_total_demand, sum(df["my_demand"]), sum(pos)+sum(neg))
         df = df.fillna(0)
@@ -310,6 +253,16 @@ class MeineAnalyse(Analyse):
             plt.show()
         return df
 
+basic_data_set = {
+    "year": 2024,
+    "fix_costs_per_kwh": 11,
+    "year_demand":2804 * 1000 * 6,
+    "solar_max_power":5000,
+    "wind_nominal_power":5000,
+    "fix_contract" : False,
+    "battery_discharge": 0.05,
+}
+
 def main(argv = []):
     """Main function"""
     if len(argv) > 1:
@@ -322,9 +275,9 @@ def main(argv = []):
         print(f"❌ Data file not found: {data_file}")
         return
     
-    analyzer = MeineAnalyse(data_file, region)
-    analyzer.run_analysis(capaciy_list=[1000, 5000, 20000, 100000], power_list=[500,2500,10000,50000], costs_per_kwh=7.9, year=2024)
-    pass
+    analyzer = MeineAnalyse(data_file, region, basic_data_set=basic_data_set)
+    analyzer.run_analysis(capaciy_list=[0, 0.25, 0.5,1, 5, 10, 50, 100, 500, 1000, 5000, 20000], 
+                          power_list=[0, 0.125, 0.25, 0.5, 2.5, 5, 25, 50, 250, 500, 1000, 2500, 10000])
 
     # # Einzelne Simulation
 
@@ -357,4 +310,14 @@ if renewable_surplus > 0:
         battery_charge()
     else:
         sell_to_grid()  # Bei hohen Preisen direkt verkaufen
+"""
+"""
+def calc_mean_cost_gain(costs):
+    cal = []
+    for i in range(int(min(356,len(costs["price"])/24))):
+        lc = []
+        for j,c in enumerate((costs["price"].iloc[i*24:(i+1)*24])):
+            lc.append(c)
+        cal.append(np.max(np.array(lc))-np.min(np.array(lc)))
+    return np.mean(np.array(cal))
 """
