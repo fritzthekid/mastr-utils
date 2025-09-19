@@ -23,15 +23,12 @@ class Analyse(BatterySimulation):
         self.battery_results = None
 
     def prepare_price(self):
-        if "battery_discharge" in self.basic_data_set:
-            self.battery_discharge = max(0,min(1,self.basic_data_set["battery_discharge"]/self.data.shape[0]))
-        else:
-            self.battery_discharge = 1
         if self.year == None:
             self.data["price_per_kwh"] = self.data["my_demand"]*0+self.costs_per_kwh
         else:
             path = f"{os.path.abspath(os.path.dirname(__file__))}/costs"
             costs = pd.read_csv(f"{path}/{self.year}-hour-price.csv")
+            costs["price"] /= 100
             total_average = costs["price"].mean()
             apl = []
             for i, p in enumerate(costs["price"]):
@@ -68,9 +65,9 @@ class Analyse(BatterySimulation):
 
     def prepare_data(self):
         if "battery_discharge" in self.basic_data_set:
-            self.battery_discharge = max(0,min(1,self.basic_data_set["battery_discharge"]/self.data.shape[0]))
+            self.battery_discharge = max(0,min(1,self.basic_data_set["battery_discharge"]))*self.resolution
         else:
-            self.battery_discharge = 1
+            self.battery_discharge = 0
         pos, neg, exflow = [], [], []
         for w,d in zip(self.data['my_renew'],self.data['my_demand']):
             if w > d:
@@ -84,21 +81,21 @@ class Analyse(BatterySimulation):
         self.neg = neg
         self.exflow = exflow
         share = sum(self.pos)/sum(self.data["my_demand"])
-        spot_price = sum(self.neg*self.data["price_per_kwh"])/100
-        fix_price = sum(self.neg)*self.costs_per_kwh/100
-        spot_price_no = sum(self.data["my_demand"]*self.data["price_per_kwh"])/100
-        fix_price_no = self.data["my_demand"].sum()*self.costs_per_kwh/100
+        spot_price = sum(self.neg*self.data["price_per_kwh"])
+        fix_price = sum(self.neg)*self.costs_per_kwh
+        spot_price_no = sum(self.data["my_demand"]*self.data["price_per_kwh"])
+        fix_price_no = self.data["my_demand"].sum()*self.costs_per_kwh
         savings_no = "NN"
         savings = f"0.00 €/MWh"
-        self.battery_results = pd.DataFrame([["no renewable",f"{(self.data["my_demand"].sum()/1000):.2f}",f"{0:.2f}",f"{0:.2f}",f"{(spot_price_no/1000):.2f}",f"{(fix_price_no/1000):.2f}"],
-                                            [0,f"{(sum(self.neg)/1000):.2f}",f"{(sum(self.exflow)/1000):.2f}",f"{share:.2f}",f"{(spot_price/1000):.2f}",f"{(fix_price/1000):.2f}"]], 
-                                            columns=["capacity MWh","residual MWh","exflow MWh", "autarky rate", "spot price [T€]", "fix price [T€]"])
+        self.battery_results = pd.DataFrame([[-1,self.data["my_demand"].sum(),0,0,spot_price_no,fix_price_no],
+                                            [0,sum(self.neg),sum(self.exflow),share,spot_price,fix_price]], 
+                                            columns=["capacity kWh","residual kWh","exflow kWh", "autarky rate", "spot price [€]", "fix price [€]"])
         # print(f"wqithout renewables fix_price: {(sum(self.data["my_demand"])*self.costs_per_kwh/100000):.2f} T€, " +
         #       f"spot_price: {((sum(self.data["my_demand"]*self.data["price_per_kwh"])/100000)):.2f} T€")
 
         self.my_total_demand = self.data["my_demand"].sum()
 
-    def run_analysis(self, capaciy_list=[5000, 10000, 20000], 
+    def run_analysis(self, capacity_list=[5000, 10000, 20000], 
                      power_list=[2500,5000,10000]):
         """Run the analysis"""
         if self.data is None:
@@ -108,14 +105,14 @@ class Analyse(BatterySimulation):
         logger.info("Starting analysis...")
 
         self.year = self.basic_data_set["year"]
-        self.costs_per_kwh = self.basic_data_set["fix_costs_per_kwh"]
+        self.costs_per_kwh = self.basic_data_set["fix_costs_per_kwh"]/100
         self.prepare_price()
         self.prepare_data()
         self.print_results()
-        for capacity, power in zip(capaciy_list, power_list):
-            self.simulate_battery(capacity=capacity, power=power)
+        for capacity, power in zip(capacity_list, power_list):
+            self.simulate_battery(capacity=capacity*1000, power=power*1000)
             # self.print_results_with_battery()
-        print(self.battery_results)
+        self.print_battery_results()
         self.visualise()
         pass
 
@@ -126,6 +123,25 @@ class Analyse(BatterySimulation):
               f"total Renewable_Source: {(sum(self.data["my_renew"])/1e3):.2f} MWh")
         print(f"total renewalbes: {(sum(self.pos)/1000):.2f} MWh, residual: {(sum(self.neg)/1000):.2f} MWh")
         print(f"share without battery {(sum(self.pos)/self.my_total_demand):.2f}")
+
+    def print_battery_results(self):
+        # print(self.battery_results)
+        sp0 = self.battery_results["spot price [€]"].iloc[1]
+        fp0 = self.battery_results["fix price [€]"].iloc[1]
+        spotprice_gain = [f"{0:.2f}",f"{0:.2f}",f"{0:.2f}"] + [f"{((sp0-s)/max(1e-10,c)):.2f}" for s,c in zip(self.battery_results["spot price [€]"][3:],self.battery_results["capacity kWh"][3:])]
+        fixprice_gain = [f"{0:.2f}",f"{0:.2f}",f"{0:.2f}"] + [f"{((fp0-f)/max(1e-10,c)):.2f}" for f,c in zip(self.battery_results["spot price [€]"][3:],self.battery_results["capacity kWh"][3:])]
+        capacity_l = ["no renew","no bat"] + [f"{(c/1000)}" for c in self.battery_results["capacity kWh"][2:]]
+        residual_l = [f"{(r/1000):.1f}" for r in self.battery_results["residual kWh"]]
+        exflowl = [f"{(e/1000):.1f}" for e in self.battery_results["exflow kWh"]]
+        autarky_rate_l = [f"{a:.2f}" for a in self.battery_results["autarky rate"]]
+        spot_price_l = [f"{(s/1000):.1f}" for s in self.battery_results["spot price [€]"]]
+        fix_price_l = [f"{(f/1000):.1f}" for f in self.battery_results["fix price [€]"]]
+        values = np.array([capacity_l, residual_l, exflowl, autarky_rate_l, spot_price_l, fix_price_l, spotprice_gain, fixprice_gain]).T
+        battery_results_norm = pd.DataFrame(values,
+                                            columns=["cap MWh","resi MWh","exfl MWh", "autarky", "spp [T€]", "fixp [T€]", "sp €/kWh", "fp €/kWh"])
+        with pd.option_context('display.max_columns', None):
+            print(battery_results_norm)
+        pass
 
     def print_results_with_battery(self):
         res = -sum(self.data["residual"])
@@ -234,7 +250,6 @@ class MeineAnalyse(Analyse):
             total_installed_wind = 208
 
         ### this an extimate (for the time being seems better ...)
-
         total_installed_solar = max(df["solar"])
         total_installed_wind = max(df["wind_onshore"])
         df["my_demand"] = df["total_demand"] * my_total_demand / total_demand * self.resolution
@@ -260,7 +275,7 @@ basic_data_set = {
     "solar_max_power":5000,
     "wind_nominal_power":5000,
     "fix_contract" : False,
-    "battery_discharge": 0.05,
+    "battery_discharge": 0.005,
 }
 
 def main(argv = []):
@@ -276,9 +291,9 @@ def main(argv = []):
         return
     
     analyzer = MeineAnalyse(data_file, region, basic_data_set=basic_data_set)
-    analyzer.run_analysis(capaciy_list=[0, 0.25, 0.5,1, 5, 10, 50, 100, 500, 1000, 5000, 20000], 
-                          power_list=[0, 0.125, 0.25, 0.5, 2.5, 5, 25, 50, 250, 500, 1000, 2500, 10000])
-
+    analyzer.run_analysis(capacity_list=[0,  0.1, 1.0,    5, 20, 100], 
+                          power_list=   [0, 0.05, 0.5, 0.25, 10,  50])
+    
     # # Einzelne Simulation
 
     # result = analyzer.simulate_battery(capacity=20000, power=10000)

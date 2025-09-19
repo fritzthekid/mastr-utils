@@ -4,13 +4,14 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
-from meine_analyse import Analyse
+from smart_analyse import Analyse
 
 class Senec(Analyse):
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, basic_data_set = {}):
+        self.basic_data_set = basic_data_set
         data = self.read_data_cleanup(file_path)
-        super().__init__(data)
+        super().__init__(data, basic_data_set)
         # self.battery_results = pd.DataFrame([[0,f"{(sum(self.neg)/1000):.2f}",f"{(sum(self.exflow)/1000):.2f}",f"{share:.2f}"]], columns=["capacity MWh","residual MWh","exflow MWh", "share"])
         self.battery_results = pd.DataFrame([[0,0,0,0]], columns=["capacity MWh","residual MWh","exflow MWh", "share"])
         self.region = "home"
@@ -104,14 +105,23 @@ class Senec(Analyse):
         plt.show()
         pass
 
+basic_data_set = {
+    "year": 2024,
+    "fix_costs_per_kwh": 24,
+    "year_demand":2804 * 1000 * 6,
+    "solar_max_power":5000,
+    "wind_nominal_power":5000,
+    "fix_contract" : True,
+}
 
 def main(argv=[]):
     file_path=f"{os.path.abspath(os.path.dirname(__file__))}/sma/senec_data_2024/2024-combine.csv"
     if len(argv) > 1:
         file_path = f"{argv[1]}"
 
-    senec = Senec(file_path)
-    senec.run_analysis(capaciy_list=[5, 10, 100, 5], power_list=[2.5,5,100,0.12],year=2024)
+    senec = Senec(file_path, basic_data_set=basic_data_set)
+    senec.run_analysis(capacity_list=[0, 0.005, 0.010, 0.10, 0.005], 
+                       power_list=   [0, 0.0025,0.005, 0.05, 0.0025])
     # senec.visualise(start=23900, end=24200) ## 2020
     # senec.visualise(start=24700,end=25700) ## 2024
     senec.simulate_battery(capacity=5,power=0.12)
