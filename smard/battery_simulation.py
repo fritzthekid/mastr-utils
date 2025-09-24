@@ -29,6 +29,41 @@ class BatterySimulation:
                 return False
         return energy_balance < 0
 
+    def loading_strategie(self, energy_balance, current_storage, capacity, avrgprice, price, power_per_step, i):
+        # Ladevorgang
+        inflow = 0.0
+        outflow = 0.0
+        residual = 0.0
+        exflow = 0.0
+
+        if energy_balance > 0:
+            if self.load_strategie(energy_balance, current_storage, capacity, avrgprice[i], price[i]):
+                max_charge = min(power_per_step, capacity - current_storage)   # power_per_step ~ kW / 1h => kWh
+                actual_charge = min(energy_balance, max_charge)
+                if actual_charge > 0:
+                    inflow = actual_charge
+                    current_storage += actual_charge
+                exflow = energy_balance - actual_charge
+            else:
+                # nicht laden, alles überschüssige wird abgegeben
+                exflow = energy_balance
+
+        # Entladevorgang
+        elif energy_balance < 0:
+            if self.unload_strategie(energy_balance, current_storage, capacity, avrgprice[i], price[i]):
+                needed = abs(energy_balance)
+                max_discharge = min(power_per_step, current_storage)
+                actual_discharge = min(needed, max_discharge)
+                if actual_discharge > 0:
+                    outflow = actual_discharge
+                    current_storage -= actual_discharge
+                    residual = needed - actual_discharge
+                else:
+                    residual = needed
+            else:
+                residual = abs(energy_balance)
+        return [current_storage, inflow, outflow, residual, exflow]
+
     def simulate_battery(self, capacity=20000, power=10000):
         """
         Simuliere Batterie (Kapazität in kWh, power in kW pro Stunde).
@@ -72,35 +107,8 @@ class BatterySimulation:
             residual = 0.0
             exflow = 0.0
 
-            # Ladevorgang
-            if energy_balance > 0:
-                if self.load_strategie(energy_balance, current_storage, capacity, avrgprice[i], price[i]):
-                    max_charge = min(power_per_step, capacity - current_storage)   # power_per_step ~ kW / 1h => kWh
-                    actual_charge = min(energy_balance, max_charge)
-                    if actual_charge > 0:
-                        inflow = actual_charge
-                        current_storage += actual_charge
-                    exflow = energy_balance - actual_charge
-                else:
-                    # nicht laden, alles überschüssige wird abgegeben
-                    exflow = energy_balance
+            [current_storage, inflow, outflow, residual, exflow] = self.loading_strategie(energy_balance, current_storage, capacity, avrgprice, price, power_per_step, i)
 
-            # Entladevorgang
-            elif energy_balance < 0:
-                if self.unload_strategie(energy_balance, current_storage, capacity, avrgprice[i], price[i]):
-                    needed = abs(energy_balance)
-                    max_discharge = min(power_per_step, current_storage)
-                    actual_discharge = min(needed, max_discharge)
-                    if actual_discharge > 0:
-                        outflow = actual_discharge
-                        current_storage -= actual_discharge
-                        residual = needed - actual_discharge
-                    else:
-                        residual = needed
-                else:
-                    residual = abs(energy_balance)
-
-            # Verluste / Selbstentladung am Ende des Schritts
             if bd > 0:
                 current_storage = max(0.0, current_storage * (1.0 - bd))
             current_storage = min(capacity, current_storage)
@@ -129,6 +137,7 @@ class BatterySimulation:
         # Für Ausgabe in T€ (tausend €)
         spot_tk = spot_total_eur
         fix_tk = fix_total_eur
+        revenue_tk = float((exflows * price).sum())
 
         results = pd.DataFrame([[
             capacity,
@@ -136,8 +145,9 @@ class BatterySimulation:
             exflows.sum(),
             autarky_rate,
             spot_tk,
-            fix_tk
-        ]], columns=["capacity kWh","residual kWh","exflow kWh", "autarky rate", "spot price [€]", "fix price [€]"])
+            fix_tk,
+            revenue_tk,
+        ]], columns=["capacity kWh","residual kWh","exflow kWh", "autarky rate", "spot price [€]", "fix price [€]", "revenue [€]"])
 
         if getattr(self, "battery_results", None) is None:
             self.battery_results = results

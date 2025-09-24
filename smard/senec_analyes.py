@@ -108,9 +108,9 @@ class Senec(Analyse):
 basic_data_set = {
     "year": 2024,
     "fix_costs_per_kwh": 24,
-    "year_demand":2804 * 1000 * 6,
-    "solar_max_power":5000,
-    "wind_nominal_power":5000,
+    "year_demand":2804,
+    "solar_max_power":3.7,
+    "wind_nominal_power":0,
     "fix_contract" : True,
 }
 

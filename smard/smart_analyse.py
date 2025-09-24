@@ -130,22 +130,35 @@ class Analyse(BatterySimulation):
         fp0 = self.battery_results["fix price [€]"].iloc[1]
         spotprice_gain = [f"{0:.2f}",f"{0:.2f}",f"{0:.2f}"] + [f"{((sp0-s)/max(1e-10,c)):.2f}" for s,c in zip(self.battery_results["spot price [€]"][3:],self.battery_results["capacity kWh"][3:])]
         fixprice_gain = [f"{0:.2f}",f"{0:.2f}",f"{0:.2f}"] + [f"{((fp0-f)/max(1e-10,c)):.2f}" for f,c in zip(self.battery_results["spot price [€]"][3:],self.battery_results["capacity kWh"][3:])]
-        capacity_l = ["no renew","no bat"] + [f"{(c/1000)}" for c in self.battery_results["capacity kWh"][2:]]
-        residual_l = [f"{(r/1000):.1f}" for r in self.battery_results["residual kWh"]]
-        exflowl = [f"{(e/1000):.1f}" for e in self.battery_results["exflow kWh"]]
+        if max(self.data["my_renew"].sum(),self.data["my_demand"].sum())/1000 > 1000:
+            scaler=1000
+            cols = ["cap MWh","resi MWh","exfl MWh", "autarky", "spp [T€]", "fixp [T€]", "sp €/kWh", "fp €/kWh"]
+        else:
+            scaler=1
+            cols = ["cap kWh","resi kWh","exfl kWh", "autarky", "spp [€]", "fixp [€]", "sp €/kWh", "fp €/kWh"]
+        capacity_l = ["no renew","no bat"] + [f"{(c/scaler)}" for c in self.battery_results["capacity kWh"][2:]]
+        residual_l = [f"{(r/scaler):.1f}" for r in self.battery_results["residual kWh"]]
+        exflowl = [f"{(e/scaler):.1f}" for e in self.battery_results["exflow kWh"]]
         autarky_rate_l = [f"{a:.2f}" for a in self.battery_results["autarky rate"]]
-        spot_price_l = [f"{(s/1000):.1f}" for s in self.battery_results["spot price [€]"]]
-        fix_price_l = [f"{(f/1000):.1f}" for f in self.battery_results["fix price [€]"]]
+        spot_price_l = [f"{(s/scaler):.1f}" for s in self.battery_results["spot price [€]"]]
+        fix_price_l = [f"{(f/scaler):.1f}" for f in self.battery_results["fix price [€]"]]
         values = np.array([capacity_l, residual_l, exflowl, autarky_rate_l, spot_price_l, fix_price_l, spotprice_gain, fixprice_gain]).T
+
         battery_results_norm = pd.DataFrame(values,
-                                            columns=["cap MWh","resi MWh","exfl MWh", "autarky", "spp [T€]", "fixp [T€]", "sp €/kWh", "fp €/kWh"])
+                                            columns=cols)
         with pd.option_context('display.max_columns', None):
             print(battery_results_norm)
         pass
 
     def print_results_with_battery(self):
         res = -sum(self.data["residual"])
-        print(f"total renewalbes: {(sum(self.pos)/1000):.2f} MWh, residual: {(res/1000):.2f} MWh, export: {(sum(self.data["exflow"])/1000):.2f} MWh")
+        if self.my_total_demand/1000 > 1000:
+            scaler=1000
+            unit = "MWh"
+        else:
+            scaler=1
+            unit = "kWh"
+        print(f"total renewalbes: {(sum(self.pos)/scaler):.2f} {unit}, residual: {(res/scaler):.2f} {unit}, export: {(sum(self.data["exflow"])/scaler):.2f} {unit}")
         print(f"share with battery: {((self.my_total_demand - res)/self.my_total_demand):.2f}")
         pass
 
