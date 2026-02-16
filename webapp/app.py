@@ -46,7 +46,7 @@ login_manager.login_view = 'login'
 
 CORS(app)  # Enable CORS for all routes
 
-MAX_CONTENT_LENGTH = 20 * 1024 * 1024  # 5 MB
+MAX_CONTENT_LENGTH = 30 * 1024 * 1024  # 5 MB
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 
 
@@ -194,8 +194,8 @@ def adduser():
         elif newuser not in users:
             users[newuser] = {
                 "password": generate_password_hash(initpw), 
-                "status":"init",
-                "owner":"newuser",
+                "status":"changed",
+                "owner":"admin",
             }
             save_users(users)
             flash(f'Benutzer {newuser} angelegt.', category="message")
