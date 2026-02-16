@@ -22,6 +22,8 @@ def index():
             command = request.form["command"]
             if command == "mastrutils":
                 return redirect("/mastrutils")
+            elif command == "smardutils":
+                return redirect("/smardutils")
     return render_template('index.html', debug=app.debug)
 
 def show_page(page):
